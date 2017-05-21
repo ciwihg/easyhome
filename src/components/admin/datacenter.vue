@@ -1,5 +1,5 @@
 <template>
-  <div>add</div>
+  <div>建设ing</div>
 </template>
 
 <script>

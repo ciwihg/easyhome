@@ -3,18 +3,18 @@
 <mu-drawer :open="navopen" :width="cc">
   <mu-appbar title="Easyhome">
   </mu-appbar>
-  <mu-list>
-       <mu-list-item title="数据中心"/>
-       <mu-list-item title="租盘管理"/>
-       <mu-list-item title="费用管理"/>
-       <mu-list-item title="客户管理"/>
+  <mu-list :value="listvalue" @change="hchange">
+       <mu-list-item :value="1" href="#/adminhome/datacenter" title="数据中心"/>
+       <mu-list-item :value="2" href="#/adminhome/room" title="租盘管理"/>
+       <mu-list-item :value="3" href="#/adminhome/charge" title="费用管理"/>
+       <mu-list-item :value="4" title="客户管理"/>
   </mu-list>
 </mu-drawer>
 <div style="margin-left:200px;">
   <mu-appbar title="Easyhome-Center">
   </mu-appbar>
-  
-<router-view>
+
+<router-view @start="hcstart">
 </router-view>
 
 </div>
@@ -29,7 +29,8 @@ export default {
       navopen:true,
       cc:"200",
       show:false,
-      trigger:null
+      trigger:null,
+      listvalue:2
     }
   },
   mounted () {
@@ -41,6 +42,12 @@ methods:{
   },
   hovere:function(){
     this.show=false;
+  },
+  hchange:function(v){
+    this.listvalue=v;
+  },
+  hcstart:function(v){
+    this.listvalue=v;
   }
 }
 }
