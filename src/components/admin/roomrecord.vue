@@ -1,20 +1,22 @@
 <template>
-  <mu-table :showCheckbox="false">
-    <div slot="header" class="table_header">
+  <div>
+    <div class="table_header">
       <span>{{pagetitle}}</span>
       <div class="roominfo-wrap">
         <span class="room-num">{{datas[0]}}</span>
         <span>{{datas[1]}}</span>
 
     <div  style="float:right; margin-top:0px; margin-right:15px;">
-     <div style="position:relative; display:inline-block" ref="addbtn" @mouseenter="hover" @mouseleave="hovere">
-    <mu-float-button icon="add" mini secondary href="#/adminhome/roomadd"/>
+     <div style="position:relative; display:inline-block" ref="addbtn" @mouseenter="hover" @mouseleave="hovere" v-if="showall">
+    <mu-float-button icon="add" mini secondary  @click="hadd"/>
     <mu-tooltip label="添加租盘" :show="show"  :trigger="trigger" :verticalPosition="bottom" :horizontalPosition="center" />
     </div>
+    <mu-raised-button  label="保存" v-if="!showall" type="submit" form="roomform" backgroundColor="blue" style="vertical-align:middle;"/>
+    <mu-raised-button  label="取消" v-if="!showall" @click="cancellink" backgroundColor="rgb(180,180,180)"  style="vertical-align:middle;"/>
   </div>
   </div>
     </div>
-
+  <mu-table :showCheckbox="false" v-if="showall">
     <mu-thead>
       <mu-tr>
         <mu-th>{{theadtitle}}</mu-th>
@@ -32,9 +34,14 @@
         </mu-td>
       </mu-tr>
      </mu-tbody>
-     <router-view>
-     </router-view>
   </mu-table>
+
+  <form style="padding-left:15px; padding-right:15px;" id="roomform" action="http://easyhome.applinzi.com/public/index.php/admin/roomcontroll/add" method="POST" v-if="!showall">
+  <mu-text-field label="读数" name="value" fullWidth="true" labelFloat/></br>
+  <mu-date-picker name="time" hintText="日期"/>
+ </form>
+
+</div>
 </template>
 
 <script>
@@ -48,8 +55,12 @@ export default{
       bottom:"bottom",
       pagetitle:"",
       theadtitle:"",
+      showall:true,
       datas:[]
     }
+  },
+  computed:{
+
   },
   created: function () {
     this.$route.params.type==="e"?(this.pagetitle="用电记录",this.theadtitle="电表读数"):(this.pagetitle="用水记录",this.theadtitle="水表读数")
@@ -93,6 +104,12 @@ export default{
     editroom:function(e){
       var rid=e.target.parentNode.parentNode.getAttribute("rid");
       this.$router.push({ name: 'roomedit', params: { rid: rid }});
+    },
+    hadd:function(){
+      this.showall=false;
+    },
+    cancellink:function(){
+      this.showall=true;
     }
   }
 }
