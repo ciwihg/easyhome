@@ -36,9 +36,10 @@
      </mu-tbody>
   </mu-table>
 
-  <form style="padding-left:15px; padding-right:15px;" id="roomform" action="http://easyhome.applinzi.com/public/index.php/admin/roomcontroll/add" method="POST" v-if="!showall">
+  <form style="padding-left:15px; padding-right:15px;" id="roomform" :action="addhlink" method="POST" v-if="!showall">
   <mu-text-field label="读数" name="value" fullWidth="true" labelFloat/></br>
-  <mu-date-picker name="time" hintText="日期"/>
+  <input name="time"  :value="time"  style="display:none;" />
+  <mu-date-picker v-model="time"  hintText="日期"/>
  </form>
 
 </div>
@@ -56,15 +57,18 @@ export default{
       pagetitle:"",
       theadtitle:"",
       showall:true,
+      time:"",
       datas:[]
     }
   },
   computed:{
-
+     addhlink:function(){
+       return "http://easyhome.applinzi.com/public/index.php/admin/recordcontroll/add/type/"+this.$route.params.type+"/rid/"+this.$route.params.rid;
+     }
   },
   created: function () {
     this.$route.params.type==="e"?(this.pagetitle="用电记录",this.theadtitle="电表读数"):(this.pagetitle="用水记录",this.theadtitle="水表读数")
-    this.ajax("GET","http://easyhome.applinzi.com/public/index.php/admin/recordcontroll/index/type/e/rid/5",this.get);
+    this.ajax("GET","http://easyhome.applinzi.com/public/index.php/admin/recordcontroll/index/type/"+this.$route.params.type+"/rid/"+this.$route.params.rid,this.get);
   },
   mounted () {
   this.trigger = this.$refs.addbtn;

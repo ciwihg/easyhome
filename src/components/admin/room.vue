@@ -26,10 +26,10 @@
         <mu-td>{{room.type}}</mu-td>
         <mu-td>{{room.address}}</mu-td>
         <mu-td>
-            <mu-raised-button label="查看" @click="editroom" backgroundColor="blue" :rid="room.rid" />
+            <mu-raised-button label="查看" @click="viewelectric" backgroundColor="blue" :rid="room.rid" />
         </mu-td>
         <mu-td>
-            <mu-raised-button label="查看" @click="editroom" backgroundColor="blue" :rid="room.rid" />
+            <mu-raised-button label="查看" @click="viewwater" backgroundColor="blue" :rid="room.rid" />
         </mu-td>
         <mu-td>
           <mu-raised-button class="demo-raised-button" label="编辑" icon="create" @click="editroom" backgroundColor="blue" :rid="room.rid" style="vertical-align:middle;"/>
@@ -97,6 +97,16 @@ methods:{
   editroom:function(e){
     var rid=e.target.parentNode.parentNode.getAttribute("rid");
     this.$router.push({ name: 'roomedit', params: { rid: rid }});
+  },
+  viewelectric:function(e){
+    var rid=e.target.parentNode.parentNode.getAttribute("rid");
+    this.$router.push({ name: 'roomrecord', params: { rid: rid, type:"e"}});
+
+  },
+  viewwater:function(e){
+    var rid=e.target.parentNode.parentNode.getAttribute("rid");
+    this.$router.push({ name: 'roomrecord', params: { rid: rid, type:"w" }});
+
   }
 }
 }
