@@ -7,16 +7,20 @@
         <span>{{datas[1]}}</span>
 
     <div  style="float:right; margin-top:0px; margin-right:15px;">
-     <div style="position:relative; display:inline-block" ref="addbtn" @mouseenter="hover" @mouseleave="hovere" v-if="showall">
+     <div style="position:relative; display:inline-block" ref="addbtn" @mouseenter="hover" @mouseleave="hovere" v-if="showview">
     <mu-float-button icon="add" mini secondary  @click="hadd"/>
-    <mu-tooltip label="添加租盘" :show="show"  :trigger="trigger" :verticalPosition="bottom" :horizontalPosition="center" />
+    <mu-tooltip label="添加记录" :show="show"  :trigger="trigger" :verticalPosition="bottom" :horizontalPosition="center" />
     </div>
-    <mu-raised-button  label="保存" v-if="!showall" type="submit" form="roomform" backgroundColor="blue" style="vertical-align:middle;"/>
-    <mu-raised-button  label="取消" v-if="!showall" @click="cancellink" backgroundColor="rgb(180,180,180)"  style="vertical-align:middle;"/>
+    <div style="position:relative; display:inline-block" ref="returnbtn" @mouseenter="hoverr" @mouseleave="hoverre" v-if="showview">
+   <mu-float-button icon="keyboard_arrow_left"  href="#/adminhome/room" mini secondary backgroundColor="#9e9e9e" />
+   <mu-tooltip label="返回" :show="showr"  :trigger="triggerr" :verticalPosition="bottom" :horizontalPosition="center" />
+   </div>
+    <mu-raised-button  label="保存" v-if="showadd|showedit" type="submit" :form="roomform" backgroundColor="blue" style="vertical-align:middle;"/>
+    <mu-raised-button  label="取消" v-if="showadd|showedit" @click="cancellink" backgroundColor="rgb(180,180,180)"  style="vertical-align:middle;"/>
   </div>
   </div>
     </div>
-  <mu-table :showCheckbox="false" v-if="showall">
+  <mu-table :showCheckbox="false" v-if="showview">
     <mu-thead>
       <mu-tr>
         <mu-th>{{theadtitle}}</mu-th>
@@ -30,17 +34,24 @@
         <mu-td>{{record.time}}</mu-td>
         <mu-td>
           <mu-raised-button class="demo-raised-button" label="编辑" icon="create" @click="editroom" backgroundColor="blue" :id="record.id" style="vertical-align:middle;"/>
-          <mu-raised-button class="demo-raised-button" label="删除" icon="delete" backgroundColor="red" @click="deleteroom" :id="record.id" style="vertical-align:middle;"/>
+          <mu-raised-button class="demo-raised-button" label="删除" icon="delete" backgroundColor="red" @click="deleterecord" :id="record.id" style="vertical-align:middle;"/>
         </mu-td>
       </mu-tr>
      </mu-tbody>
   </mu-table>
 
-  <form style="padding-left:15px; padding-right:15px;" id="roomform" :action="addhlink" method="POST" v-if="!showall">
+  <form style="padding-left:15px; padding-right:15px;" id="roomform" :action="addhlink" method="POST" v-if="showadd">
   <mu-text-field label="读数" name="value" fullWidth="true" labelFloat/></br>
   <input name="time"  :value="time"  style="display:none;" />
   <mu-date-picker v-model="time"  hintText="日期"/>
  </form>
+
+ <form style="padding-left:15px; padding-right:15px;" id="edit" :action="edithlink" method="POST" v-if="showedit">
+ <mu-text-field label="读数" name="value" v-model="value" fullWidth="true" /></br>
+ <input name="time"  :value="time"  style="display:none;" />
+  <div style="color:#bdbdbd;">日期</div>
+ <mu-date-picker v-model="time"  hintText="日期"/>
+</form>
 
 </div>
 </template>
@@ -51,19 +62,33 @@ export default{
   data:function(){
     return{
       show:false,
+      showr:false,
       trigger:null,
-      center:'center',
+      triggerr:null,
+      center:'right',
       bottom:"bottom",
       pagetitle:"",
       theadtitle:"",
-      showall:true,
+      showstatus:4,
+      roomform:"roomform",
       time:"",
+      value:"",
+      edithlink:"",
       datas:[]
     }
   },
   computed:{
      addhlink:function(){
        return "http://easyhome.applinzi.com/public/index.php/admin/recordcontroll/add/type/"+this.$route.params.type+"/rid/"+this.$route.params.rid;
+     },
+     showview:function(){
+       return (this.showstatus>>2)&1;
+     },
+     showadd:function(){
+       return (this.showstatus>>1)&1;
+     },
+     showedit:function(){
+       return this.showstatus&1;
      }
   },
   created: function () {
@@ -72,6 +97,7 @@ export default{
   },
   mounted () {
   this.trigger = this.$refs.addbtn;
+  this.triggerr = this.$refs.returnbtn;
 },
   methods:{
     ajax:function(method,url,fun){
@@ -95,25 +121,45 @@ export default{
       this.datas=respon;
       console.log(respon);
     },
+    deleteget:function(xhr){
+      var respon=JSON.parse(xhr.responseText.substring(0,xhr.responseText.indexOf("<")));
+      this.datas.splice(2,1,respon);
+    },
+    editget:function(xhr){
+      var respon=JSON.parse(xhr.responseText.substring(0,xhr.responseText.indexOf("<")));
+      this.value=respon.value;
+      this.time=respon.time;
+    },
     hover:function(){
       this.show=true;
     },
     hovere:function(){
       this.show=false;
     },
-    deleteroom:function(e){
-      var rid=e.target.parentNode.parentNode.getAttribute("rid");
-      this.ajax("GET","http://easyhome.applinzi.com/public/index.php/admin/roomcontroll/delete/rid/"+rid,this.get);
+    hoverr:function(){
+      this.showr=true;
+    },
+    hoverre:function(){
+      this.showr=false;
+    },
+    deleterecord:function(e){
+      var id=e.target.parentNode.parentNode.getAttribute("id");
+      this.ajax("GET","http://easyhome.applinzi.com/public/index.php/admin/recordcontroll/delete/type/"+this.$route.params.type+"/id/"+id+"/rid/"+this.$route.params.rid,this.deleteget);
     },
     editroom:function(e){
-      var rid=e.target.parentNode.parentNode.getAttribute("rid");
-      this.$router.push({ name: 'roomedit', params: { rid: rid }});
+      this.showstatus=1;
+      var id=e.target.parentNode.parentNode.getAttribute("id");
+      this.edithlink="http://easyhome.applinzi.com/public/index.php/admin/recordcontroll/editsave/type/"+this.$route.params.type+"/id/"+id+"/rid/"+this.$route.params.rid;
+      this.roomform="edit";
+      this.ajax("GET","http://easyhome.applinzi.com/public/index.php/admin/recordcontroll/edit/type/"+this.$route.params.type+"/id/"+id,this.editget);
     },
     hadd:function(){
-      this.showall=false;
+      this.showstatus=2;
+      this.roomform="roomform";
+      this.time="";
     },
     cancellink:function(){
-      this.showall=true;
+      this.showstatus=4;
     }
   }
 }

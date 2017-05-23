@@ -5,7 +5,7 @@
     <div  style="float:right; margin-top:10px; margin-right:15px;">
      <div style="position:relative; display:inline-block" ref="addbtn" @mouseenter="hover" @mouseleave="hovere">
     <mu-float-button icon="add" mini secondary href="#/adminhome/chargeadd"/>
-    <mu-tooltip label="添加费用项目" :show="show"  :trigger="trigger" :verticalPosition="bottom" :horizontalPosition="center" />
+    <mu-tooltip label="添加费用" :show="show"  :trigger="trigger" :verticalPosition="bottom" :horizontalPosition="center" />
     </div>
   </div>
     </div>
