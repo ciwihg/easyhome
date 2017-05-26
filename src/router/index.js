@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Hello from '@/components/Hello'
+import slider from '@/components/slidbanner'
 import adminhome from '@/components/adminhome'
 import room from '@/components/admin/room'
 import roomadd from '@/components/admin/roomadd'
@@ -66,6 +67,11 @@ export default new Router({
           component: chargeedit
         }
       ]
+    },
+    {
+      path:"/slider",
+      name:"slider",
+      component: slider
     }
   ]
 })
