@@ -3,103 +3,28 @@
     <div class="btn_prev" @click="hprev">
     </div>
     <div class="img_wrap" ref="img_wrap" @transitionend="ht">
-    <a href="#" >
-      <img src="static/t1.jpg" />
-      <span>t1</span>
-    </a>
-    <a href="#" >
-      <img src="static/t2.jpg" />
-      <span>t1</span>
-    </a>
-    <a href="#" >
-      <img src="static/t3.jpg" />
-      <span>t1</span>
-    </a>
-    <a href="#" >
-      <img src="static/t4.jpg" />
-      <span>t1</span>
-    </a>
-    <a href="#" >
-      <img src="static/t5.jpg" />
-      <span>t1</span>
-    </a>
-    <a href="#" >
-      <img src="static/t6.jpg" />
-      <span>t1</span>
-    </a>
-    <a href="#" >
-      <img src="static/t7.jpg" />
-      <span>t1</span>
-    </a>
-    <a href="#" >
-      <img src="static/t8.jpg" />
-      <span>t1</span>
-    </a>
-    <a href="#" >
-      <img src="static/t1.jpg" />
-      <span>t1</span>
-    </a>
-    <a href="#" >
-      <img src="static/t2.jpg" />
-      <span>t1</span>
-    </a>
-    <a href="#" >
-      <img src="static/t3.jpg" />
-      <span>t1</span>
-    </a>
-    <a href="#" >
-      <img src="static/t4.jpg" />
-      <span>t1</span>
-    </a>
-    <a href="#" >
-      <img src="static/t5.jpg" />
-      <span>t1</span>
-    </a>
-    <a href="#" >
-      <img src="static/t6.jpg" />
-      <span>t1</span>
-    </a>
-    <a href="#" >
-      <img src="static/t7.jpg" />
-      <span>t1</span>
-    </a>
-    <a href="#" >
-      <img src="static/t8.jpg" />
-      <span>t1</span>
-    </a>
-    <a href="#" >
-      <img src="static/t1.jpg" />
-      <span>t1</span>
-    </a>
-    <a href="#" >
-      <img src="static/t2.jpg" />
-      <span>t1</span>
-    </a>
-    <a href="#" >
-      <img src="static/t3.jpg" />
-      <span>t1</span>
-    </a>
-    <a href="#" >
-      <img src="static/t4.jpg" />
-      <span>t1</span>
-    </a>
-    <a href="#" >
-      <img src="static/t5.jpg" />
-      <span>t1</span>
-    </a>
-    <a href="#" >
-      <img src="static/t6.jpg" />
-      <span>t1</span>
-    </a>
-    <a href="#" >
-      <img src="static/t7.jpg" />
-      <span>t1</span>
-    </a>
-    <a href="#" >
-      <img src="static/t8.jpg" />
-      <span>t1</span>
-    </a>
-  </div>
+          <div  class="item_wrap" v-for="item in datas">
+            <a href="#" >
+              <img :src="item.src" />
+              <div class="mask"></div>
+              <span>{{item.title}}</span>
+            </a>
+          </div>
+          <div  class="item_wrap" v-for="item in datas">
+            <a href="#" >
+              <img :src="item.src" />
+              <div class="mask"></div>
+              <span>{{item.title}}</span>
+            </a>
+          </div>
+          <div  class="item_wrap" v-for="item in datas">
+            <a href="#" >
+              <img :src="item.src" />
+              <div class="mask"></div>
+              <span>{{item.title}}</span>
+            </a>
+          </div>
+    </div>
     <div class="btn_next" @click="hnext">
     </div>
   </div>
@@ -108,21 +33,23 @@
 <script>
 export default{
   name:"slider",
+   props:["datas"],
   data:function(){
     return {
       temp:0,
       lastw:0,
       gapdiff:0,
       transiting:false
-    }
-  },
+
+  }
+},
   mounted:function(){
-    this.lastw=this.temp=(parseInt(window.innerWidth)-parseInt(parseInt(window.innerWidth)/515)*515)/2;
+    this.lastw=this.temp=(parseInt(this.$el.offsetWidth)-parseInt(parseInt(this.$el.offsetWidth)/515)*515)/2;
     this.temp=this.temp-8*515;
     this.$refs.img_wrap.style.transform="translate3d("+this.temp+"px, 0px, 0px)";
     var that=this;
     window.onresize=function(){
-      that.gapdiff=(parseInt(window.innerWidth)-parseInt(parseInt(window.innerWidth)/515)*515)/2;
+      that.gapdiff=(parseInt(that.$el.offsetWidth)-parseInt(parseInt(that.$el.offsetWidth)/515)*515)/2;
     }
   },
   methods:{
@@ -177,17 +104,46 @@ export default{
 </script>
 
 <style scoped>
-a{
+.item_wrap{
 float:left;
 display: inline-block;
 width:515px;
 height:290px;
 }
-span{
+.item_wrap>a{
   display: inline-block;
   width:100%;
-  height:30px;
+  height:100%;
+  position:relative;
+}
+.item_wrap>a>span{
+  display: inline-block;
+  width:100%;
+  height:80px;
+  left:0px;
+  bottom:0px;
+  background:linear-gradient(to top,rgba(0,0,0,0.9), transparent);
+  position:absolute;
+  text-align: center;
+  font-size: 30px;
+  color:white;
+  line-height: 80px;
+  z-index: 2;
+}
+.mask{
+  display: inline-block;
+  width:100%;
+  height:100%;
   position: absolute;
+  z-index: 1;
+  left:0px;
+  top:0px;
+  background-color: rgba(0,0,0,.5);
+  opacity: 0;
+  transition: opacity 400ms cubic-bezier(0.25,0.46,0.45,0.94);
+}
+.mask:hover{
+  opacity: 1;
 }
 .img_wrap{
   position: relative;
