@@ -1,6 +1,7 @@
 <template>
   <div class="wrap">
     <div class="btn_prev" @click="hprev">
+      <i class="material-icons arrow">navigate_before</i>
     </div>
     <div class="img_wrap" ref="img_wrap" @transitionend="ht">
           <div  class="item_wrap" v-for="item in datas">
@@ -26,6 +27,7 @@
           </div>
     </div>
     <div class="btn_next" @click="hnext">
+      <i class="material-icons arrow">navigate_next</i>
     </div>
   </div>
 </template>
@@ -104,6 +106,11 @@ export default{
 </script>
 
 <style scoped>
+.arrow{
+  font-size: 40px !important;
+  color:white;
+  vertical-align: middle;
+}
 .item_wrap{
 float:left;
 display: inline-block;
@@ -160,6 +167,8 @@ height:290px;
   display: inline-block;
   width: 50px;
   height: 290px;
+  text-align: center;
+  line-height: 290px;
   background-color: rgba(0,0,0,.5);
 }
 .btn_prev{

@@ -15,16 +15,24 @@
     </span>
    </div>
   </div>
-  <m-slider :datas="tdatas"></m-slider>
+
+  <div class="nb_wrap">
+    <m-navbar class="navbar"></m-navbar>
+    <div style="margin-left:200px;   margin-top: 50px;">
+     <m-slider :datas="tdatas"  class="banner"></m-slider>
+   </div>
+  </div>
 </div>
 </template>
 
 <script>
 import slidbanner from '@/components/slidbanner'
+import stacknavbar from '@/components/stacknavbar'
 export default{
   name:"slider",
   components:{
-    "m-slider":slidbanner
+    "m-slider":slidbanner,
+    "m-navbar":stacknavbar
   },
   data:function(){
     return {
@@ -117,5 +125,16 @@ export default{
   display: inline-block;
   height: 100%;
   vertical-align: middle;
+}
+.nb_wrap{
+  position: relative;
+}
+.navbar{
+  position: absolute !important;
+  left: 0px;
+  top:-50px;
+}
+.banner{
+
 }
 </style>
