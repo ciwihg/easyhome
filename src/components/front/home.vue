@@ -17,10 +17,36 @@
   </div>
 
   <div class="nb_wrap">
-    <m-navbar class="navbar"></m-navbar>
-    <div style="margin-left:200px;   margin-top: 50px;">
+    <m-navbar class="navbar" :color="color" :datas="navdatas"></m-navbar>
+    <div style="margin-left:200px; background-color:white;">
      <m-slider :datas="tdatas"  class="banner"></m-slider>
    </div>
+  </div>
+
+  <div style="background-color:#ede7f6; height:100%; width:80%; overflow:hidden; height:300px;">
+    <div>
+      <span style="font-size:23px;">最近出租</span>
+    </div>
+    <div class="item" v-for="n in 10">
+      <a href="#" >
+      <img src="static/img.jpg"/>
+      <div class="mask"></div>
+      </a>
+      <div style="padding:10px 12px; background-color:white;">
+      <span style="line-height:1;font-size:18px; color:rgb(72,72,72); ">301房</span></br>
+      <span style="line-height:1; font-size:14px; color:rgb(133,133,133);">朝阳巷5号</span>
+      <div style="margin-top:25px;">
+        <i class="material-icons iconsize">star</i>
+        <i class="material-icons iconsize">star</i>
+        <i class="material-icons iconsize">star</i>
+        <i class="material-icons iconsize">star</i>
+        <i class="material-icons iconsize">star</i>
+        <span style="float:right; display:inline-block; line-height:1; color:#ff5722;">光线</span>
+      </div>
+      </div>
+     </div>
+
+
   </div>
 </div>
 </template>
@@ -53,7 +79,83 @@ export default{
                title:"细节图7"},
                {src:"static/t8.jpg",
                 title:"细节图8"}
-    ]
+    ],
+    color:["rgb(68,68,68)",
+    "rgb(104,159,56)",
+    "rgb(237,59,59)",
+    "rgb(239,108,0)",
+    "rgb(3,155,229)",
+    "rgb(83,109,254)"
+  ],
+  navdatas:[
+    {content:"首页",
+     color:"rgb(68,68,68)",
+     link:"",
+     submenu:[
+     ]
+    },
+    {content:"二房一厅",
+     color:"rgb(104,159,56)",
+     link:"",
+     submenu:[
+       {content:"最新出租",
+       link:""},
+       {content:"特价出租",
+       link:""},
+       {content:"热销户型",
+       link:""}
+     ]
+    },
+    {content:"一房一厅",
+     color:"rgb(237,59,59)",
+     link:"",
+     submenu:[
+       {content:"最新出租",
+       link:""},
+       {content:"特价出租",
+       link:""},
+       {content:"热销户型",
+       link:""}
+     ]
+    },
+
+    {content:"优惠活动",
+     color:"rgb(3,155,229)",
+     link:"",
+     submenu:[
+       {content:"最新出租",
+       link:""},
+       {content:"特价出租",
+       link:""},
+       {content:"热销户型",
+       link:""}
+     ]
+    },
+    {content:"促销活动",
+     color:"rgb(0,155,29)",
+     link:"",
+     submenu:[
+       {content:"最新出租",
+       link:""},
+       {content:"特价出租",
+       link:""},
+       {content:"热销户型",
+       link:""}
+     ]
+    },
+    {content:"测试",
+     color:"rgb(0,15,29)",
+     link:"",
+     submenu:[
+       {content:"测试1",
+       link:""},
+       {content:"测试2",
+       link:""},
+       {content:"测试3",
+       link:""}
+     ]
+    }
+  ]
 
     }
   }
@@ -128,13 +230,43 @@ export default{
 }
 .nb_wrap{
   position: relative;
+  padding-top: 50px;
+  background-color: #ede7f6;
 }
 .navbar{
   position: absolute !important;
   left: 0px;
-  top:-50px;
+  top:0px;
 }
 .banner{
 
+}
+.iconsize{
+  font-size: 10px;
+  color:rgb(115,115,115);
+}
+.item{
+  display:inline-block;
+  width:160px;
+  margin-left:10px;
+  line-height:0;box-shadow:0px 2px 4px rgba(0,0,0,0.1);
+  float:left;
+}
+.item>a{
+  display:inline-block;
+  position: relative;
+}
+.mask{
+  position: absolute;
+  left:0px;
+  top:0px;
+  width:100%;
+  height:100%;
+  opacity: 0;
+  transition: opacity 400ms cubic-bezier(0.25,0.46,0.45,0.94);
+}
+.item:hover .mask{
+  background-color: rgba(0,0,0,0.3);
+  opacity: 1
 }
 </style>

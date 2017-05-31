@@ -1,117 +1,45 @@
 <template>
   <div class="wraper">
     <div class="head_active_wrap">
-      <div class="head_active" ref="h1">
+      <div class="head_active" v-for="(data,index) in datas" :style="{backgroundColor:data.color}" :ref="'he'+index">
         <a href="#">
-        <div class="itemhead"></div>
-        <span>item1</span>
+        <div class="itemhead" :style="{backgroundColor:data.color}"></div>
+        <span>{{data.content}}</span>
         </a>
       </div>
-      <div class="head_active" ref="h2">
-        <a href="#">
-        <div class="itemhead"></div>
-        <span>item2</span>
-        </a>
-      </div>
-      <div class="head_active" ref="h3">
-        <a href="#">
-        <div class="itemhead"></div>
-        <span>item3</span>
-        </a>
-      </div>
-      <div class="head_active" ref="h4">
-        <a href="#">
-        <div class="itemhead"></div>
-        <span>item4</span>
-        </a>
-      </div>
-      <div class="head_active" ref="h5">
-        <a href="#">
-        <div class="itemhead"></div>
-        <span>item5</span>
-        </a>
-      </div>
-      <div class="head_active" ref="h6">
-        <a href="#">
-        <div class="itemhead"></div>
-        <span>item6</span>
-        </a>
-      </div>
+
     </div>
-    <div style="position:relative; height:300px; background-color:rgb(245,245,245); width:100%;">
+    <div class="sub_wrap" :style="{height:cheight}">
 
 
-      <div class="sub_slidbar" @mouseenter="hsh">&lt;</div>
+        <div class="sub_slidbar" :style="{height:cheight}" @mouseenter="hsh">&lt;</div>
 
 
-    <ul class="nav_ul nav_ul_n" ref="navul" @transitionend="hre">
-      <li class="nav_item" ref="li2" index="2" @click="t">
-        <a href="#" index="2">
-        <div class="itemhead" index="2"></div>
-        <span index="2">item2</span>
-        </a>
-      </li>
-      <li class="nav_item" ref="li3" index="3" @click="t">
-        <a href="#" index="3">
-        <div class="itemhead" index="3"></div>
-        <span index="3">item3</span>
-        </a>
-      </li>
-      <li class="nav_item" ref="li4" index="4" @click="t" >
-        <a href="#" index="4">
-        <div class="itemhead" index="4"></div>
-        <span index="4">item4</span>
-        </a>
-      </li>
-      <li class="nav_item" ref="li5" index="5" @click="t">
-        <a href="#" index="5">
-        <div class="itemhead" index="5"></div>
-        <span index="5">item5</span>
-        </a>
-      </li>
-      <li class="nav_item" ref="li6" index="6" @click="t" >
-        <a index="6" href="#">
-        <div class="itemhead" index="6"></div>
-        <span index="6">item6</span>
-        </a>
-      </li>
-      <li class="nav_item" ref="li1" index="1" @click="t">
-        <a href="#" index="1">
-        <div class="itemhead" index="1"></div>
-        <span index="1">item1</span>
-        </a>
-      </li>
-    </ul>
+        <ul class="nav_ul nav_ul_n" ref="navul" @transitionend="hre" >
+          <li class="nav_item" :ref="'li'+(index+1)" :index="index+2" v-for="(data,index) in listdatas" @click="t" @mouseenter="hcolorc" @mouseleave="ehcolorc" hstatus="0">
+            <a href="#" :index="index+2">
+            <div class="itemhead" :index="index+2" :style="{backgroundColor:data.color}"></div>
+            <span :index="index+2">{{data.content}}</span>
+            </a>
+          </li>
+
+          <li class="nav_item" :ref="'li'+0" index="1" @click="t" @mouseenter="hcolorc" @mouseleave="ehcolorc">
+            <a href="#" index="1">
+            <div class="itemhead" index="1" :style="{backgroundColor:datas[0].color}"></div>
+            <span index="1">{{datas[0].content}}</span>
+            </a>
+          </li>
+        </ul>
 
 
 
 
 
-    <ul class="sub_menu" ref="submenu2">
-      <li><a href="#">我的应用2</a></li>
-      <li><a href="#">商店</a></li>
-      <li><a href="#">市场</a></li>
-    </ul>
-    <ul class="sub_menu" ref="submenu3">
-      <li><a href="#">我的应用3</a></li>
-      <li><a href="#">商店</a></li>
-      <li><a href="#">市场</a></li>
-    </ul>
-    <ul class="sub_menu" ref="submenu4">
-      <li><a href="#">我的应用4</a></li>
-      <li><a href="#">商店</a></li>
-      <li><a href="#">市场</a></li>
-    </ul>
-    <ul class="sub_menu" ref="submenu5">
-      <li><a href="#">我的应用5</a></li>
-      <li><a href="#">商店</a></li>
-      <li><a href="#">市场</a></li>
-    </ul>
-    <ul class="sub_menu" ref="submenu6">
-      <li><a href="#">我的应用6</a></li>
-      <li><a href="#">商店</a></li>
-      <li><a href="#">市场</a></li>
-    </ul>
+      <ul class="sub_menu" v-for="(data,index) in listdatas" :ref="'submenu'+index">
+        <li v-for="item in data.submenu"><a href="#">{{item.content}}</a></li>
+      </ul>
+
+
   </div>
   </div>
 </template>
@@ -119,6 +47,7 @@
 <script>
 export default{
   name:"stacknavbar",
+  props:["color","width","datas"],
   data:function(){
     return{
       active:0,
@@ -128,13 +57,26 @@ export default{
       submenus:[]
     }
   },
+  computed:{
+    cheight:function(){
+      return 50*this.datas.length+"px";
+    },
+    listdatas:function(){
+      var listdata=this.datas.slice();
+         listdata.shift();
+      return listdata;
+    }
+  },
   methods:{
     t:function(e){
       this.heads[this.lastactive-1].style.display="none";//头部条变空白
       this.active=parseInt(e.target.getAttribute("index"));//获取激活栏目的索引
       for(var i=0;i<this.lis.length;i++){   //只显示激活栏目
         if(i==(this.active-1)){
-          this.lis[i].className="nav_item nav_itemfh"; //强制hover样式
+          this.lis[i].setAttribute("hstatus","1");
+          this.lis[i].style.backgroundColor=this.datas[this.active-1].color; //强制hover样式
+          this.lis[i].className="nav_item nav_itemfh";
+          this.$refs.navul.className="nav_ul nav_ul_fh";
           this.lis[i].style.opacity="1"; //显示需要向上浮动的栏目
         }else{
           this.lis[i].style.opacity="0";//隐藏其他不需要向上浮动的栏目
@@ -146,6 +88,7 @@ export default{
          top=0-(this.active-1)*50+"px";
       }
       else if(this.active==1){  //其他状态转换到初始状态
+        this.submenus[this.lastactive-2].style.display="none";
         this.submenus[this.lastactive-2].style.marginTop="35px";
         this.submenus[this.lastactive-2].style.height="0px";
          top=0-(this.lis.length-1)*50+"px";
@@ -165,6 +108,8 @@ export default{
           if(i==(this.active-1)){
             this.heads[i].style.display="block";
             this.lis[i].style.display="none";
+            this.lis[i].style.backgroundColor="white";
+            this.lis[i].setAttribute("hstatus","0");
             this.lis[i].style.opacity="1";
           }else{
             this.heads[i].style.display="none";
@@ -193,20 +138,39 @@ export default{
   hsh:function(e){
     this.$refs.navul.style.transition="all .5s"; //开启过渡效果
     this.$refs.navul.className="nav_ul nav_ul_n";//应用hover弹出样式
+  },
+  hcolorc:function(e){
+    var index=parseInt(e.target.getAttribute("index"));
+    e.target.style.backgroundColor=this.datas[index-1].color;
+  },
+  ehcolorc:function(e){
+    var status=e.target.getAttribute("hstatus");
+    (status=="0")&&(e.target.style.backgroundColor="white")
   }
   },
   mounted: function() {
-    this.lis=[this.$refs.li1,this.$refs.li2,this.$refs.li3,this.$refs.li4,this.$refs.li5,this.$refs.li6];
-    this.heads=[this.$refs.h1,this.$refs.h2,this.$refs.h3,this.$refs.h4,this.$refs.h5,this.$refs.h6];
-    this.submenus=[this.$refs.submenu2,this.$refs.submenu3,this.$refs.submenu4,this.$refs.submenu5,this.$refs.submenu6];
-    this.heads[0].style.display="block";
-    this.$refs.li1.style.display="none";
+
+    for(var i=0; i<this.datas.length;i++){
+      this.heads[i]=this.$refs["he"+i][0];
+      this.lis[i]=this.$refs["li"+i][0]?this.$refs["li"+i][0]:this.$refs["li"+i];
+      this.submenus[i]=this.$refs["submenu"+i]?this.$refs["submenu"+i][0]:this.$refs["submenu"+i];
+    }
+  //  this.lis=[this.$refs.li1,this.$refs.li2,this.$refs.li3,this.$refs.li4,this.$refs.li5,this.$refs.li6];
+  //  this.heads=[this.$refs.h1,this.$refs.h2,this.$refs.h3,this.$refs.h4,this.$refs.h5,this.$refs.h6];
+  //this.submenus=[this.$refs.submenu2,this.$refs.submenu3,this.$refs.submenu4,this.$refs.submenu5,this.$refs.submenu6];
+      this.heads[0].style.display="block";
+     this.lis[0].style.display="none";
     this.$refs.navul.className="nav_ul nav_ul_n nav_ul_ostatus";
   }
 }
 </script>
 
 <style scoped>
+.sub_wrap{
+  position:relative;
+  background-color:rgb(245,245,245);
+  width:100%;
+}
 .wraper{
    box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.3);
    display: inline-block;
@@ -250,7 +214,9 @@ export default{
   height:250px;
   margin-top: 50px;
 }
-
+.nav_ul_fh{
+    left:0px !important;
+}
 .nav_ul_n:hover{
     left:0px;
 }
@@ -266,14 +232,9 @@ export default{
   position: relative;
   background-color: white;
 }
-.nav_item:hover{
-  background-color: #9c27b0;
-}
+
 .nav_item:hover a span{
   color:white;
-}
-.nav_itemfh{
-  background-color: #9c27b0 !important;
 }
 .nav_itemfh span{
   color:white !important;
@@ -325,13 +286,13 @@ export default{
 .sub_slidbar{
   display:inline-block;
    width:25px;
-   height:300px;
+   height:250px;
    background-color:white;
    font-size: 15px;
    font-weight: bold;
    text-align: center;
    vertical-align: top;
-   line-height: 300px;
+   line-height: 250px;
    float:left;
 }
 .sub_slidbar:hover+.nav_ul_n{
