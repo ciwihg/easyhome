@@ -175,10 +175,11 @@ export default{
    box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.3);
    display: inline-block;
    position: relative;
+   background-color:rgb(255,255,255);
    width:200px;
 }
 .head_active_wrap{
-  width:200px;
+  width:100%;
   height: 50px;
   position: absolute;
   left: 0px;
@@ -196,7 +197,7 @@ export default{
   z-index: 1;
 }
 .head_active span{
-  font-size: 20px;
+  font-size: 18px;
   display: inline-block;
   height: 50px;
   vertical-align: top;
@@ -245,7 +246,7 @@ export default{
   height:100%;
 }
 .nav_item span{
-  font-size: 20px;
+  font-size: 18px;
   display: inline-block;
   height: 50px;
   vertical-align: top;

@@ -23,28 +23,12 @@
    </div>
   </div>
 
-  <div style="background-color:#ede7f6; height:100%; width:80%; overflow:hidden; height:300px;">
-    <div>
-      <span style="font-size:23px;">最近出租</span>
-    </div>
-    <div class="item" v-for="n in 10">
-      <a href="#" >
-      <img src="static/img.jpg"/>
-      <div class="mask"></div>
-      </a>
-      <div style="padding:10px 12px; background-color:white;">
-      <span style="line-height:1;font-size:18px; color:rgb(72,72,72); ">301房</span></br>
-      <span style="line-height:1; font-size:14px; color:rgb(133,133,133);">朝阳巷5号</span>
-      <div style="margin-top:25px;">
-        <i class="material-icons iconsize">star</i>
-        <i class="material-icons iconsize">star</i>
-        <i class="material-icons iconsize">star</i>
-        <i class="material-icons iconsize">star</i>
-        <i class="material-icons iconsize">star</i>
-        <span style="float:right; display:inline-block; line-height:1; color:#ff5722;">光线</span>
-      </div>
-      </div>
-     </div>
+  <div style="background-color:rgb(238,238,238); padding-left:243px; padding-top:60px; ">
+    <m-goodrow></m-goodrow>
+    <m-goodrow></m-goodrow>
+    <m-goodrow></m-goodrow>
+    <m-goodrow></m-goodrow>
+    <m-goodrow></m-goodrow>
 
 
   </div>
@@ -54,11 +38,13 @@
 <script>
 import slidbanner from '@/components/slidbanner'
 import stacknavbar from '@/components/stacknavbar'
+import goodp from '@/components/goodp'
 export default{
   name:"slider",
   components:{
     "m-slider":slidbanner,
-    "m-navbar":stacknavbar
+    "m-navbar":stacknavbar,
+    "m-goodrow":goodp
   },
   data:function(){
     return {
@@ -107,7 +93,7 @@ export default{
      ]
     },
     {content:"一房一厅",
-     color:"rgb(237,59,59)",
+     color:"rgb(239,108,0)",
      link:"",
      submenu:[
        {content:"最新出租",
@@ -132,7 +118,7 @@ export default{
      ]
     },
     {content:"促销活动",
-     color:"rgb(0,155,29)",
+     color:"rgb(83,109,254)",
      link:"",
      submenu:[
        {content:"最新出租",
@@ -144,7 +130,7 @@ export default{
      ]
     },
     {content:"测试",
-     color:"rgb(0,15,29)",
+     color:"rgb(101,128,146)",
      link:"",
      submenu:[
        {content:"测试1",
@@ -166,7 +152,7 @@ export default{
 .header{
   width:100%;
   height:60px;
-  background-color: #ede7f6;
+  background-color: rgb(238,238,238);
 }
 .header::before{
   content: "";
@@ -231,7 +217,7 @@ export default{
 .nb_wrap{
   position: relative;
   padding-top: 50px;
-  background-color: #ede7f6;
+  background-color: rgb(238,238,238);
 }
 .navbar{
   position: absolute !important;
@@ -241,32 +227,5 @@ export default{
 .banner{
 
 }
-.iconsize{
-  font-size: 10px;
-  color:rgb(115,115,115);
-}
-.item{
-  display:inline-block;
-  width:160px;
-  margin-left:10px;
-  line-height:0;box-shadow:0px 2px 4px rgba(0,0,0,0.1);
-  float:left;
-}
-.item>a{
-  display:inline-block;
-  position: relative;
-}
-.mask{
-  position: absolute;
-  left:0px;
-  top:0px;
-  width:100%;
-  height:100%;
-  opacity: 0;
-  transition: opacity 400ms cubic-bezier(0.25,0.46,0.45,0.94);
-}
-.item:hover .mask{
-  background-color: rgba(0,0,0,0.3);
-  opacity: 1
-}
+
 </style>
