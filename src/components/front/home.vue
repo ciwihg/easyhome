@@ -1,5 +1,5 @@
 <template>
-<div>
+<!--<div>
   <div class="header">
     <span class="logotext">EasyHome</span>
     <form class="searchbox">
@@ -14,14 +14,14 @@
       C
     </span>
    </div>
-  </div>
+ </div>
 
   <div class="nb_wrap">
     <m-navbar class="navbar" :color="color" :datas="navdatas"></m-navbar>
     <div style="margin-left:200px; background-color:white;">
      <m-slider :datas="tdatas"  class="banner"></m-slider>
    </div>
-  </div>
+ </div>
 
   <div style="background-color:rgb(238,238,238); padding-left:243px; padding-top:60px; ">
     <m-goodrow></m-goodrow>
@@ -31,7 +31,8 @@
     <m-goodrow></m-goodrow>
 
 
-  </div>
+  </div>-->
+  <m-mslider></m-mslider>
 </div>
 </template>
 
@@ -39,12 +40,14 @@
 import slidbanner from '@/components/slidbanner'
 import stacknavbar from '@/components/stacknavbar'
 import goodp from '@/components/goodp'
+import mobileslider from '@/components/mobileslider'
 export default{
   name:"slider",
   components:{
     "m-slider":slidbanner,
     "m-navbar":stacknavbar,
-    "m-goodrow":goodp
+    "m-goodrow":goodp,
+    "m-mslider":mobileslider
   },
   data:function(){
     return {
