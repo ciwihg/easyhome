@@ -1,6 +1,6 @@
 <template>
-<!--<div>
-  <div class="header">
+<div>
+  <!--<div class="header">
     <span class="logotext">EasyHome</span>
     <form class="searchbox">
     <div style="height:100%">
