@@ -11,6 +11,8 @@ import chargeadd from '@/components/admin/chargeadd'
 import chargeedit from '@/components/admin/chargeedit'
 import datacenter from '@/components/admin/datacenter'
 import roomrecord from '@/components/admin/roomrecord'
+import mobilehome from '@/components/front/mobilehome'
+import mdetail from '@/components/mdetail'
 import MuseUI from 'muse-ui'
 import 'muse-ui/dist/muse-ui.css'
 
@@ -73,5 +75,16 @@ export default new Router({
       name:"home",
       component: home
     },
+    {
+      path:"/m",
+      name:"mobilehome",
+      component: mobilehome,
+    },
+    {
+      path:"/room/:id",
+      name:"mdetail",
+      component: mdetail
+    }
+
   ]
 })

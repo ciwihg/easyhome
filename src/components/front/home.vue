@@ -1,6 +1,6 @@
 <template>
 <div>
-  <!--<div class="header">
+<div class="header">
     <span class="logotext">EasyHome</span>
     <form class="searchbox">
     <div style="height:100%">
@@ -31,8 +31,8 @@
     <m-goodrow></m-goodrow>
 
 
-  </div>-->
-  <m-mslider></m-mslider>
+  </div>
+
 </div>
 </template>
 
@@ -41,13 +41,15 @@ import slidbanner from '@/components/slidbanner'
 import stacknavbar from '@/components/stacknavbar'
 import goodp from '@/components/goodp'
 import mobileslider from '@/components/mobileslider'
+import mgoodp from '@/components/mgoodp'
 export default{
   name:"slider",
   components:{
     "m-slider":slidbanner,
     "m-navbar":stacknavbar,
     "m-goodrow":goodp,
-    "m-mslider":mobileslider
+    "m-mslider":mobileslider,
+    "m-mgoodp":mgoodp
   },
   data:function(){
     return {
