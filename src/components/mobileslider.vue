@@ -94,10 +94,10 @@ export default{
       if(this.tdistance>0){
         var offset;
         if(this.tactive==1||this.tactive==6){
-          offset=313;
+          offset=window.innerWidth*0.76;
         }
         else{
-          offset=346;
+          offset=window.innerWidth*0.84;
         }
 
         (Math.abs(this.tdistance)>=100)?(this.$refs.itemwrap.style.transform="translate3d("+(this.offsets-offset)+"px,0,0)",this.offsets=this.offsets-offset,this.tactive++):(this.$refs.itemwrap.style.transform="translate3d("+this.offsets+"px,0,0)")
@@ -105,10 +105,10 @@ export default{
       else if(this.tdistance<0){
         var offset;
         if(this.tactive==2||this.tactive==7){
-          offset=313;
+          offset=window.innerWidth*0.76;
         }
         else{
-          offset=346;
+          offset=window.innerWidth*0.84;
         }
         (Math.abs(this.tdistance)>=100)?(this.$refs.itemwrap.style.transform="translate3d("+(this.offsets+offset)+"px,0,0)",this.offsets=this.offsets+offset,this.tactive--):(this.$refs.itemwrap.style.transform="translate3d("+this.offsets+"px,0,0)")
       }
@@ -122,6 +122,7 @@ export default{
   width:1000%;
   overflow: hidden;
   left:0px;
+  padding:15px 0px;
   position: relative;
   transition: transform 400ms;
 }
@@ -135,11 +136,13 @@ export default{
    width:8%;
    margin-left: 0.2%;
    margin-right:0.2%;
-   box-shadow: 0px 0px 15px rgba(0,0,0,0.2);
+   box-shadow: 0px 4px 15px rgba(0,0,0,0.2);
+   border-radius:5px;
+   overflow: hidden;
 }
 .item img{
   width: 100%;
-  border-radius:5px;
+  vertical-align: top;
 }
 .item>a{
   display: inline-block;
@@ -148,7 +151,6 @@ export default{
 }
 .mask{
    width:100%;
-   height:100%;
    position:absolute;
    left:0px;
    top:0px;

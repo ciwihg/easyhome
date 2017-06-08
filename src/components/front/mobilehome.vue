@@ -1,5 +1,15 @@
 <template>
   <div class="content_wrap">
+    <mu-drawer :open="open" :docked="docked"  @close="toggle">
+     <mu-list>
+       <mu-list-item title="Menu Item 1"/>
+       <mu-list-item title="Menu Item 2"/>
+       <mu-list-item title="Menu Item 3"/>
+     </mu-list>
+   </mu-drawer>
+   <mu-appbar title="Easyhome">
+   <mu-icon-button icon="menu" slot="left" @click="open=!open"/>
+   </mu-appbar>
     <m-mslider></m-mslider>
     <div class="nav_bar">
       <span class="nav_item" style="background-color:rgb(237,59,59);">影视</span>
@@ -36,7 +46,13 @@ export default{
   },
   data:function(){
     return {
-
+      open:true,
+      docked:false
+    }
+  },
+  methods:{
+    toggle:function(){
+      this.open=!this.open;
     }
   }
 }
