@@ -11,6 +11,8 @@ import chargeadd from '@/components/admin/chargeadd'
 import chargeedit from '@/components/admin/chargeedit'
 import datacenter from '@/components/admin/datacenter'
 import roomrecord from '@/components/admin/roomrecord'
+import carousel from '@/components/admin/carousel'
+import carouseladd from '@/components/admin/carouseladd'
 import mobilehome from '@/components/front/mobilehome'
 import mdetail from '@/components/mdetail'
 import MuseUI from 'muse-ui'
@@ -67,6 +69,18 @@ export default new Router({
           path: 'chargeedit/:id',
           name: 'chargeedit',
           component: chargeedit
+        }
+        ,
+        {
+          path: 'carousel',
+          name: 'carousel',
+          component: carousel
+        }
+        ,
+        {
+          path: 'carouseladd',
+          name: 'carouseladd',
+          component: carouseladd
         }
       ]
     },

@@ -51,7 +51,7 @@ export default {
 },
 created: function() {
   this.ajax("GET","http://easyhome.applinzi.com/public/index.php/admin/chargecontroll",this.get);
-  this.$emit('start',3);
+  this.$emit('start',4);
 },
 methods:{
   ajax:function(method,url,fun){
