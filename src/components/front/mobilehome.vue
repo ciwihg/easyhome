@@ -10,7 +10,7 @@
    <mu-appbar title="Easyhome">
    <mu-icon-button icon="menu" slot="left" @click="open=!open"/>
    </mu-appbar>
-    <m-mslider></m-mslider>
+    <m-mslider :carouseldatas="homedatas"></m-mslider>
     <div class="nav_bar">
       <span class="nav_item" style="background-color:rgb(237,59,59);">影视</span>
       <span class="nav_item" style="background-color:rgb(239,108,0);">音乐</span>
@@ -46,13 +46,38 @@ export default{
   },
   data:function(){
     return {
-      open:true,
-      docked:false
+      open:false,
+      docked:false,
+      homedatas:[]
     }
+  },
+  created:function(){
+    this.ajax("GET","http://easyhome.applinzi.com/public/index.php/front/Mhome",this.get);
   },
   methods:{
     toggle:function(){
       this.open=!this.open;
+    },
+    ajax:function(method,url,fun){
+      var xhr=new XMLHttpRequest();
+      var that=this;
+      xhr.onreadystatechange=function(){
+        if(xhr.readyState==4){
+          if(xhr.status==200){
+            fun(xhr);
+          }
+          else{
+            alert("ajax失败");
+          }
+        }
+      };
+      xhr.open(method,url,true);
+      xhr.send(null);
+    },
+    get:function(xhr){
+      var respon=JSON.parse(xhr.responseText.substring(0,xhr.responseText.indexOf("<")));
+      this.homedatas=respon;
+      console.log(respon);
     }
   }
 }

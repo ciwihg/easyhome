@@ -13,6 +13,7 @@ import datacenter from '@/components/admin/datacenter'
 import roomrecord from '@/components/admin/roomrecord'
 import carousel from '@/components/admin/carousel'
 import carouseladd from '@/components/admin/carouseladd'
+import carouseledit from '@/components/admin/carouseledit'
 import mobilehome from '@/components/front/mobilehome'
 import mdetail from '@/components/mdetail'
 import MuseUI from 'muse-ui'
@@ -81,6 +82,12 @@ export default new Router({
           path: 'carouseladd',
           name: 'carouseladd',
           component: carouseladd
+        }
+        ,
+        {
+          path: 'carouseledit/:num',
+          name: 'carouseledit',
+          component: carouseledit
         }
       ]
     },

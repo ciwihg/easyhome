@@ -1,52 +1,17 @@
 <template>
   <div @touchstart="ts" @touchmove="tm" @touchend="te">
     <div class="item_wrap" ref="itemwrap">
-    <div class="item">
-      <a href="#">
-        <img src="static/t1.jpg"/>
-        <div class="mask"></div>
-      </a>
-    </div>
 
-    <div class="item">
-      <a href="#">
-        <img src="static/t2.jpg"/>
-        <div class="mask"></div>
-      </a>
-    </div>
-
-    <div class="item">
-      <a href="#">
-        <img src="static/t3.jpg"/>
-        <div class="mask"></div>
-      </a>
-    </div>
-
-    <div class="item">
-      <a href="#">
-        <img src="static/t4.jpg"/>
-        <div class="mask"></div>
-      </a>
-    </div>
-
-    <div class="item">
-      <a href="#">
-        <img src="static/t5.jpg"/>
-        <div class="mask"></div>
-      </a>
-    </div>
-
-    <div class="item">
-      <a href="#">
-        <img src="static/t6.jpg"/>
-        <div class="mask"></div>
-      </a>
-    </div>
-
-    <div class="item">
-      <a href="#">
-        <img src="static/t7.jpg"/>
-        <div class="mask"></div>
+    <div class="item" v-for="(item,index) in carouseldatas">
+      <a :href="item.link">
+        <img :src="item.src"/>
+        <span class="pagetip">{{index+1}}/{{carouseldatas.length}}</span>
+        <div class="mask">
+          <div>
+          <div class="title">{{item.title}}</div>
+          <div class="stitle">{{item.stitle}}</div>
+          </div>
+        </div>
       </a>
     </div>
 
@@ -57,6 +22,7 @@
 <script>
 export default{
   name:"mobileslider",
+  props:["carouseldatas"],
   data:function(){
     return {
       tspos:0,
@@ -82,7 +48,7 @@ export default{
           this.tdistance=0;
           return
         }
-        if(this.tactive==7&&this.tdistance>0){
+        if(this.tactive==this.carouseldatas.length&&this.tdistance>0){
           this.tdistance=0;
           return
         }
@@ -93,7 +59,7 @@ export default{
     te:function(e){
       if(this.tdistance>0){
         var offset;
-        if(this.tactive==1||this.tactive==6){
+        if(this.tactive==1||this.tactive==this.carouseldatas.length-1){
           offset=window.innerWidth*0.76;
         }
         else{
@@ -104,7 +70,7 @@ export default{
       }
       else if(this.tdistance<0){
         var offset;
-        if(this.tactive==2||this.tactive==7){
+        if(this.tactive==2||this.tactive==this.carouseldatas.length){
           offset=window.innerWidth*0.76;
         }
         else{
@@ -152,7 +118,40 @@ export default{
 .mask{
    width:100%;
    position:absolute;
+   height: 60%;
    left:0px;
-   top:0px;
+   bottom:0px;
+   background:linear-gradient(to top,rgba(0,0,0,0.6), transparent);
+}
+.mask>div{
+  display: inline-block;
+  width: 100%;
+  text-align: center;
+  vertical-align: bottom;
+}
+.title{
+ color:white;
+ font-size: 16px;
+}
+.stitle{
+ color:white;
+ font-size: 12px;
+}
+.mask::before{
+  content: "";
+  height: 100%;
+  display: inline-block;
+  vertical-align: bottom;
+}
+.pagetip{
+  display:inline-block;
+  position: absolute;
+  top:10px;
+  right:10px;
+  color: white;
+  background-color: rgba(0,0,0,0.3);
+  padding: 3px 10px;
+  border-radius: 15px;
+  font-size: 10px;
 }
 </style>

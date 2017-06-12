@@ -15,7 +15,7 @@
   <mu-appbar title="Easyhome-Center">
   </mu-appbar>
 
-<router-view @start="hcstart">
+<router-view @start="hcstart" @toedit="ccc" :carouselinfos="carouselinfos">
 </router-view>
 
 </div>
@@ -31,7 +31,8 @@ export default {
       cc:"200",
       show:false,
       trigger:null,
-      listvalue:1
+      listvalue:1,
+      carouselinfos:{}
     }
   },
   mounted () {
@@ -49,6 +50,9 @@ methods:{
   },
   hcstart:function(v){
     this.listvalue=v;
+  },
+  ccc:function(d){
+    this.carouselinfos=d;
   }
 }
 }

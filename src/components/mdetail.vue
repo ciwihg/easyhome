@@ -49,8 +49,8 @@
     </div>
      <div @click="handlemd">了解更多</div>
    </div>
-    <div class="picture_row">
-       <div class="picture_wrap">
+    <div class="picture_row" >
+       <div class="picture_wrap" @touchstart="ts" @touchmove="tm" @touchend="te" ref="imgswrap">
          <img class="pictures" src="static/img.jpg"/>
          <img class="pictures" src="static/img.jpg"/>
          <img class="pictures" src="static/img.jpg"/>
@@ -66,12 +66,81 @@ export default{
   name:"mdetail",
   data:function(){
     return {
-
+      tspos:0,
+      tdistance:0,
+      tactive:1,
+      offsets:0,
+       last:false,
+       lastdistance:0,
+       alreadyleftmove:true
+    }
+  },
+  computed:{
+    perwidth:function(){
+      return window.innerWidth*0.4;
     }
   },
   methods:{
     handlemd:function(){
       this.$refs.markdown.style.height="150px";
+    },
+    ts:function(e){
+      if(e.targetTouches.length==1){
+        var touch=e.targetTouches[0];
+        this.tspos=touch.pageX;
+        this.tdistance=0;
+        console.log(this.tdistance);
+        console.log(this.tactive);
+      }
+    },
+    tm:function(e){
+      if(e.targetTouches.length==1){
+        var touch=e.targetTouches[0];
+        this.tdistance=this.tspos-touch.pageX;
+
+        if(this.tactive==1&&this.tdistance<0){  //第一张右移禁止
+          this.tdistance=0;
+          return
+        }
+        if(this.last&&this.tdistance>0){   //到达最后一张左移禁止
+          if(this.alreadyleftmove)
+          {this.tdistance=0;}
+          return
+        }
+
+          if(this.tdistance>0&&!this.last) //左移
+          {
+            if((5-this.tactive)*this.perwidth<(window.innerWidth-10))//到最后一项的临界点判断
+            {
+              this.lastdistance=(5*(this.perwidth+10))-window.innerWidth-10-Math.abs(this.offsets); //计算到最后一项的位移
+              if(this.tdistance>=50){
+                this.tdistance=this.lastdistance;
+                this.alreadyleftmove=false;
+                this.last=true;
+              }
+            }
+          }
+          this.$refs.imgswrap.style.transform="translate3d("+(this.offsets-this.tdistance)+"px,0,0)";
+      }
+    },
+    te:function(e){
+      if(this.tdistance>0){
+        var offset=this.perwidth+10;
+        if(this.last)
+        { offset=this.lastdistance;
+          this.alreadyleftmove=true;
+          console.log(offset);
+        }
+        (Math.abs(this.tdistance)>=50)?(this.$refs.imgswrap.style.transform="translate3d("+(this.offsets-offset)+"px,0,0)",this.offsets=this.offsets-offset,this.tactive++):(this.$refs.imgswrap.style.transform="translate3d("+this.offsets+"px,0,0)")
+      }
+      else if(this.tdistance<0){
+        var offset=this.perwidth+10;
+        if(this.last)
+        {offset=this.lastdistance;
+        console.log(offset);
+         }
+        (Math.abs(this.tdistance)>=50)?(this.$refs.imgswrap.style.transform="translate3d("+(this.offsets+offset)+"px,0,0)",this.offsets=this.offsets+offset,this.tactive--,this.last=false):(this.$refs.imgswrap.style.transform="translate3d("+this.offsets+"px,0,0)")
+      }
     }
   }
 }
@@ -153,9 +222,12 @@ export default{
   }
   .picture_wrap{
     width:1000%;
+    transition: all 400ms;
   }
+
   .pictures{
     float:left;
-    margin-left:0.2%;
+    margin-right:10px;
+        width:4%;
   }
 </style>

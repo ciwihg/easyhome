@@ -23,7 +23,7 @@
           <mu-td><mu-avatar  style="vertical-align:middle;" :src="item.src"/></mu-td>
           <mu-td>{{item.title}}</mu-td>
           <mu-td>
-            <mu-raised-button class="demo-raised-button" label="编辑" icon="create"  backgroundColor="blue" :num="index" style="vertical-align:middle;"/>
+            <mu-raised-button class="demo-raised-button" label="编辑" icon="create"  backgroundColor="blue" :num="index" @click="heditclick" style="vertical-align:middle;"/>
             <mu-raised-button class="demo-raised-button" label="删除" icon="delete" backgroundColor="red"  :num="index" @click="hclick" style="vertical-align:middle;"/>
           </mu-td>
         </mu-tr>
@@ -72,6 +72,12 @@ export default{
     hclick:function(e){
       var num=e.target.parentNode.parentNode.getAttribute("num");
       this.ajax("GET","http://easyhome.applinzi.com/public/index.php/admin/carouselcontroll/delete/num/"+num,this.get);
+    },
+    heditclick:function(e){
+      var num=parseInt(e.target.parentNode.parentNode.getAttribute("num"));
+      this.$emit("toedit",this.carousels[num]);
+      this.$router.push({ name: 'carouseledit', params: { num: num }});
+
     }
   }
 }
