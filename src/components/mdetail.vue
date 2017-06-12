@@ -56,6 +56,9 @@
          <img class="pictures" src="static/img.jpg"/>
          <img class="pictures" src="static/img.jpg"/>
          <img class="pictures" src="static/img.jpg"/>
+         <img class="pictures" src="static/img.jpg"/>
+         <img class="pictures" src="static/img.jpg"/>
+         <img class="pictures" src="static/img.jpg"/>
        </div>
     </div>
   </div>
@@ -89,8 +92,6 @@ export default{
         var touch=e.targetTouches[0];
         this.tspos=touch.pageX;
         this.tdistance=0;
-        console.log(this.tdistance);
-        console.log(this.tactive);
       }
     },
     tm:function(e){
@@ -103,16 +104,16 @@ export default{
           return
         }
         if(this.last&&this.tdistance>0){   //到达最后一张左移禁止
-          if(this.alreadyleftmove)
+         if(this.alreadyleftmove)
           {this.tdistance=0;}
           return
-        }
+          }
 
           if(this.tdistance>0&&!this.last) //左移
           {
-            if((5-this.tactive)*this.perwidth<(window.innerWidth-10))//到最后一项的临界点判断
+            if((8-this.tactive)*this.perwidth<(window.innerWidth+10))//到最后一项的临界点判断
             {
-              this.lastdistance=(5*(this.perwidth+10))-window.innerWidth-10-Math.abs(this.offsets); //计算到最后一项的位移
+              this.lastdistance=(8*(this.perwidth+10))-window.innerWidth-10-Math.abs(this.offsets); //计算到最后一项的位移
               if(this.tdistance>=50){
                 this.tdistance=this.lastdistance;
                 this.alreadyleftmove=false;
@@ -120,7 +121,7 @@ export default{
               }
             }
           }
-          this.$refs.imgswrap.style.transform="translate3d("+(this.offsets-this.tdistance)+"px,0,0)";
+         this.$refs.imgswrap.style.transform="translate3d("+(this.offsets-this.tdistance)+"px,0,0)";
       }
     },
     te:function(e){
@@ -129,7 +130,6 @@ export default{
         if(this.last)
         { offset=this.lastdistance;
           this.alreadyleftmove=true;
-          console.log(offset);
         }
         (Math.abs(this.tdistance)>=50)?(this.$refs.imgswrap.style.transform="translate3d("+(this.offsets-offset)+"px,0,0)",this.offsets=this.offsets-offset,this.tactive++):(this.$refs.imgswrap.style.transform="translate3d("+this.offsets+"px,0,0)")
       }
@@ -137,7 +137,6 @@ export default{
         var offset=this.perwidth+10;
         if(this.last)
         {offset=this.lastdistance;
-        console.log(offset);
          }
         (Math.abs(this.tdistance)>=50)?(this.$refs.imgswrap.style.transform="translate3d("+(this.offsets+offset)+"px,0,0)",this.offsets=this.offsets+offset,this.tactive--,this.last=false):(this.$refs.imgswrap.style.transform="translate3d("+this.offsets+"px,0,0)")
       }
@@ -224,7 +223,11 @@ export default{
     width:1000%;
     transition: all 400ms;
   }
-
+  .picture_wrap::after{
+    content: "";
+    display: block;
+    clear: both;
+  }
   .pictures{
     float:left;
     margin-right:10px;
