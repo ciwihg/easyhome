@@ -50,11 +50,7 @@
   <mu-paper class="filewindow" :zDepth="2" >
     <div class="windowtitle">选择图片</div>
      <div class="windowcontent" @click="selecteimg">
-        <img class="review" src="static/t2.jpg" style="width:100px;"/>
-        <img class="review" src="static/t2.jpg" style="width:100px;"/>
-        <img class="review" src="static/t2.jpg" style="width:100px;"/>
-        <img class="review" src="static/t2.jpg" style="width:100px;"/>
-        <img class="review" src="static/t2.jpg" style="width:100px;"/>
+        <img class="review" :src="item.src" v-for="item in roomimgs" style="width:100px;"/>
      </div>
      <div style="text-align:right;">
         <a href="javascript:;" class="upload-btn">
@@ -81,7 +77,7 @@ export default{
        imgs:1,
        openwindow:false,
        selectedimg:{},
-       myfile:1
+       roomimgs:[]
      }
   },
   computed:{
@@ -145,6 +141,7 @@ export default{
       this.imgs--
     },
     selectimg:function(){
+      this.ajax("GET","http://easyhome.applinzi.com/public/index.php/admin/roomcontroll/getimgs/rid/"+this.$route.params.rid,this.ttt)
       this.openwindow=true;
     },
     closewindow:function(e){
@@ -161,14 +158,17 @@ export default{
 
     },
     ttt:function(xhr){
-      //var respon=JSON.parse(xhr.responseText.substring(0,xhr.responseText.indexOf("<")));
-      console.log(xhr.responseText.substring(0,xhr.responseText.indexOf("<")));
+      var respon=JSON.parse(xhr.responseText.substring(0,xhr.responseText.indexOf("<")));
+      this.roomimgs=respon;
+    },
+    reflash:function(){
+      this.selectimg();
     },
     uploadfile:function(){
       var file=document.getElementById("file").files[0];
       var formdata=new FormData();
       formdata.append("file",file);
-      this.ajax("POST","http://easyhome.applinzi.com/public/index.php/admin/roomcontroll/get/rid/"+this.$route.params.rid,this.ttt,formdata)
+      this.ajax("POST","http://easyhome.applinzi.com/public/index.php/admin/roomcontroll/get/rid/"+this.$route.params.rid,this.reflash,formdata)
     }
   }
 }
