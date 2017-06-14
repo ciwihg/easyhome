@@ -28,10 +28,10 @@
 
   <mu-table v-show="showimgs" :showCheckbox="false"  >
     <mu-tbody ref="tbody">
-      <mu-tr v-for="n in imgs">
-        <mu-td><img class="review" src="static/t2.jpg" style="width:100px;" @click="selectimg"/></mu-td>
+      <mu-tr v-for="(item,index) in imgs">
+        <mu-td><img :src="item.src" :index="index" style="width:100px;" @click="selectimg"/></mu-td>
         <mu-td style="text-align:right;">
-          <mu-raised-button class="demo-raised-button" label="删除" icon="delete" @click="deleteimg" backgroundColor="red"  style="vertical-align:middle;"/>
+          <mu-raised-button class="demo-raised-button" label="删除" icon="delete" @click="deleteimg" :index="index" backgroundColor="red"  style="vertical-align:middle;"/>
         </mu-td>
       </mu-tr>
     </mu-tbody>
@@ -44,20 +44,22 @@
       </mu-tr>
     </mu-tfoot>
   </mu-table>
-
+   <input name="imgs" :value="JSON.stringify(imgs)" style="display:none;" />
  </form>
  <div class="filewindow-wrap" v-if="openwindow">
   <mu-paper class="filewindow" :zDepth="2" >
     <div class="windowtitle">选择图片</div>
-     <div class="windowcontent" @click="selecteimg">
-        <img class="review" :src="item.src" v-for="item in roomimgs" style="width:100px;"/>
+     <div class="windowcontent" @click="selecteimg" ref="filewindow">
+        <div class="file-imgwrap"v-for="item in roomimgs">
+          <img class="review" :src="item.src" />
+        </div>
      </div>
      <div style="text-align:right;">
         <a href="javascript:;" class="upload-btn">
            上传<input type="file" name="file" id="file" v-on:change="uploadfile" />
         </a>
        </mu-raised-button>
-      <mu-raised-button class="demo-raised-button" label="确认"   backgroundColor="blue"  />
+      <mu-raised-button class="demo-raised-button" label="确认" @click="imgconfirm"  backgroundColor="blue"  />
       <mu-raised-button class="demo-raised-button" label="取消" @click="closewindow"   backgroundColor="rgb(180,180,180)"  />
     </div>
   </mu-paper>
@@ -74,10 +76,11 @@ export default{
        actionurl:"http://easyhome.applinzi.com/public/index.php/admin/roomcontroll/editsave/rid/",
        activetab:"2",
        chargeitems:[],
-       imgs:1,
+       imgs:[],//现时所选用的图片集
        openwindow:false,
-       selectedimg:{},
-       roomimgs:[]
+       selectedimg:{},//文件夹中被选中的图片
+       roomimgs:[], //文件夹中图片集
+       editimg:0 //被编辑图片的索引
      }
   },
   computed:{
@@ -98,6 +101,9 @@ export default{
   },
   created: function() {
     this.ajax("GET","http://easyhome.applinzi.com/public/index.php/admin/roomcontroll/edit/rid/"+this.$route.params.rid,this.get)
+  },
+  mounted:function(){
+
   },
   methods:{
     ajax:function(method,url,fun){
@@ -133,15 +139,23 @@ export default{
     },
     htabschage:function(v){
       this.activetab=v;
+      if(v==4)
+      {
+        this.ajax("GET","http://easyhome.applinzi.com/public/index.php/admin/roomcontroll/getcurrentimgs/rid/"+this.$route.params.rid,this.CbGetcurrentimgs);
+      }
     },
     addimg:function(){
-      this.imgs++
+      this.imgs.push({
+        src:"static/t2.jpg",
+      })
     },
     deleteimg:function(e){
-      this.imgs--
+    var index=parseInt ( e.target.parentNode.parentNode.getAttribute("index"));
+      this.imgs.splice(index,1);
     },
-    selectimg:function(){
-      this.ajax("GET","http://easyhome.applinzi.com/public/index.php/admin/roomcontroll/getimgs/rid/"+this.$route.params.rid,this.ttt)
+    selectimg:function(e){
+      this.ajax("GET","http://easyhome.applinzi.com/public/index.php/admin/roomcontroll/getimgs/rid/"+this.$route.params.rid,this.CbGetimgs);
+      this.editimg=parseInt(e.target.getAttribute("index"));
       this.openwindow=true;
     },
     closewindow:function(e){
@@ -157,18 +171,38 @@ export default{
       }
 
     },
-    ttt:function(xhr){
+    imgconfirm:function(){
+      this.imgs[this.editimg].src=this.selectedimg.src;
+      this.openwindow=false;
+    }
+    ,
+    CbGetimgs:function(xhr){
       var respon=JSON.parse(xhr.responseText.substring(0,xhr.responseText.indexOf("<")));
       this.roomimgs=respon;
+      this.$refs.filewindow.style.height=this.$refs.filewindow.offsetWidth+"px";
+      this.$nextTick(function(){
+        var imgs=this.$refs.filewindow.getElementsByTagName("img");
+         imgs=Array.prototype.slice.call(imgs);
+        imgs.forEach(function(img){
+          (img.width<img.height)&&(img.style.height="100%")
+        });
+      });
+
     },
-    reflash:function(){
-      this.selectimg();
+    CbReflash:function(xhr){
+      var respon=xhr.responseText.substring(0,xhr.responseText.indexOf("<"));
+      console.log(respon);
+    //  this.selectimg();
+    },
+    CbGetcurrentimgs:function(xhr){
+      var respon=JSON.parse(xhr.responseText.substring(0,xhr.responseText.indexOf("<")));
+      this.imgs=respon;
     },
     uploadfile:function(){
       var file=document.getElementById("file").files[0];
       var formdata=new FormData();
       formdata.append("file",file);
-      this.ajax("POST","http://easyhome.applinzi.com/public/index.php/admin/roomcontroll/get/rid/"+this.$route.params.rid,this.reflash,formdata)
+      this.ajax("POST","http://easyhome.applinzi.com/public/index.php/admin/roomcontroll/get/rid/"+this.$route.params.rid,this.CbReflash,formdata)
     }
   }
 }
@@ -189,9 +223,9 @@ export default{
   margin: 15px 10px;
 }
 .review{
-  vertical-align: middle;
-  margin: 10px 0px;
+  vertical-align: bottom;
   cursor: pointer;
+  width:100%;
 }
 .filewindow{
 margin-left: -50%;
@@ -214,6 +248,11 @@ padding: 15px 15px;
 .windowcontent{
   background-color: rgb(250,250,250);
 }
+.windowcontent::after{
+  content: "";
+  display: block;
+  clear: both;
+}
 .upload-btn{
   line-height: 36px;
   display: inline-block;
@@ -231,5 +270,22 @@ padding: 15px 15px;
   left: 0px;
   top:0px;
   cursor: pointer;
+}
+.file-imgwrap{
+  width:23%;
+  height: 23%;
+  margin:1% 1%;
+  padding: 10px 10px;
+  float: left;
+  text-align: center;
+}
+.file-imgwrap:hover{
+  background-color: rgb(200,200,200);
+}
+.file-imgwrap::before{
+  content: "";
+  display: inline-block;
+  height: 100%;
+  vertical-align: bottom;
 }
 </style>
