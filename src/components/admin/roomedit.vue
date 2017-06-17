@@ -51,7 +51,7 @@
     <div class="windowtitle">选择图片</div>
      <div class="windowcontent" @click="selecteimg" ref="filewindow">
         <div class="file-imgwrap"v-for="item in roomimgs">
-          <img class="review" :src="item.src" />
+          <img class="review" :src="item.src" @load="resetimgstyle"/>
         </div>
      </div>
      <div style="text-align:right;">
@@ -141,7 +141,7 @@ export default{
       this.activetab=v;
       if(v==4)
       {
-        this.ajax("GET","http://easyhome.applinzi.com/public/index.php/admin/roomcontroll/getcurrentimgs/rid/"+this.$route.params.rid,this.CbGetcurrentimgs);
+        (this.imgs.length==0)&&(this.ajax("GET","http://easyhome.applinzi.com/public/index.php/admin/roomcontroll/getcurrentimgs/rid/"+this.$route.params.rid,this.CbGetcurrentimgs))
       }
     },
     addimg:function(){
@@ -162,37 +162,29 @@ export default{
       this.openwindow=false;
     },
     selecteimg:function(e){
-      if(e.target.nodeName==="IMG"){
+      if(e.target.nodeName==="IMG"||e.target.className==="file-imgwrap"){
+        var selecteditem;
+        (e.target.className==="file-imgwrap")?(selecteditem=e.target):(selecteditem=e.target.parentNode);
         if(this.selectedimg.style){
-          this.selectedimg.style.border="none";
+          this.selectedimg.style.backgroundColor="";
         }
-        e.target.style.border="2px solid rgb(200,200,200)";
-        this.selectedimg=e.target;
+        selecteditem.style.backgroundColor="rgb(200,200,200)";
+        this.selectedimg=selecteditem;
       }
 
     },
     imgconfirm:function(){
-      this.imgs[this.editimg].src=this.selectedimg.src;
+      this.imgs[this.editimg].src=this.selectedimg.firstElementChild.src;
       this.openwindow=false;
     }
     ,
     CbGetimgs:function(xhr){
       var respon=JSON.parse(xhr.responseText.substring(0,xhr.responseText.indexOf("<")));
       this.roomimgs=respon;
-      this.$refs.filewindow.style.height=this.$refs.filewindow.offsetWidth+"px";
-      this.$nextTick(function(){
-        var imgs=this.$refs.filewindow.getElementsByTagName("img");
-         imgs=Array.prototype.slice.call(imgs);
-        imgs.forEach(function(img){
-          (img.width<img.height)&&(img.style.height="100%")
-        });
-      });
-
+      (this.$refs.filewindow.style.height==this.$refs.filewindow.offsetWidth+"px")||(this.$refs.filewindow.style.height=this.$refs.filewindow.offsetWidth+"px")
     },
     CbReflash:function(xhr){
-      var respon=xhr.responseText.substring(0,xhr.responseText.indexOf("<"));
-      console.log(respon);
-    //  this.selectimg();
+      this.ajax("GET","http://easyhome.applinzi.com/public/index.php/admin/roomcontroll/getimgs/rid/"+this.$route.params.rid,this.CbGetimgs);
     },
     CbGetcurrentimgs:function(xhr){
       var respon=JSON.parse(xhr.responseText.substring(0,xhr.responseText.indexOf("<")));
@@ -203,6 +195,9 @@ export default{
       var formdata=new FormData();
       formdata.append("file",file);
       this.ajax("POST","http://easyhome.applinzi.com/public/index.php/admin/roomcontroll/get/rid/"+this.$route.params.rid,this.CbReflash,formdata)
+    },
+    resetimgstyle:function(e){
+      (e.target.width<e.target.height)&&(e.target.style.height="100%",e.target.style.width="auto")
     }
   }
 }
@@ -212,6 +207,7 @@ export default{
 .roomaddwrap{
   padding:0px 10px;
   position: relative;
+  height: 100%;
 }
 .secondtitle{
   display: inline-block;
@@ -278,6 +274,7 @@ padding: 15px 15px;
   padding: 10px 10px;
   float: left;
   text-align: center;
+  cursor: pointer;
 }
 .file-imgwrap:hover{
   background-color: rgb(200,200,200);

@@ -1,12 +1,12 @@
 <template>
   <div>
     <div class="head_img">
-      <img src="static/imgs.jpg"/>
+      <img :src="toppic.src"/>
     </div>
     <div class="info_row">
-      <img src="static/img.jpg"/><div class="info_wrap">
-        <span class="info_title">301房</span></br>
-        <span class="info_address">朝阳巷5号</span>
+      <img :src="mainpic.src"/><div class="info_wrap">
+        <span class="info_title">{{roomdatas.number}}房</span></br>
+        <span class="info_address">{{roomdatas.address}}</span>
       </div>
     </div>
     <div class="feature_row">
@@ -41,30 +41,24 @@
     </div>
     <div class="detail_row">
     <div class="detail_head" ref="markdown">
-      轻松培养pocketmon的游戏</br>
-      《 separate》是日本著名漫画家 驾笼真太郎的最新作品，国内版权由易动漫独家代理。
-      驾笼真太郎，日本男漫画家。他的主要创作方向是面向成人的漫画作品，于1988年在COMICBOX出道。
-      从2002年开始积极地参加了众多活动，向世人展示了自己“不道德的排泄物”。
-      想对中国读者说的一句话是：我希望全世界都能读到我的漫画。请尽情欣赏。
+     相关协议
     </div>
-     <div @click="handlemd">了解更多</div>
+     <div @click="handlemd" style="color:green;">了解更多</div>
    </div>
     <div class="picture_row" >
        <div class="picture_wrap" @touchstart="ts" @touchmove="tm" @touchend="te" ref="imgswrap">
-         <img class="pictures" src="static/img.jpg"/>
-         <img class="pictures" src="static/img.jpg"/>
-         <img class="pictures" src="static/img.jpg"/>
-         <img class="pictures" src="static/img.jpg"/>
-         <img class="pictures" src="static/img.jpg"/>
-         <img class="pictures" src="static/img.jpg"/>
-         <img class="pictures" src="static/img.jpg"/>
-         <img class="pictures" src="static/img.jpg"/>
+         <img class="pictures" :src="item.src" v-for="item in roomimgs"/>
+
        </div>
     </div>
+    <transition name="fade">
+    <m-agreement v-if="agreement" @close="closeagreement"></m-agreement>
+    </transition>
   </div>
 </template>
 
 <script>
+import magreement from '@/components/magreement'
 export default{
   name:"mdetail",
   data:function(){
@@ -75,17 +69,37 @@ export default{
       offsets:0,
        last:false,
        lastdistance:0,
-       alreadyleftmove:true
+       alreadyleftmove:true,
+       agreement:false,
+       roomdatas:{},
+       roomimgs:[],
+       toppic:{},
+       mainpic:{}
     }
+  },
+  components: {
+    "m-agreement":magreement
   },
   computed:{
     perwidth:function(){
       return window.innerWidth*0.4;
     }
   },
+  created: function created() {
+    var m=new this.myrevice();
+    m.setcontroller("Mroom").setmethod("index").setparam("rid").setparamvalue("15");
+    m.grequestfront(this.get);
+  },
   methods:{
+    get:function(xhr){
+      var respon=JSON.parse(xhr.responseText.substring(0,xhr.responseText.indexOf("<")));
+      this.roomdatas=respon;
+      this.roomimgs=JSON.parse(respon.imgs);
+      this.mainpic=this.roomimgs.shift();
+      this.toppic=this.roomimgs.shift();
+    },
     handlemd:function(){
-      this.$refs.markdown.style.height="150px";
+      this.agreement=true;
     },
     ts:function(e){
       if(e.targetTouches.length==1){
@@ -111,9 +125,9 @@ export default{
 
           if(this.tdistance>0&&!this.last) //左移
           {
-            if((8-this.tactive)*this.perwidth<(window.innerWidth+10))//到最后一项的临界点判断
+            if((this.roomimgs.length-this.tactive)*this.perwidth<(window.innerWidth+10))//到最后一项的临界点判断
             {
-              this.lastdistance=(8*(this.perwidth+10))-window.innerWidth-10-Math.abs(this.offsets); //计算到最后一项的位移
+              this.lastdistance=(this.roomimgs.length*(this.perwidth+10))-window.innerWidth-10-Math.abs(this.offsets); //计算到最后一项的位移
               if(this.tdistance>=50){
                 this.tdistance=this.lastdistance;
                 this.alreadyleftmove=false;
@@ -140,6 +154,9 @@ export default{
          }
         (Math.abs(this.tdistance)>=50)?(this.$refs.imgswrap.style.transform="translate3d("+(this.offsets+offset)+"px,0,0)",this.offsets=this.offsets+offset,this.tactive--,this.last=false):(this.$refs.imgswrap.style.transform="translate3d("+this.offsets+"px,0,0)")
       }
+    },
+    closeagreement:function(){
+      this.agreement=false;
     }
   }
 }
@@ -151,6 +168,7 @@ export default{
 }
 .head_img img{
   vertical-align: top;
+  width: 100%;
 }
 .info_row img{
   width:20%;
@@ -212,9 +230,7 @@ export default{
     text-align: center;
   }
   .detail_head{
-    height: 18px;
-    overflow: hidden;
-    transition: all 400ms;
+    font-size: 16px;
   }
   .picture_row{
     overflow: hidden;
@@ -233,4 +249,10 @@ export default{
     margin-right:10px;
         width:4%;
   }
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s
+}
+.fade-enter, .fade-leave-to  {
+  opacity: 0
+}
 </style>

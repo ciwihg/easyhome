@@ -17,10 +17,11 @@ import carouseledit from '@/components/admin/carouseledit'
 import mobilehome from '@/components/front/mobilehome'
 import mdetail from '@/components/mdetail'
 import MuseUI from 'muse-ui'
+import mylib from '@/mylib/mylib.js'
 import 'muse-ui/dist/muse-ui.css'
 
 Vue.use(MuseUI)
-
+Vue.use(mylib)
 Vue.use(Router)
 
 export default new Router({
