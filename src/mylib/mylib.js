@@ -17,11 +17,12 @@ export default {
             fun(xhr);
           }
           else{
-            alert("ajax失败");
+            alert("ajax失败"+xhr.status);
           }
         }
       };
       xhr.open(method,url,true);
+      xhr.withCredentials = true;
       xhr.send(null);
     };
 

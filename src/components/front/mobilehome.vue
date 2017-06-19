@@ -1,10 +1,16 @@
 <template>
   <div class="content_wrap">
     <mu-drawer :open="open" :docked="docked"  @close="toggle">
-     <mu-list>
-       <mu-list-item title="Menu Item 1"/>
-       <mu-list-item title="Menu Item 2"/>
-       <mu-list-item title="Menu Item 3"/>
+     <mu-list :value="listv" @change="hchange">
+       <mu-list-item :value="0" title="首页"/>
+       <mu-list-item :value="1" title="二房一厅"/>
+       <mu-list-item :value="2" title="一房一厅"/>
+       <mu-list-item :value="3" title="单房"/>
+       <mu-list-item :value="4" title="其他"/>
+       <mu-divider />
+       <mu-list-item :value="5" title="注册"/>
+       <mu-list-item :value="6" title="登入"/>
+       <mu-list-item :value="7" title="我租的房"/>
      </mu-list>
    </mu-drawer>
    <mu-appbar title="Easyhome">
@@ -12,10 +18,10 @@
    </mu-appbar>
     <m-mslider :carouseldatas="homedatas"></m-mslider>
     <div class="nav_bar">
-      <span class="nav_item" style="background-color:rgb(237,59,59);">影视</span>
-      <span class="nav_item" style="background-color:rgb(239,108,0);">音乐</span>
-      <span class="nav_item" style="background-color:rgb(3,155,229);">图书</span>
-      <span class="nav_item" style="background-color:rgb(124,81,197); margin-right:0px;">报亭</span>
+      <span class="nav_item" style="background-color:rgb(237,59,59);">二房一厅</span>
+      <span class="nav_item" style="background-color:rgb(239,108,0);">一房一厅</span>
+      <span class="nav_item" style="background-color:rgb(3,155,229);">单房</span>
+      <span class="nav_item" style="background-color:rgb(124,81,197); margin-right:0px;">其他</span>
     </div>
     <div class="row_wrap">
     <m-mgoodp></m-mgoodp>
@@ -32,6 +38,25 @@
     <div class="row_wrap">
     <m-mgoodp></m-mgoodp>
     </div>
+
+   <mu-dialog :open="registration" title="注册">
+  <form action="http://easyhome.applinzi.com/public/index.php/front/user/registration" method="post" id="registration">
+   <mu-text-field label="帐号" name="userid" labelFloat/><br/>
+   <mu-text-field label="密码" name="password" labelFloat/><br/>
+     <img :src="captcha" />
+   <mu-text-field name="captcha" hintText="验证码"/><br/>
+ </form>
+   <mu-flat-button slot="actions" type="submit" form="registration" primary label="注册"/>
+   <mu-flat-button slot="actions" primary @click="regisclose" label="取消"/>
+  </mu-dialog>
+
+  <mu-dialog :open="loginin" title="登入">
+  <mu-text-field label="帐号" labelFloat/><br/>
+  <mu-text-field label="密码" labelFloat/><br/>
+  <mu-text-field hintText="验证码"/><br/>
+  <mu-flat-button slot="actions" primary label="登入"/>
+  <mu-flat-button slot="actions" primary @click="loginclose" label="取消"/>
+ </mu-dialog>
   </div>
 </template>
 
@@ -48,11 +73,16 @@ export default{
     return {
       open:false,
       docked:false,
-      homedatas:[]
+      homedatas:[],
+      registration:false,
+      loginin:false,
+      listv:0,
+      captcha:""
     }
   },
   created:function(){
     this.ajax("GET","http://easyhome.applinzi.com/public/index.php/front/Mhome",this.get);
+
   },
   methods:{
     toggle:function(){
@@ -78,8 +108,26 @@ export default{
       var respon=JSON.parse(xhr.responseText.substring(0,xhr.responseText.indexOf("<")));
       this.homedatas=respon;
       console.log(respon);
+    },
+    getcaptcha:function(xhr){
+      this.captcha="http://easyhome.applinzi.com/"+xhr.responseText.substring(0,xhr.responseText.indexOf("<"));
+    },
+    regisclose:function(){
+      this.registration=false;
+    },
+    loginclose:function(){
+      this.loginin=false;
+    },
+    hchange:function(v){
+       this.listv=v;
+       switch(v){
+         case 5:this.registration=true;var m=new this.myrevice();
+         m.setcontroller("user").setmethod("getcaptcha");
+         m.grequestfront(this.getcaptcha);break;
+         case 6:this.loginin=true;break;
+       }
     }
-  }
+    }
 }
 </script>
 
