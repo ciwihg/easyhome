@@ -41,12 +41,12 @@
 
    <mu-dialog :open="registration" title="注册">
   <form action="http://easyhome.applinzi.com/public/index.php/front/user/registration" ref='regisform' method="post" id="registration">
-   <mu-text-field label="帐号" name="userid"  :errorText="useriderror" labelFloat @blur="textcheck"/><br/>
-   <mu-text-field label="密码" name="password" :errorText="passworderror" labelFloat @blur="textcheck"/><br/>
+   <mu-text-field label="帐号" name="userid" v-model="userid" :errorText="useriderror" labelFloat @blur="textcheck"/><br/>
+   <mu-text-field label="密码" name="password" v-model="password" :errorText="passworderror" labelFloat @blur="textcheck"/><br/>
      <img :src="captcha" />
-   <mu-text-field name="captcha" hintText="验证码" :errorText="captchaerror" @blur="textcheck"/><br/>
+   <mu-text-field name="captcha" hintText="验证码" v-model="captchav" :errorText="captchaerror" @blur="textcheck"/><br/>
  </form>
-   <mu-flat-button slot="actions" type="submit" @click="rigischeck" form="registration" primary label="注册"/>
+   <mu-flat-button slot="actions" type="submit" @click="rigischeck" form="registration" primary label="注册" :disabled="regisbtn"/>
    <mu-flat-button slot="actions" primary @click="regisclose" label="取消"/>
   </mu-dialog>
 
@@ -80,7 +80,15 @@ export default{
       captcha:"",
       useriderror:'',
       passworderror:'',
-      captchaerror:''
+      captchaerror:'',
+      userid:'',
+      password:'',
+      captchav:''
+    }
+  },
+  computed:{
+    regisbtn:function(){
+      return !(((this.useriderror=="")&&(this.passworderror=="")&&(this.captchaerror==""))&&((this.userid!="")&&(this.password!="")&&(this.captchav!="")));
     }
   },
   created:function(){
@@ -107,6 +115,14 @@ export default{
       xhr.open(method,url,true);
       xhr.send(null);
     },
+    resetregis:function(){
+      this.useriderror=="";
+      this.passworderror=="";
+      this.captchaerror=="";
+      this.password="";
+      this.userid="";
+      this.captchav="";
+    },
     get:function(xhr){
       var respon=JSON.parse(xhr.responseText.substring(0,xhr.responseText.indexOf("<")));
       this.homedatas=respon;
@@ -116,6 +132,7 @@ export default{
       this.captcha="http://easyhome.applinzi.com/"+xhr.responseText.substring(0,xhr.responseText.indexOf("<"))+"?ver="+Math.random();
     },
     regisclose:function(){
+      this.resetregis();
       this.registration=false;
     },
     loginclose:function(){
@@ -135,6 +152,7 @@ export default{
        (status.status=="ok")?( this[name+'error']=""):( this[name+'error']=status.status)
     },
     textcheck:function(e){
+      console.log(this.userid);
       var msg={
         userid:"请输入帐号",
         password:"请输入密码",
@@ -146,19 +164,6 @@ export default{
     },
     rigischeck:function(e){
         e.preventDefault();
-      var msg={
-        userid:"请输入帐号",
-        password:"请输入密码",
-        captcha:"请输入验证码"
-      }
-      var validate=new this.validate(msg);
-      var that=this;
-      var inputs=this.$refs.regisform.getElementsByTagName("INPUT");
-      inputs=Array.prototype.slice.call(inputs);
-      inputs.forEach(function(input){
-        validate.requireout(input,that);
-      });
-
     }
     }
 }
