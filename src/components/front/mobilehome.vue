@@ -40,13 +40,13 @@
     </div>
 
    <mu-dialog :open="registration" title="注册">
-  <form action="http://easyhome.applinzi.com/public/index.php/front/user/registration" method="post" id="registration">
-   <mu-text-field label="帐号" name="userid" labelFloat/><br/>
-   <mu-text-field label="密码" name="password" labelFloat/><br/>
+  <form action="http://easyhome.applinzi.com/public/index.php/front/user/registration" ref='regisform' method="post" id="registration">
+   <mu-text-field label="帐号" name="userid"  :errorText="useriderror" labelFloat @blur="textcheck"/><br/>
+   <mu-text-field label="密码" name="password" :errorText="passworderror" labelFloat @blur="textcheck"/><br/>
      <img :src="captcha" />
-   <mu-text-field name="captcha" hintText="验证码"/><br/>
+   <mu-text-field name="captcha" hintText="验证码" :errorText="captchaerror" @blur="textcheck"/><br/>
  </form>
-   <mu-flat-button slot="actions" type="submit" form="registration" primary label="注册"/>
+   <mu-flat-button slot="actions" type="submit" @click="rigischeck" form="registration" primary label="注册"/>
    <mu-flat-button slot="actions" primary @click="regisclose" label="取消"/>
   </mu-dialog>
 
@@ -77,7 +77,10 @@ export default{
       registration:false,
       loginin:false,
       listv:0,
-      captcha:""
+      captcha:"",
+      useriderror:'',
+      passworderror:'',
+      captchaerror:''
     }
   },
   created:function(){
@@ -110,7 +113,7 @@ export default{
       console.log(respon);
     },
     getcaptcha:function(xhr){
-      this.captcha="http://easyhome.applinzi.com/"+xhr.responseText.substring(0,xhr.responseText.indexOf("<"));
+      this.captcha="http://easyhome.applinzi.com/"+xhr.responseText.substring(0,xhr.responseText.indexOf("<"))+"?ver="+Math.random();
     },
     regisclose:function(){
       this.registration=false;
@@ -126,6 +129,36 @@ export default{
          m.grequestfront(this.getcaptcha);break;
          case 6:this.loginin=true;break;
        }
+    },
+    ajaxvalidate:function(xhr,name){
+       var status=JSON.parse(xhr.responseText.substring(0,xhr.responseText.indexOf("<")));
+       (status.status=="ok")?( this[name+'error']=""):( this[name+'error']=status.status)
+    },
+    textcheck:function(e){
+      var msg={
+        userid:"请输入帐号",
+        password:"请输入密码",
+        captcha:"请输入验证码"
+      }
+      var validate=new this.validate(msg);
+      validate.requireout(e.target,this);
+      (e.target.name=="userid")&&(validate.ajaxcheck(e.target,this,'ajaxvalidate'))
+    },
+    rigischeck:function(e){
+        e.preventDefault();
+      var msg={
+        userid:"请输入帐号",
+        password:"请输入密码",
+        captcha:"请输入验证码"
+      }
+      var validate=new this.validate(msg);
+      var that=this;
+      var inputs=this.$refs.regisform.getElementsByTagName("INPUT");
+      inputs=Array.prototype.slice.call(inputs);
+      inputs.forEach(function(input){
+        validate.requireout(input,that);
+      });
+
     }
     }
 }
