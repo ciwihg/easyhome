@@ -37,19 +37,15 @@
 </template>
 
 <script>
-import slidbanner from '@/components/slidbanner'
-import stacknavbar from '@/components/stacknavbar'
-import goodp from '@/components/goodp'
-import mobileslider from '@/components/mobileslider'
-import mgoodp from '@/components/mgoodp'
+import slidbanner from '@/components/front/pc/slidbanner'
+import stacknavbar from '@/components/front/pc/stacknavbar'
+import goodp from '@/components/front/pc/goodp'
 export default{
   name:"slider",
   components:{
     "m-slider":slidbanner,
     "m-navbar":stacknavbar,
-    "m-goodrow":goodp,
-    "m-mslider":mobileslider,
-    "m-mgoodp":mgoodp
+    "m-goodrow":goodp
   },
   data:function(){
     return {

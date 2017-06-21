@@ -1,8 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Hello from '@/components/Hello'
-import home from '@/components/front/home'
-import adminhome from '@/components/adminhome'
+import home from '@/components/front/pc/home'
+import adminhome from '@/components/admin/adminhome'
 import room from '@/components/admin/room'
 import roomadd from '@/components/admin/roomadd'
 import roomedit from '@/components/admin/roomedit'
@@ -14,8 +13,10 @@ import roomrecord from '@/components/admin/roomrecord'
 import carousel from '@/components/admin/carousel'
 import carouseladd from '@/components/admin/carouseladd'
 import carouseledit from '@/components/admin/carouseledit'
-import mobilehome from '@/components/front/mobilehome'
-import mdetail from '@/components/mdetail'
+import mframework from '@/components/front/mobile/framework'
+import mhome from '@/components/front/mobile/home'
+import mdetail from '@/components/front/mobile/goodsrow'
+import muserroom from '@/components/front/mobile/userroom'
 import MuseUI from 'muse-ui'
 import mylib from '@/mylib/mylib.js'
 import 'muse-ui/dist/muse-ui.css'
@@ -99,8 +100,20 @@ export default new Router({
     },
     {
       path:"/m",
-      name:"mobilehome",
-      component: mobilehome,
+      name:"framework",
+      component: mframework,
+      children:[
+        {
+          path:'home',
+          name:'home',
+          component:mhome
+        },
+        {
+          path:'userroom',
+          name:'userroom',
+          component:muserroom
+        }
+      ]
     },
     {
       path:"/room/:id",

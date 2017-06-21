@@ -23,7 +23,7 @@ export default {
       };
       xhr.open(method,url,true);
       (method=="POST")&&(xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded'))
-      xhr.withCredentials = true; //跨域读取cookies
+      //xhr.withCredentials = true; //跨域读取cookies
       (method=="POST")?(xhr.send(data)):(xhr.send(null));
     };
 
@@ -79,7 +79,9 @@ export default {
     this.pdatagetfront=function(){
       this.ajax("GET",this.baseurl+"/front"+this.finallurl(),this.responseparse);
     }
-
+    this.pdatapostfront=function(data){
+      this.ajax("POST",this.baseurl+"/front"+this.finallurl(),this.responseparse,this.formatpostdata(data));
+    }
     this.grequestfront=function(callback){
       this.ajax("GET",this.baseurl+"/front"+this.finallurl(),callback);
     }
@@ -129,6 +131,11 @@ export default {
     }
 
   };
+
+
+    Vue.prototype.saedata=function(d){
+      return d.substring(0,d.indexOf("<"));
+    };
 
 }
 
