@@ -1,4 +1,5 @@
 <template>
+  <div>
   <mu-table :showCheckbox="false">
     <div slot="header" class="table_header">
       <span>租盘管理</span>
@@ -17,6 +18,7 @@
         <mu-th>地址</mu-th>
         <mu-th>用电记录</mu-th>
         <mu-th>用水记录</mu-th>
+        <mu-th>注册码</mu-th>
         <mu-th>操作</mu-th>
       </mu-tr>
     </mu-thead>
@@ -32,6 +34,9 @@
             <mu-raised-button label="查看" @click="viewwater" backgroundColor="blue" :rid="room.rid" />
         </mu-td>
         <mu-td>
+            <mu-raised-button label="查看" backgroundColor="blue" @click="viewcode" :rid="room.rid" />
+        </mu-td>
+        <mu-td>
           <mu-raised-button class="demo-raised-button" label="编辑" icon="create" @click="editroom" backgroundColor="blue" :rid="room.rid" style="vertical-align:middle;"/>
           <mu-raised-button class="demo-raised-button" label="删除" icon="delete" backgroundColor="red" @click="deleteroom" :rid="room.rid" style="vertical-align:middle;"/>
         </mu-td>
@@ -40,6 +45,11 @@
      <router-view>
      </router-view>
   </mu-table>
+    <mu-dialog :open="dialogon" title="注册码">
+      <mu-content-block>{{code}}</mu-content-block>
+      <mu-raised-button label="关闭" backgroundColor="blue" slot="actions" @click="closedialog" />
+    </mu-dialog>
+</div>
 </template>
 
 <script>
@@ -53,7 +63,9 @@ export default {
       trigger:null,
       center:'center',
       bottom:"bottom",
-      rooms:[]
+      rooms:[],
+      dialogon:true,
+      code:""
     }
   },
   mounted () {
@@ -107,6 +119,19 @@ methods:{
     var rid=e.target.parentNode.parentNode.getAttribute("rid");
     this.$router.push({ name: 'roomrecord', params: { rid: rid, type:"w" }});
 
+  },
+  viewcode:function(e){
+    var rid=e.target.parentNode.parentNode.getAttribute("rid");
+    this.ajax("GET","http://easyhome.applinzi.com/public/index.php/admin/roomcontroll/getcode/rid/"+rid,this.CbGetcode);
+
+  },
+  CbGetcode:function(xhr){
+    var respon=JSON.parse(xhr.responseText.substring(0,xhr.responseText.indexOf("<")));
+    this.code=respon.code;
+    this.dialogon=true;
+  },
+  closedialog:function(){
+    this.dialogon=false;
   }
 }
 }

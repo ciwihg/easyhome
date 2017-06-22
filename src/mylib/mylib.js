@@ -22,8 +22,8 @@ export default {
         }
       };
       xhr.open(method,url,true);
-      (method=="POST")&&(xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded'))
-      //xhr.withCredentials = true; //跨域读取cookies
+      (method=="POST")&&(xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded'));
+      xhr.withCredentials = true; //跨域读取cookies
       (method=="POST")?(xhr.send(data)):(xhr.send(null));
     };
 

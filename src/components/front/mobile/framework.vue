@@ -32,6 +32,7 @@
    <mu-text-field label="密码" name="password" type="password" v-model="password" :errorText="passworderror" labelFloat @blur="textcheck"/><br/>
      <img :src="captcha" />
    <mu-text-field name="captcha" hintText="验证码" v-model="captchav" :errorText="captchaerror" @blur="textcheck"/><br/>
+   <mu-text-field label="注册码" name="code" v-model="code" :errorText="codeerror" labelFloat @blur="textcheck"/><br/>
  </form>
    <mu-flat-button slot="actions"  @click="rigisconfirm"  primary label="注册" :disabled="regisbtn"/>
    <mu-flat-button slot="actions" primary @click="regisclose" label="取消"/>
@@ -74,9 +75,11 @@ export default{
       useriderror:'',
       passworderror:'',
       captchaerror:'',
+      codeerror:'',
       userid:'',
       password:'',
       captchav:'',
+      code:'',
       bottompop:false,
       responsemsg:"",
       username:'',
@@ -85,7 +88,7 @@ export default{
   },
   computed:{
     regisbtn:function(){
-      return !(((this.useriderror=="")&&(this.passworderror=="")&&(this.captchaerror==""))&&((this.userid!="")&&(this.password!="")&&(this.captchav!="")));
+      return !(((this.useriderror=="")&&(this.passworderror=="")&&(this.captchaerror=="")&&(this.codeerror==""))&&((this.userid!="")&&(this.password!="")&&(this.captchav!="")&&(this.code!="")));
     }
   },
   created:function(){
@@ -104,7 +107,7 @@ export default{
       this.captchav="";
     },
     Cbcaptcha:function(xhr){
-      this.captcha="http://easyhome.applinzi.com/"+xhr.responseText.substring(0,xhr.responseText.indexOf("<"))+"?ver="+Math.random();
+      this.captcha="http://easyhome.applinzi.com/"+xhr.responseText.substring(0,xhr.responseText.indexOf("<"));
     },
     regisclose:function(){
       this.resetregis();
@@ -167,7 +170,8 @@ export default{
       var msg={
         userid:"请输入帐号",
         password:"请输入密码",
-        captcha:"请输入验证码"
+        captcha:"请输入验证码",
+        code:"请输入注册码"
       }
       var validate=new this.validate(msg);
       validate.requireout(e.target,this);
@@ -180,9 +184,11 @@ export default{
         var data={
           userid:inputs[0].value,
           password:inputs[1].value,
-          captcha:inputs[2].value
+          captcha:inputs[2].value,
+          code:inputs[3].value
         };
-        revice.prequestfront(this.Cbregis,data);
+        //revice.prequestfront(this.Cbregis,data);
+        revice.pdatapostfront(data);
     },
     closepop:function(){
       this.bottompop=false;

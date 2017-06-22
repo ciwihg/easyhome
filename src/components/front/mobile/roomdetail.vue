@@ -58,7 +58,7 @@
 </template>
 
 <script>
-import magreement from '@/components/front/mobile/magreement'
+import magreement from '@/components/front/mobile/agreement'
 export default{
   name:"mdetail",
   data:function(){

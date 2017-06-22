@@ -3,6 +3,7 @@
   <mu-tabs  :value="tabsvalue" @change="Ehchage">
    <mu-tab value="1" title="我租的房"/>
    <mu-tab value="2" title="账单查询"/>
+   <mu-tab value="4" title="租房登记"/>
  </mu-tabs>
  <div v-if="infoon">
  <mu-table :showCheckbox="false">
@@ -98,6 +99,11 @@
      </mu-tbody>
    </mu-table>
  </div>
+
+ <div v-if="roomregison">
+      <mu-text-field label="请输入登记码" name="regiscode" labelFloat :fullWidth="true"/>
+      <mu-raised-button label="登记" :fullWidth="true" secondary/>
+ </div>
  </div>
 </template>
 
@@ -129,6 +135,9 @@ export default{
     },
     billon:function(){
       return (parseInt(this.tabsvalue)>>1)&1;
+    },
+    roomregison:function(){
+      return (parseInt(this.tabsvalue)>>2)&1;
     }
   },
   methods:{
