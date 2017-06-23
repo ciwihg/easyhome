@@ -45,7 +45,7 @@
    <img :src="captcha" />
   <mu-text-field hintText="验证码" name="captcha" v-model="captchav" :errorText="captchaerror" @blur="logincheck"/><br/>
   </form>
-  <mu-flat-button slot="actions" primary label="登入" @click="loginconfirm" :disabled="regisbtn"/>
+  <mu-flat-button slot="actions" primary label="登入" @click="loginconfirm" :disabled="loginbtn"/>
   <mu-flat-button slot="actions" primary @click="loginclose" label="取消"/>
  </mu-dialog>
 
@@ -89,6 +89,9 @@ export default{
   computed:{
     regisbtn:function(){
       return !(((this.useriderror=="")&&(this.passworderror=="")&&(this.captchaerror=="")&&(this.codeerror==""))&&((this.userid!="")&&(this.password!="")&&(this.captchav!="")&&(this.code!="")));
+    },
+    loginbtn:function(){
+        return !(((this.useriderror=="")&&(this.passworderror=="")&&(this.captchaerror==""))&&((this.userid!="")&&(this.password!="")&&(this.captchav!="")));
     }
   },
   created:function(){
@@ -187,8 +190,8 @@ export default{
           captcha:inputs[2].value,
           code:inputs[3].value
         };
-        //revice.prequestfront(this.Cbregis,data);
-        revice.pdatapostfront(data);
+        revice.prequestfront(this.Cbregis,data);
+
     },
     closepop:function(){
       this.bottompop=false;

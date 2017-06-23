@@ -64,7 +64,7 @@ export default {
       center:'center',
       bottom:"bottom",
       rooms:[],
-      dialogon:true,
+      dialogon:false,
       code:""
     }
   },

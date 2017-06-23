@@ -5,7 +5,8 @@
    <mu-tab value="2" title="账单查询"/>
    <mu-tab value="4" title="租房登记"/>
  </mu-tabs>
- <div v-if="infoon">
+ <div v-if="infoon" class="infotab">
+ <m-markdown :head="info.number+'房'" v-for="info in infodatas">
  <mu-table :showCheckbox="false">
    <mu-thead>
      <mu-tr>
@@ -15,11 +16,19 @@
    <mu-tbody>
      <mu-tr>
        <mu-td>房号</mu-td>
-       <mu-td>301</mu-td>
+       <mu-td>{{info.number}}</mu-td>
      </mu-tr>
      <mu-tr>
        <mu-td>地址</mu-td>
-       <mu-td>朝阳巷5号</mu-td>
+       <mu-td>{{info.address}}</mu-td>
+     </mu-tr>
+     <mu-tr>
+       <mu-td>房型</mu-td>
+       <mu-td>{{info.type}}</mu-td>
+     </mu-tr>
+     <mu-tr>
+       <mu-td>租金</mu-td>
+       <mu-td>{{info.price}}</mu-td>
      </mu-tr>
    </mu-tbody>
  </mu-table>
@@ -30,23 +39,20 @@
       </mu-tr>
    </mu-thead>
    <mu-tbody>
-     <mu-tr>
-       <mu-td>电费</mu-td>
-       <mu-td>1元/KWH</mu-td>
-     </mu-tr>
-     <mu-tr>
-       <mu-td>水费</mu-td>
-       <mu-td>3.5元/m³</mu-td>
-     </mu-tr>
-     <mu-tr>
-       <mu-td>楼梯灯</mu-td>
-       <mu-td>5元/月</mu-td>
+     <mu-tr v-for="item in info.chargeitems">
+       <mu-td>{{item.name}}</mu-td>
+       <mu-td>{{item.price}}</mu-td>
      </mu-tr>
    </mu-tbody>
  </mu-table>
+ </m-markdown>
+
  </div>
  <div v-if="billon">
-   <mu-picker :slots="yearmonthSlots" :visible-item-count="3" />
+   <mu-select-field label="选择查询的房屋" :fullWidth="true" @change="Ehroomchage">
+   <mu-menu-item v-for="info in infodatas" :key="info.rid" :value="info.rid"  :title="info.number+'房'" />
+   </mu-select-field>
+   <mu-picker :slots="yearmonthSlots" :visible-item-count="3"  @change="Ehdatechange"/>
    <mu-raised-button label="查询" :fullWidth="true" secondary/>
    <mu-table :showCheckbox="false">
      <mu-thead>
@@ -108,8 +114,7 @@
 </template>
 
 <script>
-var month=[1,2,3,4,5,6,7,8,9,10,11,12];
-var year=[2013,2014,2015,2016,2017,2018];
+import markdown from "@/components/front/mobile/markdown"
 export default{
   name:"userroom",
   data:function(){
@@ -119,15 +124,20 @@ export default{
        {
          width: '100%',
          textAlign: 'right',
-         values: year
+         values: []
        },
        {
          width: '100%',
          textAlign: 'left',
-         values: month
+         values: []
        }
-     ]
+     ],
+     infodatas:{},
+     yearmonth:{}
     }
+  },
+  components:{
+    "m-markdown":markdown
   },
   computed:{
     infoon:function(){
@@ -140,14 +150,42 @@ export default{
       return (parseInt(this.tabsvalue)>>2)&1;
     }
   },
+  created:function(){
+    var revice= new this.myrevice();
+    revice.setcontroller('userroom');
+    revice.grequestfront(this.CbSetinfodatas);
+  },
   methods:{
     Ehchage:function(v){
       this.tabsvalue=v;
+    },
+    CbSetinfodatas:function(xhr){
+      var reponse=JSON.parse(xhr.responseText.substring(0,xhr.responseText.indexOf("<")));
+      this.infodatas=reponse;
+    },
+    CbSetyearmonth:function(xhr){
+      this.yearmonth=JSON.parse(xhr.responseText.substring(0,xhr.responseText.indexOf("<")));
+      var years=Object.keys(this.yearmonth);
+      this.yearmonthSlots[0].values=years;
+      this.yearmonthSlots[1].values=this.yearmonth[years[0]];
+    },
+    Ehroomchage:function(v){
+      var revice= new this.myrevice();
+      revice.setcontroller('userroom').setmethod('getyear').setparam('rid').setparamvalue(v);
+      revice.grequestfront(this.CbSetyearmonth);
+
+    },
+    Ehdatechange:function(value, index){
+      if(index==0){
+        this.yearmonthSlots[1].values=this.yearmonth[value];
+      }
     }
   }
 }
 </script>
 
 <style scoped>
-
+.infotab{
+  margin-top: 2px;
+}
 </style>
