@@ -1,53 +1,16 @@
 <template>
   <div class="top_wrap">
     <div class="head_wrap">
-      <strong class="m_title">栏目标题</strong></br>
-      <span class="s_title">栏目副标题</span>
+      <strong class="m_title">{{title}}</strong></br>
+      <span class="s_title">{{stitle}}</span>
     </div>
     <div class="item_wrap" @touchstart="ts" @touchmove="tm" @touchend="te" ref="itemwrap">
-    <a class="item" href="#/room/1">
-      <img src="static/img.jpg"/></br>
-      <span class="item_mtitle">项目标题</span></br>
-      <span class="item_stitle">项目副标题</span>
+    <a class="item"  v-for="item in datas" :href="'#/room/'+item.rid">
+      <img :src="JSON.parse(item.imgs)[0].src"/></br>
+      <span class="item_mtitle">{{item.number}}房</span></br>
+      <span class="item_stitle">{{item.address}}</span>
       <div><span class="bottom_detail">光线 4.5</span></div>
     </a>
-    <a class="item" href="#/room/1">
-      <img src="static/img.jpg"/></br>
-      <span class="item_mtitle">项目标题</span></br>
-      <span class="item_stitle">项目副标题</span>
-      <div><span class="bottom_detail">光线 4.5</span></div>
-    </a>
-    <a class="item" href="#/room/1">
-      <img src="static/img.jpg"/></br>
-      <span class="item_mtitle">项目标题</span></br>
-      <span class="item_stitle">项目副标题</span>
-      <div><span class="bottom_detail">光线 4.5</span></div>
-    </a>
-    <a class="item" href="#/room/1">
-      <img src="static/img.jpg"/></br>
-      <span class="item_mtitle">项目标题</span></br>
-      <span class="item_stitle">项目副标题</span>
-      <div><span class="bottom_detail">光线 4.5</span></div>
-    </a>
-    <a class="item" href="#/room/1">
-      <img src="static/img.jpg"/></br>
-      <span class="item_mtitle">项目标题</span></br>
-      <span class="item_stitle">项目副标题</span>
-      <div><span class="bottom_detail">光线 4.5</span></div>
-    </a>
-    <a class="item" href="#/room/1">
-      <img src="static/img.jpg"/></br>
-      <span class="item_mtitle">项目标题</span></br>
-      <span class="item_stitle">项目副标题</span>
-      <div><span class="bottom_detail">光线 4.5</span></div>
-    </a>
-    <a class="item" href="#/room/1">
-      <img src="static/img.jpg"/></br>
-      <span class="item_mtitle">项目标题</span></br>
-      <span class="item_stitle">项目副标题</span>
-      <div><span class="bottom_detail">光线 4.5</span></div>
-    </a>
-
   </div>
   </div>
 </template>
@@ -55,6 +18,7 @@
 <script>
 export default{
   name:"mgoodp",
+  props: ['title','stitle','datas'],
   data:function(){
     return {
       tspos:0,
@@ -63,8 +27,7 @@ export default{
       offsets:0,
        last:false,
        lastdistance:0,
-       alreadyleftmove:true,
-       datas:[1,2,3,4,5,6,7]
+       alreadyleftmove:true
     }
   },
   computed:{
@@ -97,9 +60,9 @@ export default{
 
           if(this.tdistance>0&&!this.last) //左移
           {
-            if((7-this.tactive)*this.perwidth<(window.innerWidth-26))//到最后一项的临界点判断
+            if((this.datas.length-this.tactive)*this.perwidth<(window.innerWidth-26))//到最后一项的临界点判断
             {
-              this.lastdistance=((7*this.perwidth+10)-(window.innerWidth-16)+10)-Math.abs(this.offsets); //计算到最后一项的位移
+              this.lastdistance=((this.datas.length*this.perwidth+10)-(window.innerWidth-16)+10)-Math.abs(this.offsets); //计算到最后一项的位移
               if(this.tdistance>=50){
                 this.tdistance=this.lastdistance;
                 this.alreadyleftmove=false;

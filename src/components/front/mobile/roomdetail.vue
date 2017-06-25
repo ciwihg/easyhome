@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div class="head_img">
+  <div style="position:relative;">
+    <div class="head_img" ref="head">
       <img :src="toppic.src"/>
     </div>
     <div class="info_row">
@@ -87,8 +87,11 @@ export default{
   },
   created: function created() {
     var m=new this.myrevice();
-    m.setcontroller("Mroom").setmethod("index").setparam("rid").setparamvalue("15");
+    m.setcontroller("Mroom").setmethod("index").setparam("rid").setparamvalue(this.$route.params.id);
     m.grequestfront(this.get);
+  },
+  mounted: function mounted() {
+    this.$refs.head.style.height=window.innerHeight*0.3+'px';
   },
   methods:{
     get:function(xhr){
@@ -165,6 +168,7 @@ export default{
 <style scoped>
 .head_img{
   width:100%;
+  overflow: hidden;
 }
 .head_img img{
   vertical-align: top;

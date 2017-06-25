@@ -101,6 +101,7 @@ export default{
   },
   created: function() {
     this.ajax("GET","http://easyhome.applinzi.com/public/index.php/admin/roomcontroll/edit/rid/"+this.$route.params.rid,this.get)
+    this.ajax("GET","http://easyhome.applinzi.com/public/index.php/admin/roomcontroll/getcurrentimgs/rid/"+this.$route.params.rid,this.CbGetcurrentimgs)
   },
   mounted:function(){
 

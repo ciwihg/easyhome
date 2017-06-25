@@ -8,19 +8,7 @@
       <span class="nav_item" style="background-color:rgb(124,81,197); margin-right:0px;">其他</span>
     </div>
     <div class="row_wrap">
-    <m-mgoodp></m-mgoodp>
-    </div>
-    <div class="row_wrap">
-    <m-mgoodp></m-mgoodp>
-    </div>
-    <div class="row_wrap">
-    <m-mgoodp></m-mgoodp>
-    </div>
-    <div class="row_wrap">
-    <m-mgoodp></m-mgoodp>
-    </div>
-    <div class="row_wrap">
-    <m-mgoodp></m-mgoodp>
+    <m-mgoodp :datas="srdatas" title="一房一厅" stitle="有要求 不将就"></m-mgoodp>
     </div>
   </div>
 </template>
@@ -32,7 +20,8 @@ export default{
   name:"mobilehome",
   data:function(){
     return {
-     carouseldatas:[]
+     carouseldatas:[],
+     srdatas:[]
     }
   },
   components:{
@@ -47,7 +36,9 @@ export default{
   methods:{
     CbSetcarouseldatas:function(xhr){
       var respon=JSON.parse(this.saedata(xhr.responseText));
-      this.carouseldatas=respon;
+      this.carouseldatas=respon.carousel;
+      this.srdatas=respon.sr;
+      console.log(respon);
     }
   }
 }
