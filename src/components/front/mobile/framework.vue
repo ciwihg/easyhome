@@ -10,20 +10,20 @@
       </div>
      <mu-list :value="listv" @change="hchange">
        <mu-list-item :value="0" href="#/m/home" title="首页"/>
-       <mu-list-item :value="1" title="二房一厅"/>
-       <mu-list-item :value="2" title="一房一厅"/>
-       <mu-list-item :value="3" title="单房"/>
-       <mu-list-item :value="4" title="其他"/>
+       <mu-list-item :value="1" href="#/m/sortpage/s2r" title="二房一厅"/>
+       <mu-list-item :value="2" href="#/m/sortpage/sr" title="一房一厅"/>
+       <mu-list-item :value="3" href="#/m/sortpage/r" title="单房"/>
+       <mu-list-item :value="4" href="#/m/sortpage/other" title="其他"/>
        <mu-divider />
        <mu-list-item :value="5" title="注册"/>
-       <mu-list-item :value="6" title="登入"/>
+       <mu-list-item :value="6" :title="varloginexit"/>
        <mu-list-item :value="7" href="#/m/userroom" title="我租的房"/>
      </mu-list>
    </mu-drawer>
    <mu-appbar title="Easyhome">
    <mu-icon-button icon="menu" slot="left" @click="open=!open"/>
    </mu-appbar>
-    <router-view>
+    <router-view :loginstatus="usercard" @invali="Ehinvalid">
     </router-view>
 
    <mu-dialog :open="registration" title="注册">
@@ -83,7 +83,8 @@ export default{
       bottompop:false,
       responsemsg:"",
       username:'',
-      usercard:false
+      usercard:false,
+      srdatas:[]
     }
   },
   computed:{
@@ -92,10 +93,21 @@ export default{
     },
     loginbtn:function(){
         return !(((this.useriderror=="")&&(this.passworderror=="")&&(this.captchaerror==""))&&((this.userid!="")&&(this.password!="")&&(this.captchav!="")));
+    },
+    varloginexit:function(){
+      if(this.usercard)
+      {return "退出登录";}
+      else{
+        return "登录";
+      }
     }
   },
   created:function(){
-
+    if(!this.usercard){
+      var revice= new this.myrevice();
+      revice.setcontroller("user").setmethod("mvalidate");
+      revice.grequestfront(this.CbSetloginstatus);
+    }
   },
   methods:{
     toggle:function(){
@@ -129,7 +141,15 @@ export default{
        this.listv=v;
        switch(v){
          case 5:this.registration=true;this.getcaptcha();break;
-         case 6:this.loginin=true;this.getcaptcha();break;
+         case 6:if(!this.usercard){
+                 this.loginin=true;
+                 this.getcaptcha();}
+                 else{
+                   var revice=new this.myrevice();
+                   revice.setcontroller("user").setmethod("exitlogin");
+                   revice.grequestfront(this.CbExit);
+                 }
+         break;
        }
     },
     Cbregis:function(xhr){
@@ -217,6 +237,27 @@ export default{
         };
         revice.prequestfront(this.Cblogin,data);
 
+    },
+    CbSetloginstatus:function(xhr){
+      var status=JSON.parse(this.saedata(xhr.responseText)).name;
+      console.log(status);
+      if(status!=""){
+        this.usercard=true;
+        this.username=status;
+      }
+    },
+    CbExit:function(xhr){
+      var status=JSON.parse(this.saedata(xhr.responseText)).status;
+      if(status=="ok"){
+        this.usercard=false;
+        this.username="";
+      }
+    },
+    Ehinvalid:function(msg,v){
+      console.log(v);
+      this.listv=parseInt(v);
+      this.responsemsg=msg;
+      this.bottompop=true;
     }
     }
 }
@@ -254,5 +295,6 @@ export default{
 }
 .content_wrap{
   background-color: rgb(243,243,243);
+  min-height: 800px;
 }
 </style>

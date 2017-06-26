@@ -110,6 +110,7 @@
 import markdown from "@/components/front/mobile/markdown"
 export default{
   name:"userroom",
+  props:['loginstatus'],
   data:function(){
     return {
      tabsvalue:'1',
@@ -196,6 +197,11 @@ export default{
     }
   },
   created:function(){
+    if(!this.loginstatus){
+      this.$emit("invali",'请先登录','0');
+      this.$router.push({ name: 'mhome'});
+      return;
+    }
     var revice= new this.myrevice();
     revice.setcontroller('userroom');
     revice.grequestfront(this.CbSetinfodatas);

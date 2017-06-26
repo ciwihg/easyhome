@@ -2,10 +2,10 @@
   <div>
     <m-mslider :carouseldatas="carouseldatas"></m-mslider>
     <div class="nav_bar">
-      <span class="nav_item" style="background-color:rgb(237,59,59);">二房一厅</span>
-      <span class="nav_item" style="background-color:rgb(239,108,0);">一房一厅</span>
-      <span class="nav_item" style="background-color:rgb(3,155,229);">单房</span>
-      <span class="nav_item" style="background-color:rgb(124,81,197); margin-right:0px;">其他</span>
+      <a class="nav_item" href="#/m/sortpage/s2r" style="background-color:rgb(237,59,59);">二房一厅</a>
+      <a class="nav_item" href="#/m/sortpage/sr" style="background-color:rgb(239,108,0);">一房一厅</a>
+      <a class="nav_item" href="#/m/sortpage/r" style="background-color:rgb(3,155,229);">单房</a>
+      <a class="nav_item" href="#/m/sortpage/other" style="background-color:rgb(124,81,197); margin-right:0px;">其他</a>
     </div>
     <div class="row_wrap">
     <m-mgoodp :datas="srdatas" title="一房一厅" stitle="有要求 不将就"></m-mgoodp>
@@ -38,6 +38,7 @@ export default{
       var respon=JSON.parse(this.saedata(xhr.responseText));
       this.carouseldatas=respon.carousel;
       this.srdatas=respon.sr;
+      this.$emit('srdatas',this.srdatas);
       console.log(respon);
     }
   }
