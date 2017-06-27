@@ -18,6 +18,7 @@ import mhome from '@/components/front/mobile/home'
 import mdetail from '@/components/front/mobile/roomdetail'
 import muserroom from '@/components/front/mobile/userroom'
 import sortpage from '@/components/front/mobile/sortpage'
+import customer from '@/components/admin/customer'
 import MuseUI from 'muse-ui'
 import mylib from '@/mylib/mylib.js'
 import 'muse-ui/dist/muse-ui.css'
@@ -47,6 +48,11 @@ export default new Router({
           path: 'charge',
           name: 'charge',
           component: charge
+        },
+        {
+          path: 'customer',
+          name: 'customer',
+          component: customer
         },
         {
           path: 'chargeadd',

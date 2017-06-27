@@ -8,7 +8,7 @@
        <mu-list-item :value="2" href="#/adminhome/carousel" title="幻灯片"/>
        <mu-list-item :value="3" href="#/adminhome/room" title="租盘管理"/>
        <mu-list-item :value="4" href="#/adminhome/charge" title="费用管理"/>
-       <mu-list-item :value="5" title="客户管理"/>
+       <mu-list-item :value="5" href="#/adminhome/customer" title="客户管理"/>
   </mu-list>
 </mu-drawer>
 <div style="margin-left:200px;">

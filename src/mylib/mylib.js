@@ -79,15 +79,29 @@ export default {
     this.pdatagetfront=function(){
       this.ajax("GET",this.baseurl+"/front"+this.finallurl(),this.responseparse);
     }
+
+    this.pdatagetadmin=function(){
+      this.ajax("GET",this.baseurl+"/admin"+this.finallurl(),this.responseparse);
+    }
+
     this.pdatapostfront=function(data){
       this.ajax("POST",this.baseurl+"/front"+this.finallurl(),this.responseparse,this.formatpostdata(data));
     }
+
     this.grequestfront=function(callback){
       this.ajax("GET",this.baseurl+"/front"+this.finallurl(),callback);
     }
 
+    this.grequestadmin=function(callback){
+      this.ajax("GET",this.baseurl+"/admin"+this.finallurl(),callback);
+    }
+
     this.prequestfront=function(callback,data){
       this.ajax("POST",this.baseurl+"/front"+this.finallurl(),callback,this.formatpostdata(data));
+    }
+
+    this.prequestadmin=function(callback,data){
+      this.ajax("POST",this.baseurl+"/admin"+this.finallurl(),callback,this.formatpostdata(data));
     }
 
     this.grequestadmin=function(callback){

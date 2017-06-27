@@ -285,7 +285,7 @@ export default{
    },
    Cbpoptoast:function(xhr){
      var status=JSON.parse(xhr.responseText.substring(0,xhr.responseText.indexOf("<"))).status;
-     (status=="ok")?(this.msg="登记成功"):(this.msg=status)
+     (status=="ok")?(this.msg="登记成功",this.reflash()):(this.msg=status)
      this.toast=true;
    },
    Ehregisroom:function(){
@@ -298,6 +298,11 @@ export default{
    },
    Ehhidetoast:function(){
      this.toast=false;
+   },
+   reflash:function(){
+     var revice= new this.myrevice();
+     revice.setcontroller('userroom');
+     revice.grequestfront(this.CbSetinfodatas);
    }
   }
 }
