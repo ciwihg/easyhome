@@ -182,7 +182,7 @@ export default{
     CbGetimgs:function(xhr){
       var respon=JSON.parse(xhr.responseText.substring(0,xhr.responseText.indexOf("<")));
       this.roomimgs=respon;
-      (this.$refs.filewindow.style.height==this.$refs.filewindow.offsetWidth+"px")||(this.$refs.filewindow.style.height=this.$refs.filewindow.offsetWidth+"px")
+      (this.$refs.filewindow.style.height==this.$refs.filewindow.offsetWidth/2+"px")||(this.$refs.filewindow.style.height=this.$refs.filewindow.offsetWidth/2+"px")
     },
     CbReflash:function(xhr){
       this.ajax("GET","http://easyhome.applinzi.com/public/index.php/admin/roomcontroll/getimgs/rid/"+this.$route.params.rid,this.CbGetimgs);
@@ -199,6 +199,7 @@ export default{
     },
     resetimgstyle:function(e){
       (e.target.width<e.target.height)&&(e.target.style.height="100%",e.target.style.width="auto")
+      e.target.style.opacity=1;
     }
   }
 }
@@ -223,18 +224,19 @@ export default{
   vertical-align: bottom;
   cursor: pointer;
   width:100%;
+  opacity: 0;
+  transition: opacity 3000ms;
 }
 .filewindow{
-margin-left: -50%;
 position: relative;
 width: 100%;
 padding: 15px 15px;
 }
 .filewindow-wrap{
   display: inline-block;
-  position: absolute;
-  left: 50%;
-  top:10%;
+  position: fixed;
+  right: 10px;
+  top:50px;
   z-index: 12;
   width:80%;
 }
@@ -269,9 +271,9 @@ padding: 15px 15px;
   cursor: pointer;
 }
 .file-imgwrap{
-  width:23%;
+  width:11.5%;
   height: 23%;
-  margin:1% 1%;
+  margin:0.5% 0.5%;
   padding: 10px 10px;
   float: left;
   text-align: center;
