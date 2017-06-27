@@ -241,10 +241,12 @@ export default{
     CbSetloginstatus:function(xhr){
       var status=JSON.parse(this.saedata(xhr.responseText)).name;
       console.log(status);
+      if(status){
       if(status!=""){
         this.usercard=true;
         this.username=status;
       }
+    }
     },
     CbExit:function(xhr){
       var status=JSON.parse(this.saedata(xhr.responseText)).status;
