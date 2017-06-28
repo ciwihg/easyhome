@@ -76,6 +76,10 @@ export default {
       this.ajax("GET",this.baseurl+"/front"+this.finallurl(),this.responseorigin);
     }
 
+    this.odatagetadmin=function(){
+      this.ajax("GET",this.baseurl+"/admin"+this.finallurl(),this.responseorigin);
+    }
+
     this.pdatagetfront=function(){
       this.ajax("GET",this.baseurl+"/front"+this.finallurl(),this.responseparse);
     }

@@ -19,6 +19,7 @@ import mdetail from '@/components/front/mobile/roomdetail'
 import muserroom from '@/components/front/mobile/userroom'
 import sortpage from '@/components/front/mobile/sortpage'
 import customer from '@/components/admin/customer'
+import customeredit from '@/components/admin/customeredit'
 import MuseUI from 'muse-ui'
 import mylib from '@/mylib/mylib.js'
 import 'muse-ui/dist/muse-ui.css'
@@ -97,6 +98,12 @@ export default new Router({
           path: 'carouseledit/:num',
           name: 'carouseledit',
           component: carouseledit
+        }
+        ,
+        {
+          path: 'customeredit/:userid',
+          name: 'customeredit',
+          component: customeredit
         }
       ]
     },

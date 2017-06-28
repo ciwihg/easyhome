@@ -61,25 +61,51 @@
     </mu-dialog>
     <mu-dialog :open="historyon" title="出租历史" >
     <mu-content-block>
-        <mu-table :showCheckbox="false">
+        <mu-table :showCheckbox="false" @cellClick="popcinfo">
           <mu-thead>
             <mu-tr>
               <mu-th>客户</mu-th>
               <mu-th>出租时间</mu-th>
               <mu-th>退租时间</mu-th>
+              <mu-th>操作</mu-th>
             </mu-tr>
           </mu-thead>
           <mu-tbody>
-            <mu-tr v-for="item in historydata">
-              <mu-td>{{item.customer}}</mu-td>
-              <mu-td>{{item.start}}</mu-td>
-              <mu-td>{{item.end}}</mu-td>
+            <mu-tr v-for="(item,index) in historydata">
+              <mu-td :name="item.customer">{{item.customer}}</mu-td>
+              <mu-td><mu-date-picker inputClass="dateclass" style="vertical-align:middle;" underlineClass="underlinec" v-model="item.start"/></mu-td>
+              <mu-td><mu-date-picker inputClass="dateclass" underlineClass="underlinec" v-model="item.end"/></mu-td>
+              <mu-td><mu-raised-button label="保存" :cid="item.customer" :index="index" @click="savedate" primary/></mu-td>
             </mu-tr>
           </mu-tbody>
         </mu-table>
     </mu-content-block>
     <mu-flat-button slot="actions" @click="historyclose" primary label="关闭"/>
   </mu-dialog>
+  <mu-dialog :open="customerinfo" :title="customerdatas[0].cid" >
+    <mu-content-block>
+      <mu-content-block>
+          <mu-table :showCheckbox="false" >
+            <mu-tbody>
+              <mu-tr >
+                <mu-td>姓名</mu-td>
+                <mu-td>{{customerdatas[0].name}}</mu-td>
+              </mu-tr>
+              <mu-tr >
+                <mu-td>身份证号码</mu-td>
+                <mu-td>{{customerdatas[0].idnum}}</mu-td>
+              </mu-tr>
+              <mu-tr >
+                <mu-td>联系电话</mu-td>
+                <mu-td>{{customerdatas[0].phone_number}}</mu-td>
+              </mu-tr>
+            </mu-tbody>
+          </mu-table>
+      </mu-content-block>
+      </mu-content-block>
+      <mu-flat-button slot="actions" @click="closeinfo" primary label="关闭"/>
+  </mu-dialog>
+  <mu-toast v-if="toast" message="保存成功" @close="hideToast"/>
 </div>
 </template>
 
@@ -98,7 +124,11 @@ export default {
       dialogon:false,
       historyon:false,
       historydata:[],
-      code:""
+      code:"",
+      customerinfo:false,
+      customerdatas:[{}],
+      crid:'',
+      toast:false
     }
   },
   mounted () {
@@ -174,6 +204,7 @@ methods:{
     var rid;
     if(rid=e.$el.getAttribute("rid"))
     {
+      this.crid=rid;
       var revice=new this.myrevice();
       revice.setcontroller("roomcontroll").setmethod('gethistory').setparam('rid').setparamvalue(rid);
       revice.grequestadmin(this.CbGethistory);
@@ -185,16 +216,53 @@ methods:{
   },
   historyclose:function(){
     this.historyon=false;
-  }
+  },
+  popcinfo:function(a,b,c,d){
+    if(b)
+    {  var revice=new this.myrevice();
+      revice.setcontroller("customercontroll").setmethod('getcustomer');
+      revice.prequestadmin(this.CbSetcustomerdatas,{userid:b});}
+  },
+  CbSetcustomerdatas:function(xhr){
+    this.customerdatas=JSON.parse(this.saedata(xhr.responseText));
+    this.customerinfo=true;
+  },
+  closeinfo:function(){
+    this.customerinfo=false;
+  },
+  savedate:function(e){
+    var temp=e.target.parentNode.parentNode;
+    var cid=temp.getAttribute('cid');
+    var index=temp.getAttribute('index');
+    var revice=new this.myrevice();
+      revice.setcontroller("roomcontroll").setmethod('edithistory');
+      var data={
+        rid:this.crid,
+        userid:cid,
+        start:this.historydata[index].start,
+        end:this.historydata[index].end
+      }
+    revice.prequestadmin(this.Cbflashh,data);
+
+  },
+  Cbflashh:function(xhr){
+   this.toast=true;
+ },
+ hideToast:function(){
+   this.toast=false;
+ }
 }
 }
 </script>
 
-<style scoped>
+<style>
 .table_header>span{
   display: inline-block;
   font-size: 18px;
   margin-top:20px;
   margin-left: 10px;
+}
+.underlinec{
+  width:80px;
 }
 </style>

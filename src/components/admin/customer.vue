@@ -27,7 +27,7 @@
     </mu-icon-menu>
         </mu-td>
         <mu-td>
-          <mu-raised-button class="demo-raised-button" label="编辑" icon="create"  backgroundColor="blue" style="vertical-align:middle;"/>
+          <mu-raised-button :href="'#/adminhome/customeredit/'+item.userid" label="编辑" icon="create"  backgroundColor="blue" style="vertical-align:middle;"/>
         </mu-td>
       </mu-tr>
      </mu-tbody>
