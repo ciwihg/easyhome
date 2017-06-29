@@ -37,7 +37,7 @@ export default {
     }
   },
   created:function(){
-    console.log(this.$route);
+    console.log(this.$router);
     if(!this.status){
     var revice=new this.myrevice();
     revice.setcontroller('adminlogin').setmethod('check');

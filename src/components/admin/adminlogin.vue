@@ -12,6 +12,7 @@
 </template>
 
 <script>
+
 export default{
   name:'adminlogin',
   data:function(){
@@ -33,7 +34,15 @@ export default{
     CbGetstatus:function(xhr){
       var msg=JSON.parse(this.saedata(xhr.responseText)).status;
       if(msg=='ok'){
-       this.$router.push({name:'datacenter'});
+    //  this.$router.beforeEach((to,from,next)=>{
+    //    console.log(to);
+    //    if(to.path=="/ciwi_admin"){console.log(to);next('/m/home');}
+      //  else{
+      //    console.log(to);
+      //    next();
+    //    }
+    //  });
+    //  this.$router.push({name:'mhome'})
       }else{
         alert(msg);
       }

@@ -103,6 +103,7 @@ export default{
     }
   },
   created:function(){
+    setTimeout(console.log(this.$router),2000);
     if(!this.usercard){
       var revice= new this.myrevice();
       revice.setcontroller("user").setmethod("mvalidate");
