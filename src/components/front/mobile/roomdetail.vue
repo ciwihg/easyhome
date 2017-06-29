@@ -14,27 +14,21 @@
       <div>
         <div class="feature_wrap">
         <div class="feature_icon">
-          <i class="material-icons icon-format">brightness_5</i>
+          <i class="material-icons icon-format">location_city</i>
         </div>
-        <span>光线</span>
-        </div>
-        <div class="feature_wrap">
-        <div class="feature_icon">
-          <i class="material-icons icon-format">brightness_5</i>
-        </div>
-        <span>光线</span>
+        <span>{{roomdatas.type}}</span>
         </div>
         <div class="feature_wrap">
         <div class="feature_icon">
-          <i class="material-icons icon-format">brightness_5</i>
+          <i class="material-icons icon-format">{{'filter_'+String(roomdatas.number).substring(0,1)}}</i>
         </div>
-        <span>光线</span>
+        <span>楼层</span>
         </div>
         <div class="feature_wrap">
         <div class="feature_icon">
-          <i class="material-icons icon-format">brightness_5</i>
+          <i class="material-icons icon-format">brightness_7</i>
         </div>
-        <span>光线</span>
+        <span>光线{{roomdatas.sunshine}}</span>
         </div>
       </div>
       <div class="separate_line"></div>

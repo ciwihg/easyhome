@@ -9,7 +9,7 @@
       <img :src="JSON.parse(item.imgs)[0].src"/></br>
       <span class="item_mtitle">{{item.number}}房</span></br>
       <span class="item_stitle">{{item.address}}</span>
-      <div><span class="bottom_detail">光线 4.5</span></div>
+      <div><span class="bottom_detail">光线 {{item.sunshine}}</span></div>
     </a>
   </div>
   </div>
@@ -79,7 +79,7 @@ export default{
         if(this.last)
         { offset=this.lastdistance;
           this.alreadyleftmove=true;
-          console.log(offset);
+
         }
         (Math.abs(this.tdistance)>=50)?(this.$refs.itemwrap.style.transform="translate3d("+(this.offsets-offset)+"px,0,0)",this.offsets=this.offsets-offset,this.tactive++):(this.$refs.itemwrap.style.transform="translate3d("+this.offsets+"px,0,0)")
       }
@@ -87,7 +87,7 @@ export default{
         var offset=this.perwidth;
         if(this.last)
         {offset=this.lastdistance;
-        console.log(offset);
+
          }
         (Math.abs(this.tdistance)>=50)?(this.$refs.itemwrap.style.transform="translate3d("+(this.offsets+offset)+"px,0,0)",this.offsets=this.offsets+offset,this.tactive--,this.last=false):(this.$refs.itemwrap.style.transform="translate3d("+this.offsets+"px,0,0)")
       }

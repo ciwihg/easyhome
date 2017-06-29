@@ -37,7 +37,7 @@ export default{
         var touch=e.targetTouches[0];
         this.tspos=touch.pageX;
         this.tdistance=0;
-        console.log(touch.pageX);
+  
       }
     },
     tm:function(e){

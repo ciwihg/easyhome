@@ -13,7 +13,7 @@
           <span class="item-title">{{item.number}}房</span></br>
           <span class="item-stitle">{{item.address}}</span>
         </div>
-        <span class="view">查看</span>
+        <span class="view">{{another?item.type:'查看'}}</span>
        </a>
       </li>
     </ul>
@@ -29,10 +29,16 @@ export default{
 
     }
   },
-  mounted:function(){
-    if(this.$refs.itemwrap){
+  computed:{
+    another:function(){
+    return  (this.$route.params.type=='other')
+    }
+  },
+  updated:function(){
+    if(this.$refs.itemwrap!==undefined){
     this.$refs.itemwrap.forEach(function(e){
       e.style.height=(window.innerWidth-16)*0.2+16+'px';
+
     })
    }
   }

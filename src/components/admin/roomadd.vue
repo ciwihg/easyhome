@@ -13,6 +13,7 @@
   <mu-text-field label="地址" name="address" fullWidth="true" labelFloat/></br>
   <mu-text-field label="租金" name="price" fullWidth="true" labelFloat/></br>
   <mu-text-field label="户型" name="type" fullWidth="true" labelFloat/></br>
+  <mu-text-field label="光线" name="sunshine" fullWidth="true" labelFloat/></br>
   <mu-text-field label="按金" name="sub_price" fullWidth="true" labelFloat/>
  </form>
 </div>

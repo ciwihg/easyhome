@@ -20,6 +20,7 @@ import muserroom from '@/components/front/mobile/userroom'
 import sortpage from '@/components/front/mobile/sortpage'
 import customer from '@/components/admin/customer'
 import customeredit from '@/components/admin/customeredit'
+import adminlogin from '@/components/admin/adminlogin'
 import MuseUI from 'muse-ui'
 import mylib from '@/mylib/mylib.js'
 import 'muse-ui/dist/muse-ui.css'
@@ -138,6 +139,11 @@ export default new Router({
       path:"/room/:id",
       name:"mdetail",
       component: mdetail
+    },
+    {
+      path:'/ciwi_admin',
+      name:"adminlogin",
+      component: adminlogin
     }
 
   ]

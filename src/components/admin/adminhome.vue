@@ -32,8 +32,20 @@ export default {
       show:false,
       trigger:null,
       listvalue:1,
-      carouselinfos:{}
+      carouselinfos:{},
+      status:false
     }
+  },
+  created:function(){
+    console.log(this.$route);
+    if(!this.status){
+    var revice=new this.myrevice();
+    revice.setcontroller('adminlogin').setmethod('check');
+    revice.grequestadmin(this.CbGetstatus);
+   }
+  },
+  beforeMount:function(){
+
   },
   mounted () {
   this.trigger = this.$refs.addbtn;
@@ -53,6 +65,16 @@ methods:{
   },
   ccc:function(d){
     this.carouselinfos=d;
+  },
+  CbGetstatus:function(xhr){
+    var status=JSON.parse(this.saedata(xhr.responseText)).status;
+    if(status=='ok'){
+      this.status=true;
+      this.$router.push({name:'datacenter'});
+    }else{
+      this.status=false;
+      this.$router.push({name:'adminlogin'});
+    }
   }
 }
 }

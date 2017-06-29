@@ -19,6 +19,7 @@
     <mu-text-field label="地址" name="address" :value="roominfo[0].address" :fullWidth="true" /></br>
     <mu-text-field label="租金" name="price" :value="roominfo[0].price" :fullWidth="true" /></br>
     <mu-text-field label="户型" name="type" :value="roominfo[0].type" :fullWidth="true" /></br>
+    <mu-text-field label="光线" name="sunshine" :value="roominfo[0].sunshine" fullWidth="true" labelFloat/></br>
     <mu-text-field label="按金" name="sub_price" :value="roominfo[0].sub_price" :fullWidth="true" />
    </div>
 
@@ -51,8 +52,11 @@
     <div class="windowtitle">选择图片</div>
      <div class="windowcontent" @click="selecteimg" ref="filewindow">
         <div class="file-imgwrap"v-for="item in roomimgs">
+          <div style="width:100px; height:100px; display:inline-block;" class="square">
           <img class="review" :src="item.src" @load="resetimgstyle"/>
         </div>
+        </div>
+        <div v-if="loading" class="forbitmask"><mu-circular-progress  style="vertical-align:middle;" :size="60" :strokeWidth="5"/></div>
      </div>
      <div style="text-align:right;">
         <a href="javascript:;" class="upload-btn">
@@ -80,7 +84,8 @@ export default{
        openwindow:false,
        selectedimg:{},//文件夹中被选中的图片
        roomimgs:[], //文件夹中图片集
-       editimg:0 //被编辑图片的索引
+       editimg:0, //被编辑图片的索引
+       loading:false
      }
   },
   computed:{
@@ -182,9 +187,10 @@ export default{
     CbGetimgs:function(xhr){
       var respon=JSON.parse(xhr.responseText.substring(0,xhr.responseText.indexOf("<")));
       this.roomimgs=respon;
-      (this.$refs.filewindow.style.height==this.$refs.filewindow.offsetWidth/2+"px")||(this.$refs.filewindow.style.height=this.$refs.filewindow.offsetWidth/2+"px")
+      //(this.$refs.filewindow.style.height==this.$refs.filewindow.offsetWidth/2+"px")||(this.$refs.filewindow.style.height=this.$refs.filewindow.offsetWidth/2+"px")
     },
     CbReflash:function(xhr){
+      this.loading=false;
       this.ajax("GET","http://easyhome.applinzi.com/public/index.php/admin/roomcontroll/getimgs/rid/"+this.$route.params.rid,this.CbGetimgs);
     },
     CbGetcurrentimgs:function(xhr){
@@ -192,6 +198,7 @@ export default{
       this.imgs=respon;
     },
     uploadfile:function(){
+      this.loading=true;
       var file=document.getElementById("file").files[0];
       var formdata=new FormData();
       formdata.append("file",file);
@@ -199,7 +206,7 @@ export default{
     },
     resetimgstyle:function(e){
       (e.target.width<e.target.height)&&(e.target.style.height="100%",e.target.style.width="auto")
-      e.target.style.opacity=1;
+    //  e.target.style.opacity=1;
     }
   }
 }
@@ -224,8 +231,7 @@ export default{
   vertical-align: bottom;
   cursor: pointer;
   width:100%;
-  opacity: 0;
-  transition: opacity 3000ms;
+
 }
 .filewindow{
 position: relative;
@@ -238,7 +244,8 @@ padding: 15px 15px;
   right: 10px;
   top:50px;
   z-index: 12;
-  width:80%;
+  width:50%;
+  min-width: 480px;
 }
 .windowtitle{
  font-size: 16px;
@@ -271,10 +278,9 @@ padding: 15px 15px;
   cursor: pointer;
 }
 .file-imgwrap{
-  width:11.5%;
-  height: 23%;
-  margin:0.5% 0.5%;
-  padding: 10px 10px;
+  width:23%;
+  margin:1% 1%;
+  padding: 10px 0px;
   float: left;
   text-align: center;
   cursor: pointer;
@@ -282,10 +288,26 @@ padding: 15px 15px;
 .file-imgwrap:hover{
   background-color: rgb(200,200,200);
 }
-.file-imgwrap::before{
+.square::before{
   content: "";
   display: inline-block;
   height: 100%;
   vertical-align: bottom;
+}
+.forbitmask{
+  position: absolute;
+  left:0px;
+  top:0px;
+  z-index: 10;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,.5);
+  text-align: center;
+}
+.forbitmask::before{
+  content: "";
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
 }
 </style>

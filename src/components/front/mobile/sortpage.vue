@@ -1,6 +1,6 @@
 <template>
   <div >
-    <mu-tabs :value="tabsvalue" @change="Ehvchange">
+    <mu-tabs :value="tabsvalue" @change="Ehvchange" v-if="another">
       <mu-tab value="1" title="全部"/>
       <mu-tab value="2" title="横潭大街32号"/>
       <mu-tab value="4" title="朝阳巷5号"/>
@@ -53,6 +53,9 @@ export default{
     },
     address2:function(){
       return (parseInt(this.tabsvalue)>>2)&1;
+    },
+    another:function(){
+    return  !(this.$route.params.type=='other')
     }
   },
   methods:{

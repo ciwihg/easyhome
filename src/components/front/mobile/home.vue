@@ -10,6 +10,9 @@
     <div class="row_wrap">
     <m-mgoodp :datas="srdatas" title="一房一厅" stitle="有要求 不将就"></m-mgoodp>
     </div>
+    <div class="row_wrap">
+    <m-mgoodp :datas="rdatas" title="单房" stitle="够用就好 节省是美"></m-mgoodp>
+    </div>
   </div>
 </template>
 
@@ -21,7 +24,8 @@ export default{
   data:function(){
     return {
      carouseldatas:[],
-     srdatas:[]
+     srdatas:[],
+     rdatas:[]
     }
   },
   components:{
@@ -38,8 +42,8 @@ export default{
       var respon=JSON.parse(this.saedata(xhr.responseText));
       this.carouseldatas=respon.carousel;
       this.srdatas=respon.sr;
+      this.rdatas=respon.r;
       this.$emit('srdatas',this.srdatas);
-      console.log(respon);
     }
   }
 }
