@@ -46,7 +46,7 @@
       <mu-menu-item title="出租历史" :rid="room.rid" />
     </mu-icon-menu>
         </mu-td>
-        <mu-td>
+        <mu-td class="demo-raised-button">
           <mu-raised-button class="demo-raised-button" label="编辑" icon="create" @click="editroom" backgroundColor="blue" :rid="room.rid" style="vertical-align:middle;"/>
           <mu-raised-button class="demo-raised-button" label="删除" icon="delete" backgroundColor="red" @click="deleteroom" :rid="room.rid" style="vertical-align:middle;"/>
         </mu-td>
@@ -71,7 +71,7 @@
             </mu-tr>
           </mu-thead>
           <mu-tbody>
-            <mu-tr v-for="(item,index) in historydata">
+            <mu-tr v-for="(item,index) in historydata" :key="index">
               <mu-td :name="item.customer">{{item.customer}}</mu-td>
               <mu-td><mu-date-picker inputClass="dateclass" style="vertical-align:middle;" underlineClass="underlinec" v-model="item.start"/></mu-td>
               <mu-td><mu-date-picker inputClass="dateclass" underlineClass="underlinec" v-model="item.end"/></mu-td>
@@ -157,7 +157,7 @@ methods:{
   get:function(xhr){
     var respon=JSON.parse(xhr.responseText.substring(0,xhr.responseText.indexOf("<")));
     this.rooms=respon;
-    console.log(respon);
+
   },
   hover:function(){
     this.show=true;
@@ -265,4 +265,10 @@ methods:{
 .underlinec{
   width:80px;
 }
+@media screen and (max-width:600px){
+  .demo-raised-button{
+    display: none !important;
+  }
+}
+
 </style>

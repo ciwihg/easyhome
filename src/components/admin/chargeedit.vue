@@ -52,7 +52,6 @@ export default{
     get:function(xhr){
       var respon=JSON.parse(xhr.responseText.substring(0,xhr.responseText.indexOf("<")));
       this.chargeiteminfo=respon;
-      console.log(respon);
     }
   }
 }

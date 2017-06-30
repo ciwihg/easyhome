@@ -15,7 +15,7 @@
         <mu-td>已出租</mu-td>
         <mu-td>剩余</mu-td>
       </mu-tr>
-      <mu-tr v-for="(value,key) in buliding0.sum">
+      <mu-tr v-for="(value,index,key) in buliding0.sum" :key="index">
         <mu-td>{{key}}</mu-td>
         <mu-td>{{value}}</mu-td>
         <mu-td>{{buliding0.rented[key]}}</mu-td>
@@ -45,7 +45,7 @@
         <mu-td>已出租</mu-td>
         <mu-td>剩余</mu-td>
       </mu-tr>
-      <mu-tr v-for="(value,key) in buliding1.sum">
+      <mu-tr v-for="(value,index,key) in buliding1.sum" :key="index">
         <mu-td>{{key}}</mu-td>
         <mu-td>{{value}}</mu-td>
         <mu-td>{{buliding1.rented[key]}}</mu-td>
@@ -75,7 +75,7 @@
         <mu-td>已出租</mu-td>
         <mu-td>剩余</mu-td>
       </mu-tr>
-      <mu-tr v-for="(value,key) in buliding2.sum">
+      <mu-tr v-for="(value,index,key) in buliding2.sum" :key="index">
         <mu-td>{{key}}</mu-td>
         <mu-td>{{value}}</mu-td>
         <mu-td>{{buliding2.rented[key]}}</mu-td>
@@ -111,7 +111,6 @@ export default{
   methods:{
     CbSetdatas:function(xhr){
       this.datas=JSON.parse(this.saedata(xhr.responseText));
-      console.log(this.datas);
       var that=this;
       var sum,rented;
       for(var i=0;i<3;i++){

@@ -24,12 +24,12 @@
    </div>
 
    <mu-select-field name="chargeitems" v-model="chargeitems" :fullWidth="true" multiple label="选择收费项目" v-show="showchareitem">
-    <mu-menu-item :value="citem.id" :title="citem.name" v-for="citem in roominfo[2]"/>
+    <mu-menu-item :value="citem.id" :title="citem.name" v-for="(index,citem) in roominfo[2]" :key="index"/>
   </mu-select-field>
 
   <mu-table v-show="showimgs" :showCheckbox="false"  >
     <mu-tbody ref="tbody">
-      <mu-tr v-for="(item,index) in imgs">
+      <mu-tr v-for="(item,index) in imgs" :key="index">
         <mu-td><img :src="item.src" :index="index" style="width:100px;" @click="selectimg"/></mu-td>
         <mu-td style="text-align:right;">
           <mu-raised-button class="demo-raised-button" label="删除" icon="delete" @click="deleteimg" :index="index" backgroundColor="red"  style="vertical-align:middle;"/>
@@ -139,9 +139,9 @@ export default{
       for(var i=0;i<this.roominfo[1].length;i++)
       {
         this.chargeitems.push(this.roominfo[1][i].id);
-        console.log(this.chargeitems);
+
       }
-      console.log(respon);
+
     },
     htabschage:function(v){
       this.activetab=v;
@@ -152,7 +152,7 @@ export default{
     },
     addimg:function(){
       this.imgs.push({
-        src:"static/t2.jpg",
+        src:"static/none.jpg",
       })
     },
     deleteimg:function(e){

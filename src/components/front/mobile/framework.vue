@@ -17,7 +17,7 @@
        <mu-divider />
        <mu-list-item :value="5" title="注册"/>
        <mu-list-item :value="6" :title="varloginexit"/>
-       <mu-list-item :value="7" href="#/m/userroom" title="我租的房"/>
+       <mu-list-item :value="7" @click="Ehuserroom" title="我租的房"/>
      </mu-list>
    </mu-drawer>
    <mu-appbar title="Easyhome">
@@ -103,7 +103,6 @@ export default{
     }
   },
   created:function(){
-    setTimeout(console.log(this.$router),2000);
     if(!this.usercard){
       var revice= new this.myrevice();
       revice.setcontroller("user").setmethod("mvalidate");
@@ -151,6 +150,7 @@ export default{
                    revice.grequestfront(this.CbExit);
                  }
          break;
+
        }
     },
     Cbregis:function(xhr){
@@ -241,7 +241,6 @@ export default{
     },
     CbSetloginstatus:function(xhr){
       var status=JSON.parse(this.saedata(xhr.responseText)).name;
-      console.log(status);
       if(status){
       if(status!=""){
         this.usercard=true;
@@ -254,15 +253,24 @@ export default{
       if(status=="ok"){
         this.usercard=false;
         this.username="";
+        this.$router.push({name:'mhome'});  
       }
     },
     Ehinvalid:function(msg,v){
-      console.log(v);
       this.listv=parseInt(v);
       this.responsemsg=msg;
       this.bottompop=true;
+    },
+    Ehuserroom:function(){
+    if(!this.usercard){
+          this.responsemsg="请先登录";
+          this.bottompop=true;
+            }
+            else{
+          this.$router.push({name:'userroom'});
+            }
     }
-    }
+  }
 }
 </script>
 

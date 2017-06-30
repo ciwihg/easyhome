@@ -19,7 +19,7 @@
         </mu-tr>
       </mu-thead>
        <mu-tbody>
-         <mu-tr  v-for="(item,index) in carousels">
+         <mu-tr  v-for="(item,index) in carousels" :key="index">
           <mu-td><mu-avatar  style="vertical-align:middle;" :src="item.src"/></mu-td>
           <mu-td>{{item.title}}</mu-td>
           <mu-td>
@@ -67,7 +67,6 @@ export default{
     get:function(xhr){
       var respon=JSON.parse(xhr.responseText.substring(0,xhr.responseText.indexOf("<")));
       this.carousels=respon;
-      console.log(respon);
     },
     hclick:function(e){
       var num=e.target.parentNode.parentNode.getAttribute("num");

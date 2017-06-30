@@ -42,7 +42,8 @@ export default{
       //    next();
     //    }
     //  });
-    //  this.$router.push({name:'mhome'})
+     window.location="http://easyhome.applinzi.com/public/#/adminhome/datacenter";
+
       }else{
         alert(msg);
       }

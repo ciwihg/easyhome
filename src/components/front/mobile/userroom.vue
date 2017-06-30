@@ -6,7 +6,7 @@
    <mu-tab value="4" title="租房登记"/>
  </mu-tabs>
  <div v-if="infoon" class="infotab">
- <m-markdown :head="info.number+'房'" v-for="info in infodatas">
+ <m-markdown :head="info.number+'房'" v-for="(info,index) in infodatas" :key="index">
  <mu-table :showCheckbox="false">
    <mu-thead>
      <mu-tr>
@@ -39,7 +39,7 @@
       </mu-tr>
    </mu-thead>
    <mu-tbody>
-     <mu-tr v-for="item in info.chargeitems">
+     <mu-tr v-for="(item,index) in info.chargeitems" :key="index">
        <mu-td>{{item.name}}</mu-td>
        <mu-td>{{item.price}}</mu-td>
      </mu-tr>
@@ -81,7 +81,7 @@
        <mu-tr v-if="wateron">
          <mu-td>金额{{waterfee}}元</mu-td>
        </mu-tr>
-       <mu-tr v-for="item in billdatas.chargeitems" v-if="item!==eletric&&item!==water">
+       <mu-tr v-for="(item,index) in billdatas.chargeitems" v-if="item!==eletric&&item!==water" :key="index">
          <mu-td>{{item.name}}</mu-td>
          <mu-td>{{item.price}}</mu-td>
        </mu-tr>
@@ -197,11 +197,6 @@ export default{
     }
   },
   created:function(){
-    if(!this.loginstatus){
-      this.$emit("invali",'请先登录','0');
-      this.$router.push({ name: 'mhome'});
-      return;
-    }
     var revice= new this.myrevice();
     revice.setcontroller('userroom');
     revice.grequestfront(this.CbSetinfodatas);

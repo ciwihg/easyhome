@@ -73,7 +73,6 @@ methods:{
   get:function(xhr){
     var respon=JSON.parse(xhr.responseText.substring(0,xhr.responseText.indexOf("<")));
     this.chargeitems=respon;
-    console.log(respon);
   },
   hover:function(){
     this.show=true;

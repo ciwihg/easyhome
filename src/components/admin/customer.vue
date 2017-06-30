@@ -12,7 +12,7 @@
       </mu-tr>
     </mu-thead>
      <mu-tbody>
-       <mu-tr v-for="item in rooms">
+       <mu-tr v-for="(item,index) in rooms" :key="index">
         <mu-td>{{item.userid}}</mu-td>
         <mu-td>
           <mu-icon-menu
@@ -20,7 +20,7 @@
       :anchorOrigin="{vertical: 'top',horizontal: 'left'}"
       :targetOrigin="{vertical: 'top',horizontal: 'left'}"
     >
-      <mu-menu-item titleClass="myitemtitle" v-for="room in item.rooms">
+      <mu-menu-item titleClass="myitemtitle" v-for="(room,index) in item.rooms" :key="index">
         <span slot="title">{{room.number}}房</br><span style="color:rgb(180,180,180)">{{room.address}}</span></span>
         <mu-raised-button  slot="after" label="退租" backgroundColor="red" @click="deleteroom" :rid="room.rid" :userid="item.userid"/>
       </mu-menu-item>
