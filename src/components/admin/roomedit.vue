@@ -24,7 +24,7 @@
    </div>
 
    <mu-select-field name="chargeitems" v-model="chargeitems" :fullWidth="true" multiple label="选择收费项目" v-show="showchareitem">
-    <mu-menu-item :value="citem.id" :title="citem.name" v-for="(index,citem) in roominfo[2]" :key="index"/>
+    <mu-menu-item :value="citem.id" :title="citem.name" v-for="(citem,index) in roominfo[2]" :key="index"/>
   </mu-select-field>
 
   <mu-table v-show="showimgs" :showCheckbox="false"  >

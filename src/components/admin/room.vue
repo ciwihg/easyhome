@@ -16,9 +16,9 @@
         <mu-th>房号</mu-th>
         <mu-th>户型</mu-th>
         <mu-th>地址</mu-th>
-        <mu-th>注册码</mu-th>
+        <mu-th class="wclass">注册码</mu-th>
         <mu-th>更多</mu-th>
-        <mu-th>操作</mu-th>
+        <mu-th class="wclass">操作</mu-th>
       </mu-tr>
     </mu-thead>
      <mu-tbody>
@@ -32,7 +32,7 @@
         <mu-td>
             <mu-raised-button label="查看" @click="viewwater" backgroundColor="blue" :rid="room.rid" />
         </mu-td>-->
-        <mu-td>
+        <mu-td class="wclass">
             <mu-raised-button label="查看" backgroundColor="blue" @click="viewcode" :rid="room.rid" />
         </mu-td>
         <mu-td>
@@ -40,13 +40,16 @@
       icon="more_vert"
       :anchorOrigin="{vertical: 'top',horizontal: 'left'}"
       :targetOrigin="{vertical: 'top',horizontal: 'left'}"
-    @itemClick="showhistory">
+    @itemClick="Ehmenuclick">
       <mu-menu-item title="电费记录" :href="'#/adminhome/roomrecord/'+room.rid+'/e'" />
       <mu-menu-item title="水费记录" :href="'#/adminhome/roomrecord/'+room.rid+'/w'" />
+      <mu-menu-item class="menuclass" title="注册码" :cid="room.rid"/>
+      <mu-menu-item class="menuclass" title="编辑" :href="'#/adminhome/roomedit/'+room.rid"/>
+      <mu-menu-item class="menuclass" title="删除" :did="room.rid"/>
       <mu-menu-item title="出租历史" :rid="room.rid" />
     </mu-icon-menu>
         </mu-td>
-        <mu-td class="demo-raised-button">
+        <mu-td class="wclass">
           <mu-raised-button class="demo-raised-button" label="编辑" icon="create" @click="editroom" backgroundColor="blue" :rid="room.rid" style="vertical-align:middle;"/>
           <mu-raised-button class="demo-raised-button" label="删除" icon="delete" backgroundColor="red" @click="deleteroom" :rid="room.rid" style="vertical-align:middle;"/>
         </mu-td>
@@ -200,7 +203,7 @@ methods:{
     this.historydata=JSON.parse(this.saedata(xhr.responseText));
     this.historyon=true;
   },
-  showhistory:function(e){
+  Ehmenuclick:function(e){
     var rid;
     if(rid=e.$el.getAttribute("rid"))
     {
@@ -208,6 +211,18 @@ methods:{
       var revice=new this.myrevice();
       revice.setcontroller("roomcontroll").setmethod('gethistory').setparam('rid').setparamvalue(rid);
       revice.grequestadmin(this.CbGethistory);
+    }
+
+
+    if(rid=e.$el.getAttribute("cid"))
+    {
+      this.ajax("GET","http://easyhome.applinzi.com/public/index.php/admin/roomcontroll/getcode/rid/"+rid,this.CbGetcode);
+    }
+
+
+    if(rid=e.$el.getAttribute("did"))
+    {
+      this.ajax("GET","http://easyhome.applinzi.com/public/index.php/admin/roomcontroll/delete/rid/"+rid,this.get);
     }
     else{
       return;
@@ -265,9 +280,15 @@ methods:{
 .underlinec{
   width:80px;
 }
+.menuclass{
+    display: none;
+}
 @media screen and (max-width:600px){
-  .demo-raised-button{
+  .wclass{
     display: none !important;
+  }
+  .menuclass{
+      display: block !important;
   }
 }
 

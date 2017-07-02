@@ -145,6 +145,14 @@ export default{
   ]
 
     }
+  },
+  created: function created() {
+    var reg=/Mobile/;
+    var device=navigator.userAgent;
+    if(device.search(reg)!=-1){
+      this.$router.push({name:'mhome'});
+    }
+
   }
 }
 </script>

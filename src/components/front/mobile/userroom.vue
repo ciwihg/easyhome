@@ -210,7 +210,7 @@ export default{
       var reponse=JSON.parse(xhr.responseText.substring(0,xhr.responseText.indexOf("<")));
       var item;
       var that=this;
-      for(item in reponse){
+     /*for(item in reponse){
         reponse[item].chargeitems.forEach(function(element){
           switch(element.name){
             case '电费':element.price=element.price+"元/KWH";break;
@@ -218,7 +218,7 @@ export default{
             default:element.price=element.price+"元/月";
           }
         });
-      }
+      }*/
       this.infodatas=reponse;
     },
     CbSetyearmonth:function(xhr){

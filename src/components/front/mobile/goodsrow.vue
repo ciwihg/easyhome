@@ -22,12 +22,16 @@ export default{
   data:function(){
     return {
       tspos:0,
+      tsypos:0,
       tdistance:0,
+      tydistance:0,
       tactive:1,
       offsets:0,
        last:false,
        lastdistance:0,
-       alreadyleftmove:true
+       alreadyleftmove:true,
+       ymove:false,
+       judge:false
     }
   },
   computed:{
@@ -41,6 +45,7 @@ export default{
       if(e.targetTouches.length==1){
         var touch=e.targetTouches[0];
         this.tspos=touch.pageX;
+        this.tsypos=touch.pageY;
         this.tdistance=0;
       }
     },
@@ -48,6 +53,20 @@ export default{
       if(e.targetTouches.length==1){
         var touch=e.targetTouches[0];
         this.tdistance=this.tspos-touch.pageX;
+        if(!this.judge){
+        this.tydistance=this.tsypos-touch.pageY;
+        if(Math.abs(this.tydistance)>=Math.abs(this.tdistance)){
+          this.ymove=true;
+          }else{
+          this.ymove=false;
+          }
+        this.judge=true;
+        }
+        if(this.ymove){
+          this.tdistance=0;
+          return;
+        }
+        e.preventDefault();
         if(this.tactive==1&&this.tdistance<0){
           this.tdistance=0;
           return
@@ -74,6 +93,7 @@ export default{
       }
     },
     te:function(e){
+      this.judge=false;
       if(this.tdistance>0){
         var offset=this.perwidth;
         if(this.last)

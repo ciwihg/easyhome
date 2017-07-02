@@ -26,9 +26,13 @@ export default{
   data:function(){
     return {
       tspos:0,
+      tsypos:0,
       tdistance:0,
+      tydistance:0,
       tactive:1,
-      offsets:0
+      offsets:0,
+      ymove:false,
+      judge:false
     }
   },
   methods:{
@@ -36,14 +40,29 @@ export default{
       if(e.targetTouches.length==1){
         var touch=e.targetTouches[0];
         this.tspos=touch.pageX;
+        this.tsypos=touch.pageY;
         this.tdistance=0;
-  
+
       }
     },
     tm:function(e){
       if(e.targetTouches.length==1){
         var touch=e.targetTouches[0];
         this.tdistance=this.tspos-touch.pageX;
+        if(!this.judge){
+        this.tydistance=this.tsypos-touch.pageY;
+        if(Math.abs(this.tydistance)>=Math.abs(this.tdistance)){
+          this.ymove=true;
+          }else{
+          this.ymove=false;
+          }
+        this.judge=true;
+        }
+        if(this.ymove){
+          this.tdistance=0;
+          return;
+        }
+        e.preventDefault();
         if(this.tactive==1&&this.tdistance<0){
           this.tdistance=0;
           return
@@ -57,6 +76,7 @@ export default{
       }
     },
     te:function(e){
+      this.judge=false;
       if(this.tdistance>0){
         var offset;
         if(this.tactive==1||this.tactive==this.carouseldatas.length-1){
@@ -66,7 +86,7 @@ export default{
           offset=window.innerWidth*0.84;
         }
 
-        (Math.abs(this.tdistance)>=100)?(this.$refs.itemwrap.style.transform="translate3d("+(this.offsets-offset)+"px,0,0)",this.offsets=this.offsets-offset,this.tactive++):(this.$refs.itemwrap.style.transform="translate3d("+this.offsets+"px,0,0)")
+        (Math.abs(this.tdistance)>=50)?(this.$refs.itemwrap.style.transform="translate3d("+(this.offsets-offset)+"px,0,0)",this.offsets=this.offsets-offset,this.tactive++):(this.$refs.itemwrap.style.transform="translate3d("+this.offsets+"px,0,0)")
       }
       else if(this.tdistance<0){
         var offset;
@@ -76,7 +96,7 @@ export default{
         else{
           offset=window.innerWidth*0.84;
         }
-        (Math.abs(this.tdistance)>=100)?(this.$refs.itemwrap.style.transform="translate3d("+(this.offsets+offset)+"px,0,0)",this.offsets=this.offsets+offset,this.tactive--):(this.$refs.itemwrap.style.transform="translate3d("+this.offsets+"px,0,0)")
+        (Math.abs(this.tdistance)>=50)?(this.$refs.itemwrap.style.transform="translate3d("+(this.offsets+offset)+"px,0,0)",this.offsets=this.offsets+offset,this.tactive--):(this.$refs.itemwrap.style.transform="translate3d("+this.offsets+"px,0,0)")
       }
     }
   }
