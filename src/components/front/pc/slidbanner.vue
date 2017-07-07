@@ -8,21 +8,30 @@
             <a href="#" >
               <img :src="item.src" />
               <div class="mask"></div>
-              <span>{{item.title}}</span>
+              <div class="info_wrap">
+                <span class="mtitle">{{item.title}}</span></br>
+                <span class="stitle">{{item.stitle}}</span>
+              </div>
             </a>
           </div>
           <div  class="item_wrap" v-for="item in datas">
             <a href="#" >
               <img :src="item.src" />
               <div class="mask"></div>
-              <span>{{item.title}}</span>
+              <div class="info_wrap">
+                <span class="mtitle">{{item.title}}</span></br>
+                <span class="stitle">{{item.stitle}}</span>
+              </div>
             </a>
           </div>
           <div  class="item_wrap" v-for="item in datas">
             <a href="#" >
               <img :src="item.src" />
               <div class="mask"></div>
-              <span>{{item.title}}</span>
+              <div class="info_wrap">
+                <span class="mtitle">{{item.title}}</span></br>
+                <span class="stitle">{{item.stitle}}</span>
+              </div>
             </a>
           </div>
     </div>
@@ -45,9 +54,19 @@ export default{
 
   }
 },
+created:function(){
+  this.$watch(function(){
+    return this.datas;
+  },function(n, o){
+    if(o.length==0){
+    this.temp=this.temp-this.datas.length*515;
+    this.$refs.img_wrap.style.transform="translate3d("+this.temp+"px, 0px, 0px)";
+  }
+  })
+},
   mounted:function(){
     this.lastw=this.temp=(parseInt(this.$el.offsetWidth)-parseInt(parseInt(this.$el.offsetWidth)/515)*515)/2;
-    this.temp=this.temp-8*515;
+    this.temp=this.temp-this.datas.length*515;
     this.$refs.img_wrap.style.transform="translate3d("+this.temp+"px, 0px, 0px)";
     var that=this;
     window.onresize=function(){
@@ -88,15 +107,15 @@ export default{
     },
     ht:function(){
       this.transting=false;
-      if(this.temp===-16*515+this.lastw)
+      if(this.temp===-this.datas.length*2*515+this.lastw)
       {
-        this.temp=this.lastw-8*515;
+        this.temp=this.lastw-this.datas.length*515;
         this.$refs.img_wrap.style.transition="none";
-        this.$refs.img_wrap.style.transform="translate3d("+(this.lastw-8*515)+"px, 0px, 0px)";
+        this.$refs.img_wrap.style.transform="translate3d("+(this.lastw-this.datas.length*515)+"px, 0px, 0px)";
       }else if(this.temp===-515+this.lastw){
-          this.temp=this.lastw-9*515;
+          this.temp=this.lastw-(this.datas.length+1)*515;
           this.$refs.img_wrap.style.transition="none";
-          this.$refs.img_wrap.style.transform="translate3d("+(this.lastw-9*515)+"px, 0px, 0px)";
+          this.$refs.img_wrap.style.transform="translate3d("+(this.lastw-(this.datas.length+1)*515)+"px, 0px, 0px)";
 
 
       }
@@ -123,7 +142,7 @@ height:290px;
   height:100%;
   position:relative;
 }
-.item_wrap>a>span{
+.info_wrap{
   display: inline-block;
   width:100%;
   height:80px;
@@ -132,11 +151,17 @@ height:290px;
   background:linear-gradient(to top,rgba(0,0,0,0.9), transparent);
   position:absolute;
   text-align: center;
-  font-size: 30px;
-  color:white;
-  line-height: 80px;
   z-index: 2;
 }
+.mtitle{
+  font-size: 25px;
+  color:white;
+}
+.stitle{
+  font-size: 15px;
+  color:white;
+}
+
 .mask{
   display: inline-block;
   width:100%;

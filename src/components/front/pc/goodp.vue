@@ -1,23 +1,22 @@
 <template>
   <div>
-    <div>
-      <span class="rowtitle">最近出租</span>
+    <div class="rowtitle">
+
+        <span class="rtitle">{{title}}</span>
+        </br>
+        <span class="rsubtitle">{{subtitle}}</span>
     </div>
     <div class="itemwrap">
-    <div class="item" v-for="n in 10">
+    <div class="item" v-for="item in datas">
       <a href="#" >
-      <img src="static/img.jpg"/>
+      <img  style="width:100%":src="JSON.parse(item.imgs)[0].src"/>
       <div class="mask"></div>
       </a>
       <div class="detail_wrap">
-      <span class="mtitle">301房</span></br>
-      <span class="stitle">朝阳巷5号</span>
+      <span class="mtitle">{{item.number}}房</span></br>
+      <span class="stitle">{{item.address}}</span>
       <div >
-        <i class="material-icons iconsize">star</i>
-        <i class="material-icons iconsize">star</i>
-        <i class="material-icons iconsize">star</i>
-        <i class="material-icons iconsize">star</i>
-        <i class="material-icons iconsize">star</i>
+        <i class="material-icons iconsize" v-for="n in item.sunshine">star</i>
         <span>光线</span>
       </div>
       </div>
@@ -27,6 +26,10 @@
 </template>
 
 <script>
+export default{
+  name:'goodp',
+  props:['title','subtitle','datas']
+}
 </script>
 
 <style scoped>
@@ -56,12 +59,11 @@
   transition: opacity 400ms cubic-bezier(0.25,0.46,0.45,0.94);
 }
 .item:hover .mask{
-  background-color: rgba(0,0,0,0.3);
+  background-color: rgba(0,0,0,0.5);
   opacity: 1
 }
 .itemwrap{
   width: 100%;
-  height: 360px;
   overflow: hidden;
 }
 .itemwrap::after{
@@ -72,7 +74,7 @@
 }
 .rowtitle{
   padding-left: 10px;
-  font-size: 23px;
+
 }
 .detail_wrap{
   padding:10px 12px;
@@ -96,5 +98,13 @@
   display:inline-block;
   line-height:1;
   color:#ff5722;
+}
+.rtitle{
+  font-size: 23px;
+  color:rgb(130,130,130);
+}
+.rsubtitle{
+  font-size: 13px;
+  color:rgb(130,130,130);
 }
 </style>

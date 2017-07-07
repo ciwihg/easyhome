@@ -15,24 +15,17 @@
     </span>
    </div>
  </div>
+<div style="background-color:rgb(238,238,238);">
+<div :class="{'navfixed':navfix}">
+    <m-navbar  style="vertical-align:top;" :datas="navdatas"></m-navbar>
+</div>
+<div style="margin-left:200px; position:relative;top:-250px;">
+  <div :class="{'pagenavbar':pnav,'pnavfixed':!pnav}"></div>
+  <div :class="{'hiddenbar':pnav,'shiddenbar':!pnav}"></div>
+   <router-view></router-view>
+</div>
 
-  <div class="nb_wrap">
-    <m-navbar class="navbar" :color="color" :datas="navdatas"></m-navbar>
-    <div style="margin-left:200px; background-color:white;">
-     <m-slider :datas="tdatas"  class="banner"></m-slider>
-   </div>
- </div>
-
-  <div style="background-color:rgb(238,238,238); padding-left:243px; padding-top:60px; ">
-    <m-goodrow></m-goodrow>
-    <m-goodrow></m-goodrow>
-    <m-goodrow></m-goodrow>
-    <m-goodrow></m-goodrow>
-    <m-goodrow></m-goodrow>
-
-
-  </div>
-
+</div>
 </div>
 </template>
 
@@ -49,31 +42,8 @@ export default{
   },
   data:function(){
     return {
-      tdatas:[
-        {src:"static/t1.jpg",
-         title:"细节图1"},
-         {src:"static/t2.jpg",
-          title:"细节图2"},
-          {src:"static/t3.jpg",
-           title:"细节图3"},
-           {src:"static/t4.jpg",
-            title:"细节图4"},
-            {src:"static/t5.jpg",
-             title:"细节图5"},
-             {src:"static/t6.jpg",
-              title:"细节图6"},
-              {src:"static/t7.jpg",
-               title:"细节图7"},
-               {src:"static/t8.jpg",
-                title:"细节图8"}
-    ],
-    color:["rgb(68,68,68)",
-    "rgb(104,159,56)",
-    "rgb(237,59,59)",
-    "rgb(239,108,0)",
-    "rgb(3,155,229)",
-    "rgb(83,109,254)"
-  ],
+      pnav:true,
+      navfix:false,
   navdatas:[
     {content:"首页",
      color:"rgb(68,68,68)",
@@ -85,11 +55,9 @@ export default{
      color:"rgb(104,159,56)",
      link:"",
      submenu:[
-       {content:"最新出租",
+       {content:"横潭大街32号",
        link:""},
-       {content:"特价出租",
-       link:""},
-       {content:"热销户型",
+       {content:"朝阳巷5号",
        link:""}
      ]
     },
@@ -97,48 +65,32 @@ export default{
      color:"rgb(239,108,0)",
      link:"",
      submenu:[
-       {content:"最新出租",
+       {content:"横潭大街32号",
        link:""},
-       {content:"特价出租",
-       link:""},
-       {content:"热销户型",
+       {content:"朝阳巷5号",
        link:""}
      ]
     },
 
-    {content:"优惠活动",
+    {content:"单房",
      color:"rgb(3,155,229)",
      link:"",
      submenu:[
-       {content:"最新出租",
+       {content:"横潭大街32号",
        link:""},
-       {content:"特价出租",
-       link:""},
-       {content:"热销户型",
+       {content:"朝阳巷5号",
        link:""}
      ]
     },
-    {content:"促销活动",
+    {content:"其他",
      color:"rgb(83,109,254)",
      link:"",
      submenu:[
-       {content:"最新出租",
+       {content:"横潭大街32号",
        link:""},
-       {content:"特价出租",
+       {content:"朝阳巷5号",
        link:""},
-       {content:"热销户型",
-       link:""}
-     ]
-    },
-    {content:"测试",
-     color:"rgb(101,128,146)",
-     link:"",
-     submenu:[
-       {content:"测试1",
-       link:""},
-       {content:"测试2",
-       link:""},
-       {content:"测试3",
+       {content:"横潭市场",
        link:""}
      ]
     }
@@ -151,7 +103,14 @@ export default{
     var device=navigator.userAgent;
     if(device.search(reg)!=-1){
       this.$router.push({name:'mhome'});
+    }else{
+      var that=this;
+      document.addEventListener("scroll",function(){
+        (document.body.scrollTop>=60)?(that.navfix=true,that.pnav=false):(that.navfix=false,that.pnav=true)
+    });
     }
+  },
+  methods:{
 
   }
 }
@@ -233,8 +192,30 @@ export default{
   left: 0px;
   top:0px;
 }
-.banner{
+
+.navfixed{
+  position: fixed;
+  left:0px;
+  top:0px;
 
 }
-
+.pnavfixed{
+  position: fixed;
+  top:0px;
+  height: 50px;
+  background-color: white;
+  box-shadow: 0px 2px 4px rgba(0,0,0,.2);
+  width: 100%;
+  z-index: 2;
+}
+.pagenavbar{
+  height: 50px;
+  background-color: white;
+}
+.hiddenbar{
+  height: 0px;
+}
+.shiddenbar{
+  height: 300px;
+}
 </style>

@@ -269,6 +269,7 @@ export default{
   height: 0px;
   overflow: hidden;
   transition: all .5s;
+  margin-bottom: 0px;
 }
 .sub_menu>li{
   height: 40px;

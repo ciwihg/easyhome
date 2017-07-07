@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import home from '@/components/front/pc/home'
+import pcframework from '@/components/front/pc/pcframework'
+import pchome from '@/components/front/pc/pchome'
+import pcdetail from '@/components/front/pc/pcdetail'
 import adminhome from '@/components/admin/adminhome'
 import room from '@/components/admin/room'
 import roomadd from '@/components/admin/roomadd'
@@ -31,11 +33,23 @@ Vue.use(Router)
 
 export default new Router({
   routes: [
-    
+     { path: '/', redirect: '/home' },
     {
       path:"/",
-      name:"home",
-      component: home
+      name:"pcframework",
+      component: pcframework,
+      children:[
+        {
+          path:'home',
+          name:'pchome',
+          component:pchome
+        },
+        {
+          path:"/room/:id",
+          name:"pcdetail",
+          component: pcdetail
+        }
+      ]
     },
     {
       path:"/m",
