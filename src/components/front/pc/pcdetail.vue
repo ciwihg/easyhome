@@ -11,16 +11,26 @@
      </div>
     </div>
 
-    <div class="pic-row">
-      <div class="prev-btn">
+    <div class="pic-row" ref="picrow">
+      <div class="prev-btn" v-if="prevon">
+        <div @click="prev"><i class="material-icons arrow">navigate_before</i></div>
       </div>
+      <div ref="imgcover" style="margin:0 50px; overflow:hidden; transition:all 400ms;">
     <div class="pic-framework">
-      <div class="pic-wrap" v-for="item in roomimgs">
-        <img :src="item.src"/>
+      <div @click="ttt" class="pic-wrap" v-for="(item,index) in roomimgs" >
+        <img :src="item.src" :num="index"/>
       </div>
     </div>
+  </div>
+  <div class="imgitem"  v-for="item in roomimgs" ref="carouselimgs" style="padding:20px 80px; position:absolute; top:0px; transition:all 400ms; ">
+    <img style="width:100%" :src="item.src"/>
+  </div>
     <div class="next-btn">
-      <i class="material-icons arrow">navigate_next</i>
+      <div @click="tc"><i class="material-icons arrow">navigate_next</i></div>
+    </div>
+    <div class="zoomout-btn" v-show="prevon" @click="zoomout" >
+      <i class="material-icons zoomout1">call_made</i>
+      <i class="material-icons zoomout12">call_received</i>
     </div>
   </div>
 
@@ -68,9 +78,11 @@ export default{
     return {
      mainpic:'',
      roomdatas:{},
-     roomimgs:[],
+     roomimgs:[{}],
      agreementh:0,
-     noshow:true
+     noshow:true,
+     index:-1,
+     prevon:false
     }
   },
   created:function(){
@@ -93,6 +105,52 @@ export default{
     showfull:function(){
       this.$refs.agreement.style.height=this.agreementh+"px";
       this.noshow=false;
+    },
+    tc:function(){
+        if(this.index==this.$refs.carouselimgs.length-1){
+          return;
+        }
+      (this.index!=-1)&&(this.$refs.carouselimgs[this.index].className="imgitem");
+      (this.index==-1)&&(this.$refs.imgcover.className="imgitem");
+      this.$refs.carouselimgs[++this.index].className="next";
+      this.$refs.carouselimgs[this.index].offsetHeight
+      this.$refs.carouselimgs[this.index].className="next slid";
+
+        this.$refs.picrow.style.height="900px";
+        this.prevon=true;
+    },
+    prev:function(){
+      this.$refs.carouselimgs[this.index].className="imgitem";
+      if(this.index==0){
+        this.$refs.imgcover.className="prev";
+        this.$refs.imgcover.offsetHeight
+        this.$refs.imgcover.className="prev slid";
+        this.$refs.picrow.style.height="286px";
+        --this.index;
+        this.prevon=false;
+        return;
+      }
+      this.$refs.carouselimgs[--this.index].className="prev";
+      this.$refs.carouselimgs[this.index].offsetHeight
+      this.$refs.carouselimgs[this.index].className="prev slid";
+    },
+    ttt:function(e){
+      this.index=parseInt(e.target.getAttribute('num'));
+      this.$refs.imgcover.className="imgitem";
+      this.$refs.carouselimgs[this.index].className="next";
+      this.$refs.carouselimgs[this.index].offsetHeight
+      this.$refs.carouselimgs[this.index].className="next slid";
+      this.$refs.picrow.style.height="900px";
+      this.prevon=true;
+    },
+    zoomout:function(){
+      this.$refs.carouselimgs[this.index].className="imgitem";
+      this.$refs.imgcover.className="prev";
+      this.$refs.imgcover.offsetHeight
+      this.$refs.imgcover.className="prev slid";
+      this.$refs.picrow.style.height="286px";
+      this.index=-1;
+      this.prevon=false;
     }
   }
 }
@@ -157,17 +215,19 @@ export default{
 }
 .pic-wrap{
   width:3%;
-  margin: 0 0.16%;
+  margin: 0 .16%;
   float: left;
 
 }
 .pic-row{
     overflow: hidden;
     margin-top: 40px;
+    position: relative;
+    transition: all 400ms;
+    height: 286px;
 }
 .pic-framework{
   width:1000%;
-
 }
 .pic-framework::after{
   content: "";
@@ -206,5 +266,92 @@ export default{
 }
 .f-text{
   color:#e1bee7;
+}
+.next-btn{
+  position: absolute;
+  right:0px;
+  height: 100%;
+  top:0px;
+  width: 50px;
+  padding: 60px 5px;
+  z-index: 1;
+}
+.next-btn div,.prev-btn div{
+  height: 100%;
+  text-align: center;
+  border: 1px solid rgba(0,0,0,0);
+  border-radius: 4px;
+  background-color: white;
+}
+.next-btn div:hover,.prev-btn div:hover{
+  border: 1px solid rgba(0,0,0,.2);
+}
+.next-btn div::before,.prev-btn div::before{
+  content:'';
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+}
+.prev-btn{
+  position: absolute;
+  left:0px;
+  height: 100%;
+  width:50px;
+  top:0px;
+  padding: 60px 5px;
+  z-index: 1;
+}
+.arrow{
+  vertical-align: middle;
+  font-size: 30px;
+}
+.imgitem{
+  background-color: white;
+  display: none;
+  transform: translateX(0%);
+}
+
+.next{
+  display: block;
+  z-index: 0;
+  transform: translateX(100%);
+}
+.prev{
+  z-index: 0;
+  display: block;
+  transform: translateX(-100%);
+}
+.next.slid,.prev.slid{
+  background-color: white;
+  transform: translateX(0%);
+}
+.zoomout-btn{
+  position: absolute;
+  right: 5px;
+  height: 40px;
+  width: 40px;
+  top:0px;
+  border: 1px solid rgba(0,0,0,0.2);
+  border-radius: 4px;
+  background-color: white;
+  z-index: 2;
+}
+.zoomout-btn:hover{
+  border: 1px solid rgba(0,0,0,0.4);
+}
+.zoomout-btn::before{
+  content: "";
+  display:inline-block;
+  height: 100%;
+  vertical-align: bottom;
+}
+.zoomout1{
+  vertical-align: bottom;
+  display: inline-block;
+  font-size: 17px;
+}
+.zoomout12{
+  vertical-align: top;
+  font-size: 17px;
 }
 </style>

@@ -8,15 +8,13 @@
     </div>
     </form>
     <div  class="header_right"style="display:inline-block; float:right; height:100%;">
-    <span class="more">
-    </span>
-    <span class="user">
-      C
-    </span>
+    <div class="loginbtn" @click="openlogin">
+      登录
+    </div>
    </div>
  </div>
 <div style="background-color:rgb(238,238,238);">
-<div :class="{'navfixed':navfix}">
+<div :class="{'navfixed':navfix}" style="z-index:2;">
     <m-navbar  style="vertical-align:top;" :datas="navdatas"></m-navbar>
 </div>
 <div style="margin-left:200px; position:relative;top:-250px;">
@@ -25,6 +23,14 @@
    <router-view></router-view>
 </div>
 
+</div>
+<div class="whitemask" v-if="maskon">
+  <mu-paper class="loginwrap">
+    <mu-text-field label="帐号" name="userid"  labelFloat/><br/>
+    <mu-text-field label="密码" type="password" name="password" labelFloat/><br/>
+    <mu-flat-button primary label="登录" />
+    <mu-flat-button primary label="取消"/>
+  </mu-paper>
 </div>
 </div>
 </template>
@@ -44,6 +50,7 @@ export default{
     return {
       pnav:true,
       navfix:false,
+      maskon:false,
   navdatas:[
     {content:"首页",
      color:"rgb(68,68,68)",
@@ -111,7 +118,11 @@ export default{
     }
   },
   methods:{
-
+     openlogin:function(){
+       this.maskon=true;
+       document.body.style.overflow='hidden';
+       document.all[0].style.overflow='hidden';
+     }
   }
 }
 </script>
@@ -164,17 +175,18 @@ export default{
     vertical-align: middle;
     margin-right: 30px;
 }
-.user{
+.loginbtn{
   display: inline-block;
-  width:32px;
+  width:55px;
   height:32px;
-  border-radius: 50%;
+  border-radius: 2px;
   background-color: #2196f3;
   color:white;
   vertical-align: middle;
   text-align: center;
   line-height: 32px;
   margin-right: 30px;
+  cursor: pointer;
 }
 .header_right::before{
   content: "";
@@ -217,5 +229,27 @@ export default{
 }
 .shiddenbar{
   height: 300px;
+}
+.whitemask{
+  position: fixed;
+  left: 0;
+  right:0;
+  top:0;
+  bottom:0;
+  z-index: 1;
+  background-color: rgb(238,238,238);
+  text-align: center;
+}
+.whitemask::before{
+  content: "";
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+}
+.loginwrap{
+  width:25%;
+  min-width: 320px;
+  display: inline-block;
+  vertical-align: middle;
 }
 </style>

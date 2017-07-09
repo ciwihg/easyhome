@@ -38,14 +38,14 @@
    <mu-flat-button slot="actions" primary @click="regisclose" label="取消"/>
   </mu-dialog>
 
-  <mu-dialog :open="loginin" title="登入">
+  <mu-dialog :open="loginin" title="登录">
   <form ref='loginform'>
   <mu-text-field label="帐号" name="userid" v-model="userid" :errorText="useriderror" @blur="logincheck"labelFloat/><br/>
   <mu-text-field label="密码" type="password" name="password" v-model="password" :errorText="passworderror" @blur="logincheck"labelFloat/><br/>
    <img :src="captcha" />
   <mu-text-field hintText="验证码" name="captcha" v-model="captchav" :errorText="captchaerror" @blur="logincheck"/><br/>
   </form>
-  <mu-flat-button slot="actions" primary label="登入" @click="loginconfirm" :disabled="loginbtn"/>
+  <mu-flat-button slot="actions" primary label="登录" @click="loginconfirm" :disabled="loginbtn"/>
   <mu-flat-button slot="actions" primary @click="loginclose" label="取消"/>
  </mu-dialog>
 
@@ -253,7 +253,7 @@ export default{
       if(status=="ok"){
         this.usercard=false;
         this.username="";
-        this.$router.push({name:'mhome'});  
+        this.$router.push({name:'mhome'});
       }
     },
     Ehinvalid:function(msg,v){
