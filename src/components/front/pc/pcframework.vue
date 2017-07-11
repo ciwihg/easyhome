@@ -30,12 +30,16 @@
 <div :class="{'navfixed':navfix}" style="z-index:3; position:absolute;">
     <m-navbar  style="vertical-align:top;" :datas="navdatas"></m-navbar>
 </div>
-<div style="margin-left:200px; position:relative;top:-250px;">
+<div style="margin-left:200px; position:relative;">
   <div :class="{'pagenavbar':pnav,'pnavfixed':!pnav}"></div>
-  <div :class="{'hiddenbar':pnav,'shiddenbar':!pnav}"></div>
+
    <router-view></router-view>
 </div>
-
+<div class="loadingmask">
+  <div class="circular-wrap" style="position:fixed; left:50%; display:inline-block; top:0; bottom:0;">
+   <mu-circular-progress :size="60" :strokeWidth="5" style="margin-left:-50%; width:100%; vertical-align:middle;"/>
+ </div>
+</div>
 </div>
 <div class="whitemask" v-if="maskon">
   <div style="position:relative; display:inline-block; width:25%; vertical-align:middle; height:100%;   min-width: 320px;">
@@ -87,8 +91,7 @@
  </mu-content-block>
  </mu-popup>
 
- <div class="loadingmask">
- </div>
+
 </div>
 </template>
 
@@ -628,12 +631,18 @@ export default{
   border-top: 1px solid rgba(0,0,0,.1);
 }
 .loadingmask{
-  position: fixed;
+  position: absolute;
   left: 0px;
   right:0px;
   top:0px;
   bottom:0px;
   z-index: 2;
   background-color: rgba(255,255,255,.8);
+}
+.circular-wrap::before{
+  content: "";
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
 }
 </style>
