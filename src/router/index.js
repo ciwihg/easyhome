@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import pcframework from '@/components/front/pc/pcframework'
 import pchome from '@/components/front/pc/pchome'
+import pcsortpage from '@/components/front/pc/pcsortpage'
 import pcdetail from '@/components/front/pc/pcdetail'
 import adminhome from '@/components/admin/adminhome'
 import room from '@/components/admin/room'
@@ -45,9 +46,14 @@ export default new Router({
           component:pchome
         },
         {
-          path:"/room/:id",
+          path:"proom/:id",
           name:"pcdetail",
           component: pcdetail
+        },
+        {
+          path:"sortpage/:type",
+          name:"pcsortpage",
+          component: pcsortpage
         }
       ]
     },

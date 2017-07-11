@@ -2,7 +2,7 @@
   <div class="wraper">
     <div class="head_active_wrap">
       <div class="head_active" v-for="(data,index) in datas" :style="{backgroundColor:data.color}" :ref="'he'+index">
-        <a href="#">
+        <a :href="data.link">
         <div class="itemhead" :style="{backgroundColor:data.color}"></div>
         <span>{{data.content}}</span>
         </a>
@@ -17,7 +17,7 @@
 
         <ul class="nav_ul nav_ul_n" ref="navul" @transitionend="hre" >
           <li class="nav_item" :ref="'li'+(index+1)" :index="index+2" v-for="(data,index) in listdatas" @click="t" @mouseenter="hcolorc" @mouseleave="ehcolorc" hstatus="0">
-            <a href="#" :index="index+2">
+            <a :href="data.link" :index="index+2">
             <div class="itemhead" :index="index+2" :style="{backgroundColor:data.color}"></div>
             <span :index="index+2">{{data.content}}</span>
             </a>
