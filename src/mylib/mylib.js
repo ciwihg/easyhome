@@ -155,6 +155,13 @@ export default {
       return d.substring(0,d.indexOf("<"));
     };
 
+    Vue.prototype.mtool=function(){
+      this.setbodyheight=function(){
+        document.body.style.height="auto";
+          (document.body.offsetHeight<window.innerHeight)?(document.body.style.height="100%"):(document.body.style.height="auto")
+        }
+    }
+
 }
 
   };

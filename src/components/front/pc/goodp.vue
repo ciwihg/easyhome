@@ -8,7 +8,7 @@
     </div>
     <div class="itemwrap">
     <div class="item" v-for="item in datas">
-      <a href="#" >
+      <a :href="'#/proom/'+item.rid" >
       <img  style="width:100%":src="JSON.parse(item.imgs)[0].src"/>
       <div class="mask"></div>
       </a>

@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import pcframework from '@/components/front/pc/pcframework'
 import pchome from '@/components/front/pc/pchome'
 import pcsortpage from '@/components/front/pc/pcsortpage'
+import puserroom from '@/components/front/pc/puserroom'
 import pcdetail from '@/components/front/pc/pcdetail'
 import adminhome from '@/components/admin/adminhome'
 import room from '@/components/admin/room'
@@ -54,6 +55,11 @@ export default new Router({
           path:"sortpage/:type",
           name:"pcsortpage",
           component: pcsortpage
+        },
+        {
+          path:"puserroom",
+          name:"puserroom",
+          component: puserroom
         }
       ]
     },

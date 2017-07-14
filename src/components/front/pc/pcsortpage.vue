@@ -1,13 +1,16 @@
 <template>
-  <div style="padding-left:150px;">
+  <div style="padding:0px 50px;">
+    <div v-if="outofroom" style="text-align:center; margin-top:50px; color:#d1c4e9; font-size:30px;">暂时没有空房</div>
     <m-goodrow title="" subtitle="" :datas="cdatas"></m-goodrow>
   </div>
+
 </template>
 
 <script>
 import goodp from '@/components/front/pc/goodp'
 export default{
   name:"pcsortpage",
+  props:['sortpaddress'],
   components:{
     "m-goodrow":goodp
   },
@@ -17,10 +20,12 @@ export default{
       address1data:[],
       address2data:[],
       alldatas:[],
-      outofroom:false
+      outofroom:false,
+      tool:{}
     }
   },
   created:function(){
+    this.tool=new this.mtool();
     this.$watch(function(){
       return this.$route.params.type;
     },function(n, o){
@@ -28,10 +33,24 @@ export default{
       var revice=new this.myrevice();
       revice.setcontroller('Mhome').setmethod(this.$route.params.type);
       revice.grequestfront(this.CbSetcdatas);
-    })
+    });
+    this.$watch(function(){
+      return this.sortpaddress;
+    },function(n,o){
+      var reg=/^[^tf]+/;
+      console.log(n.match(reg)[0]);
+      switch(n.match(reg)[0]){
+        case '横潭大街32号':this.cdatas=this.address1data;this.$emit("loadfinsh");break;
+        case '朝阳巷5号':this.cdatas=this.address2data;this.$emit("loadfinsh");break;
+        default:this.$emit("loadfinsh");break;
+      }
+    });
     var revice=new this.myrevice();
     revice.setcontroller('Mhome').setmethod(this.$route.params.type);
     revice.grequestfront(this.CbSetcdatas);
+  },
+  mounted:function(){
+
   },
   methods:{
     CbSetcdatas:function(xhr){
@@ -41,6 +60,10 @@ export default{
           this.outofroom=true;
           this.address1data=[];
           this.address2data=[];
+          this.$nextTick(function(){
+            this.tool.setbodyheight();
+            this.$emit("loadfinsh");
+          });
           return;
         }
         this.address1data=[];
@@ -52,6 +75,10 @@ export default{
             case '朝阳巷5号':that.address2data.push(element);break;
           }
         });
+            this.$nextTick(function(){
+              this.tool.setbodyheight();
+              this.$emit("loadfinsh");
+            });
 
     }
   }

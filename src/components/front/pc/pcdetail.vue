@@ -83,12 +83,14 @@ export default{
      noshow:true,
      index:-1,
      prevon:false
+
     }
   },
   created:function(){
     var m=new this.myrevice();
     m.setcontroller("Mroom").setmethod("index").setparam("rid").setparamvalue(this.$route.params.id);
     m.grequestfront(this.Cbgetroominfo);
+
   },
   mounted:function(){
     this.agreementh=this.$refs.agreement.offsetHeight;
@@ -101,6 +103,8 @@ export default{
       this.roomimgs=JSON.parse(respon.imgs);
       this.mainpic=this.roomimgs.shift();
       this.roomimgs.shift();
+      this.$emit('roomtype',this.roomdatas.type);
+      this.$nextTick(function(){this.$emit("loadfinsh")});
     },
     showfull:function(){
       this.$refs.agreement.style.height=this.agreementh+"px";

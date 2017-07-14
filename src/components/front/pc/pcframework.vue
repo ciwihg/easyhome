@@ -1,6 +1,6 @@
 <template>
 <div>
-<div class="header">
+<div class="header" ref="header">
     <span class="logotext">EasyHome</span>
     <form class="searchbox">
     <div style="height:100%">
@@ -26,16 +26,16 @@
     </div>
    </div>
  </div>
-<div style="background-color:rgb(238,238,238); position:relative;">
+<div style=" position:relative;">
 <div :class="{'navfixed':navfix}" style="z-index:3; position:absolute;">
-    <m-navbar  style="vertical-align:top;" :datas="navdatas"></m-navbar>
+    <m-navbar @itemclick="Ehitemclick" @smenuclick="Ehsmclick" style="vertical-align:top;" :datas="navdatas" :typeindex="typenum"></m-navbar>
 </div>
 <div style="margin-left:200px; position:relative;">
   <div :class="{'pagenavbar':pnav,'pnavfixed':!pnav}"></div>
 
-   <router-view></router-view>
+   <router-view @loadfinsh="loadfinish" :sortpaddress="sortaddress" @roomtype="settype"></router-view>
 </div>
-<div class="loadingmask">
+<div class="loadingmask" v-if="loading">
   <div class="circular-wrap" style="position:fixed; left:50%; display:inline-block; top:0; bottom:0;">
    <mu-circular-progress :size="60" :strokeWidth="5" style="margin-left:-50%; width:100%; vertical-align:middle;"/>
  </div>
@@ -128,6 +128,10 @@ export default{
       usercardon:false,
       codeerror:'',
       code:'',
+      loading:false,
+      sortaddress:"",
+      typenum:'',
+      ver:true,
   navdatas:[
     {content:"首页",
      color:"rgb(68,68,68)",
@@ -140,9 +144,9 @@ export default{
      link:"#/sortpage/s2r",
      submenu:[
        {content:"横潭大街32号",
-       link:""},
+       link:"#/sortpage/s2r"},
        {content:"朝阳巷5号",
-       link:""}
+       link:"#/sortpage/s2r"}
      ]
     },
     {content:"一房一厅",
@@ -150,9 +154,9 @@ export default{
      link:"#/sortpage/sr",
      submenu:[
        {content:"横潭大街32号",
-       link:""},
+       link:"#/sortpage/sr"},
        {content:"朝阳巷5号",
-       link:""}
+       link:"#/sortpage/sr"}
      ]
     },
 
@@ -161,9 +165,9 @@ export default{
      link:"#/sortpage/r",
      submenu:[
        {content:"横潭大街32号",
-       link:""},
+       link:"#/sortpage/r"},
        {content:"朝阳巷5号",
-       link:""}
+       link:"#/sortpage/r"}
      ]
     },
     {content:"其他",
@@ -171,11 +175,21 @@ export default{
      link:"#/sortpage/other",
      submenu:[
        {content:"横潭大街32号",
-       link:""},
+       link:"#/sortpage/other"},
        {content:"朝阳巷5号",
-       link:""},
+       link:"#/sortpage/other"},
        {content:"横潭市场",
-       link:""}
+       link:"#/sortpage/other"}
+     ]
+    },
+    {content:"我租的房",
+     color:"rgb(101, 128, 146)",
+     link:"#/puserroom",
+     submenu:[
+       {content:"房屋列表",
+       link:"#/sortpage/other"},
+       {content:"租房登记",
+       link:"#/sortpage/other"}
      ]
     }
   ]
@@ -198,6 +212,7 @@ export default{
     }else{
       var that=this;
       document.addEventListener("scroll",function(){
+        document.body.style.height="auto";
         (document.body.scrollTop>=60)?(that.navfix=true,that.pnav=false):(that.navfix=false,that.pnav=true)
     });
     if(!this.userstatus){
@@ -208,7 +223,6 @@ export default{
     }
   },
   mounted:function(){
-
   },
   methods:{
      openlogin:function(){
@@ -220,10 +234,7 @@ export default{
      addexitclick:function(){
        var that=this;
        document.addEventListener("click",function(e){
-
            that.usercardon=false;
-
-
        });
      },
      CbSetloginstatus:function(xhr){
@@ -361,6 +372,27 @@ export default{
          }
 
        this.bottompop=true;
+     },
+     Ehitemclick:function(){
+       this.loading=true;
+     },
+     Ehsmclick:function(item){
+       this.sortaddress=item;
+       this.loading=true;
+     },
+     loadfinish:function(){
+       var that=this;
+       setTimeout(function(){that.loading=false;},500);
+     },
+     settype:function(c){
+       this.ver=!this.ver;
+       switch(c){
+         case "二房一厅":this.typenum="1"+this.ver;break;
+         case "一房一厅":this.typenum="2"+this.ver;break;
+         case "单房":this.typenum="3"+this.ver;break;
+         default:this.typenum="4"+this.ver;
+       }
+
      }
   }
 }
@@ -479,7 +511,7 @@ export default{
   right:0;
   top:0;
   bottom:0;
-  z-index: 1;
+  z-index: 3;
   background-color: rgb(238,238,238);
   text-align: center;
 }
@@ -631,10 +663,10 @@ export default{
   border-top: 1px solid rgba(0,0,0,.1);
 }
 .loadingmask{
-  position: absolute;
+  position: fixed;
   left: 0px;
   right:0px;
-  top:0px;
+  top:60px;
   bottom:0px;
   z-index: 2;
   background-color: rgba(255,255,255,.8);

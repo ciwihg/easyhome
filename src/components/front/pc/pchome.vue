@@ -24,10 +24,12 @@ export default{
     return {
       srdatas:[],
       rdatas:[],
-      carouseldatas:[]
+      carouseldatas:[],
+      tool:{}
     }
   },
   created:function(){
+    this.tool=new this.mtool();
     var revice=new this.myrevice();
     revice.setcontroller("Mhome");
     revice.grequestfront(this.CbSetcarouseldatas);
@@ -38,6 +40,10 @@ export default{
       this.carouseldatas=respon.carousel;
       this.srdatas=respon.sr;
       this.rdatas=respon.r;
+      this.$nextTick(function(){
+        this.tool.setbodyheight();
+        this.$emit("loadfinsh");
+      });
     }
   }
 }

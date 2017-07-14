@@ -23,7 +23,7 @@
             </a>
           </li>
 
-          <li class="nav_item" :ref="'li'+0" index="1" @click="t" @mouseenter="hcolorc" @mouseleave="ehcolorc">
+          <li class="nav_item" :ref="'li'+0" index="1" @click="t" @mouseenter="hcolorc" @mouseleave="ehcolorc" hstatus="0">
             <a href="#" index="1">
             <div class="itemhead" index="1" :style="{backgroundColor:datas[0].color}"></div>
             <span index="1">{{datas[0].content}}</span>
@@ -36,7 +36,7 @@
 
 
       <ul class="sub_menu" v-for="(data,index) in listdatas" :ref="'submenu'+index">
-        <li v-for="item in data.submenu"><a href="#">{{item.content}}</a></li>
+        <li v-for="item in data.submenu" @click="submclick"><a :href="item.link">{{item.content}}</a></li>
       </ul>
 
 
@@ -47,14 +47,16 @@
 <script>
 export default{
   name:"stacknavbar",
-  props:["color","width","datas"],
+  props:["color","width","datas","typeindex"],
   data:function(){
     return{
       active:0,
       lastactive:1,
       heads:[],
       lis:[],
-      submenus:[]
+      submenus:[],
+      lastsubitem:null,
+      ver:true
     }
   },
   computed:{
@@ -69,6 +71,7 @@ export default{
   },
   methods:{
     t:function(e){
+      this.$emit("itemclick");
       this.heads[this.lastactive-1].style.display="none";//头部条变空白
       this.active=parseInt(e.target.getAttribute("index"));//获取激活栏目的索引
       for(var i=0;i<this.lis.length;i++){   //只显示激活栏目
@@ -89,6 +92,9 @@ export default{
       }
       else if(this.active==1){  //其他状态转换到初始状态
         this.submenus[this.lastactive-2].style.display="none";
+        if(this.lastsubitem){
+          this.lastsubitem.style.color="";
+        }
         this.submenus[this.lastactive-2].style.marginTop="35px";
         this.submenus[this.lastactive-2].style.height="0px";
          top=0-(this.lis.length-1)*50+"px";
@@ -97,6 +103,9 @@ export default{
 
       (this.active>this.lastactive)?(top=0-(this.active-2)*50+"px"):(top=0-(this.active-1)*50+"px")
       this.submenus[this.lastactive-2].style.display="none";
+      if(this.lastsubitem){
+        this.lastsubitem.style.color="";
+      }
       this.submenus[this.lastactive-2].style.marginTop="35px";
       this.submenus[this.lastactive-2].style.height="0px";
     }
@@ -146,7 +155,29 @@ export default{
   ehcolorc:function(e){
     var status=e.target.getAttribute("hstatus");
     (status=="0")&&(e.target.style.backgroundColor="white")
+  },
+  submclick:function(e){
+    if(this.lastsubitem){
+      this.lastsubitem.style.color="";
+    }
+    var address;
+    switch(e.target.nodeName){
+      case "A":e.target.style.color=this.datas[this.active-1].color;address=e.target.innerHTML;this.lastsubitem=e.target;break;
+      case "LI":e.target.firstElementChild.style.color=this.datas[this.active-1].color;address=e.target.firstElementChild.innerHTML;this.lastsubitem=e.target.firstElementChild;break;
+    }
+    this.ver=!this.ver;
+    this.$emit("smenuclick",address+this.ver);
   }
+  },
+  created:function(){
+    this.$watch(function(){
+     return  this.typeindex;
+    },function(n,o){
+      if(this.active-1==parseInt(n.substring(0,1))){
+        return;
+      }
+      this.lis[parseInt(n.substring(0,1))].click();
+    });
   },
   mounted: function() {
 
@@ -158,9 +189,10 @@ export default{
   //  this.lis=[this.$refs.li1,this.$refs.li2,this.$refs.li3,this.$refs.li4,this.$refs.li5,this.$refs.li6];
   //  this.heads=[this.$refs.h1,this.$refs.h2,this.$refs.h3,this.$refs.h4,this.$refs.h5,this.$refs.h6];
   //this.submenus=[this.$refs.submenu2,this.$refs.submenu3,this.$refs.submenu4,this.$refs.submenu5,this.$refs.submenu6];
-      this.heads[0].style.display="block";
-     this.lis[0].style.display="none";
+    this.heads[0].style.display="block";
+    this.lis[0].style.display="none";
     this.$refs.navul.className="nav_ul nav_ul_n nav_ul_ostatus";
+
   }
 }
 </script>
@@ -275,12 +307,16 @@ export default{
   height: 40px;
   width:175px;
   line-height: 40px;
-  text-indent: 25px;
+
 }
 .sub_menu>li>a{
   height: 40px;
   color: rgb(106,108,106);
   font-size: 17px;
+  display: inline-block;
+  text-indent: 25px;
+  width:100%;
+  height:100%;
 }
 .sub_menu>li:hover{
   background-color: rgb(233,233,233);
