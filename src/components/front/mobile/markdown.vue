@@ -12,20 +12,34 @@
 <script>
 export default{
   name:'markdown',
-  props:['head'],
+  props:['head','infodata'],
   data:function(){
     return {
       oheight:0
     }
   },
   mounted:function(){
-    this.oheight=this.$refs.content.offsetHeight+'px';
-    this.$refs.content.style.height="0px";
+    //this.oheight=this.$refs.content.offsetHeight+'px';
+    //this.$refs.content.style.height="0px";
   },
   methods:{
     Ehhclick:function(){
+      if(this.infodata.open==false){
+        this.infodata.open=true;
+      this.$nextTick(function(){
+
+        this.$refs.content.style.height="auto";
+        this.oheight=this.$refs.content.offsetHeight+'px';
+        this.$refs.content.style.height="0px";
+        this.$refs.content.offsetWidth;
+        (this.$refs.content.style.height=='0px')?(this.$refs.content.style.height=this.oheight,this.$refs.slot.style.opacity=1,this.$refs.slot.style.top="0px"):(this.$refs.content.style.height="0px",
+         this.$refs.slot.style.opacity=0,this.$refs.slot.style.top="50px")
+      });
+      return;
+    }
       (this.$refs.content.style.height=='0px')?(this.$refs.content.style.height=this.oheight,this.$refs.slot.style.opacity=1,this.$refs.slot.style.top="0px"):(this.$refs.content.style.height="0px",
        this.$refs.slot.style.opacity=0,this.$refs.slot.style.top="50px")
+
     }
   }
 }

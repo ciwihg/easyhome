@@ -1,5 +1,5 @@
 <template>
-  <div style="text-align:center; padding:50px 0px;">
+  <!--<div style="text-align:center; padding:50px 0px;">
   <mu-paper style=" width:60%;margin:0 auto;" :zDepth="2">
     <div style=" ">
     <mu-tabs  :value="tabsvalue" @change="Ehchage">
@@ -8,8 +8,8 @@
      <mu-tab value="4" title="租房登记"/>
    </mu-tabs>
    <div v-if="infoon" class="infotab">
-   <m-markdown :head="info.number+'房'" v-for="(info,index) in infodatas" :key="index">
-   <mu-table :showCheckbox="false">
+   <m-markdown :head="info.number+'房'" v-for="(info,index) in infodatas" :key="index" :infodata="info">
+   <mu-table :showCheckbox="false" v-if="info.open">
      <mu-thead>
        <mu-tr>
           <mu-th colspan="2">房屋信息</mu-th>
@@ -34,7 +34,7 @@
        </mu-tr>
      </mu-tbody>
    </mu-table>
-   <mu-table :showCheckbox="false">
+   <mu-table :showCheckbox="false" v-if="info.open">
      <mu-thead>
        <mu-tr>
           <mu-th colspan="2">费用项目</mu-th>
@@ -107,6 +107,60 @@
    <mu-toast v-if="toast" :message="msg" @close="Ehhidetoast"/>
    </div>
   </mu-paper>
+</div>-->
+<div style="margin:50px 50px; width:60%;position:relative; ">
+<div style="width:200%;" ref="moveframework">
+  <transition name="fadeleft" mode="out-in">
+  <mu-paper style="width: 50%;display:inline-block;" v-show="liston">
+  <mu-list>
+    <mu-list-item :title="info.number+'房'" v-for="info in infodatas" :afterText="info.address" afterTextClass="mtt" @click="detailopen">
+    </mu-list-item>
+  </mu-list>
+</mu-paper>
+</transition><transition name="faderight">
+  <mu-paper style="width: 50%; display:inline-block;" v-show="!liston">
+  <mu-table :showCheckbox="false" >
+    <mu-thead>
+      <mu-tr>
+         <mu-th colspan="2">房屋信息</mu-th>
+       </mu-tr>
+    </mu-thead>
+    <mu-tbody>
+      <mu-tr>
+        <mu-td>房号</mu-td>
+        <mu-td>{{infodatas[7].number}}</mu-td>
+      </mu-tr>
+      <mu-tr>
+        <mu-td>地址</mu-td>
+        <mu-td>{{infodatas[7].address}}</mu-td>
+      </mu-tr>
+      <mu-tr>
+        <mu-td>房型</mu-td>
+        <mu-td>{{infodatas[7].type}}</mu-td>
+      </mu-tr>
+      <mu-tr>
+        <mu-td>租金</mu-td>
+        <mu-td>{{infodatas[7].price}}</mu-td>
+      </mu-tr>
+    </mu-tbody>
+  </mu-table>
+  <mu-table :showCheckbox="false" >
+    <mu-thead>
+      <mu-tr>
+         <mu-th colspan="2">费用项目</mu-th>
+       </mu-tr>
+    </mu-thead>
+    <mu-tbody>
+      <mu-tr v-for="(item,index) in infodatas[7].chargeitems" :key="index">
+        <mu-td>{{item.name}}</mu-td>
+        <mu-td>{{item.price}}</mu-td>
+      </mu-tr>
+    </mu-tbody>
+    <div @click="detailopen">out</div>
+  </mu-table>
+</mu-paper>
+</transition>
+</div>
 </div>
 </template>
 
@@ -144,7 +198,8 @@ export default{
      records:{},
      billliston:false,
      toast:false,
-     code:''
+     code:'',
+     liston:true
     }
   },
   components:{
@@ -214,7 +269,8 @@ export default{
       var reponse=JSON.parse(xhr.responseText.substring(0,xhr.responseText.indexOf("<")));
       var item;
       var that=this;
-     /*for(item in reponse){
+       for(item in reponse){
+         reponse[item].open=false;
         reponse[item].chargeitems.forEach(function(element){
           switch(element.name){
             case '电费':element.price=element.price+"元/KWH";break;
@@ -222,8 +278,10 @@ export default{
             default:element.price=element.price+"元/月";
           }
         });
-      }*/
+      }
       this.infodatas=reponse;
+      console.log(reponse[7]);
+      this.$emit('loadfinsh');
     },
     CbSetyearmonth:function(xhr){
       this.yearmonth=JSON.parse(xhr.responseText.substring(0,xhr.responseText.indexOf("<")));
@@ -302,13 +360,63 @@ export default{
      var revice= new this.myrevice();
      revice.setcontroller('userroom');
      revice.grequestfront(this.CbSetinfodatas);
+   },
+   detailopen:function(){
+     this.liston=!this.liston;
    }
   }
 }
 </script>
-
+<style>
+.mtt{
+  color:white !important;
+  background-color: #7c4dff;
+  padding: 5px;
+  border-radius: 3px;
+}
+</style>
 <style scoped>
 .infotab{
   margin-top: 2px;
+
+}
+.fadeleft-enter-active{
+  transition: all .5s;
+  transform: translate3d(0%,0,0);
+  opacity: 1;
+}
+.fadeleft-leave-active {
+  transition: all .5s;
+  opacity: 0;
+  position: absolute;
+  transform: translate3d(-100%,0,0);
+}
+.fadeleft-enter{
+  opacity: 0;
+  transform: translate3d(-100%,0,0);
+}
+.fadeleft-leave{
+  opacity: 1;
+  transform: translate3d(0,0,0);
+}
+
+.faderight-enter-active{
+  transition: all .5s;
+  transform: translate3d(0%,0,0);
+  opacity: 1;
+}
+.faderight-leave-active {
+  transition: all .5s;
+  opacity: 0;
+  position: absolute;
+  transform: translate3d(100%,0,0);
+}
+.faderight-enter{
+  opacity: 0;
+  transform: translate3d(100%,0,0);
+}
+.faderight-leave{
+  opacity: 1;
+  transform: translate3d(0%,0,0);
 }
 </style>

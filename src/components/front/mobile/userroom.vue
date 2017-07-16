@@ -6,8 +6,8 @@
    <mu-tab value="4" title="租房登记"/>
  </mu-tabs>
  <div v-if="infoon" class="infotab">
- <m-markdown :head="info.number+'房'" v-for="(info,index) in infodatas" :key="index">
- <mu-table :showCheckbox="false">
+ <m-markdown :head="info.number+'房'" v-for="(info,key,index) in infodatas" :key="key" :infodata="info">
+ <mu-table :showCheckbox="false" v-if="info.open">
    <mu-thead>
      <mu-tr>
         <mu-th colspan="2">房屋信息</mu-th>
@@ -32,7 +32,7 @@
      </mu-tr>
    </mu-tbody>
  </mu-table>
- <mu-table :showCheckbox="false">
+ <mu-table :showCheckbox="false" v-if="info.open">
    <mu-thead>
      <mu-tr>
         <mu-th colspan="2">费用项目</mu-th>
@@ -204,13 +204,19 @@ export default{
   methods:{
     Ehchage:function(v){
       this.tabsvalue=v;
+      var item;
+      for(item in this.infodatas){
+        this.infodatas[item].open=false;
+      }
     },
     CbSetinfodatas:function(xhr){
       this.oinfodatas=xhr.responseText.substring(0,xhr.responseText.indexOf("<"));
       var reponse=JSON.parse(xhr.responseText.substring(0,xhr.responseText.indexOf("<")));
       var item;
       var that=this;
-     /*for(item in reponse){
+      console.log(reponse);
+     for(item in reponse){
+       reponse[item].open=false;
         reponse[item].chargeitems.forEach(function(element){
           switch(element.name){
             case '电费':element.price=element.price+"元/KWH";break;
@@ -218,7 +224,7 @@ export default{
             default:element.price=element.price+"元/月";
           }
         });
-      }*/
+      }
       this.infodatas=reponse;
     },
     CbSetyearmonth:function(xhr){
@@ -298,6 +304,9 @@ export default{
      var revice= new this.myrevice();
      revice.setcontroller('userroom');
      revice.grequestfront(this.CbSetinfodatas);
+   },
+   test:function(e){
+     console.log(111);
    }
   }
 }
