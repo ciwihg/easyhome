@@ -19,7 +19,7 @@
    <mu-table :showCheckbox="false" v-if="billliston">
      <mu-thead>
        <mu-tr>
-          <mu-th colspan="2">2017年3月 账单</mu-th>
+          <mu-th colspan="2">{{date.getFullYear()}}年{{date.getMonth()+1}}月 账单</mu-th>
         </mu-tr>
      </mu-thead>
      <mu-tbody>
@@ -43,13 +43,13 @@
        <mu-tr v-if="wateron">
          <mu-td>金额{{waterfee}}元</mu-td>
        </mu-tr>
-       <mu-tr v-for="(item,index) in billdatas.chargeitems" v-if="item!==eletric&&item!==water" :key="index">
+       <mu-tr v-for="(item,index) in billdatas[rid].chargeitems" v-if="item!==eletric&&item!==water" :key="index">
          <mu-td>{{item.name}}</mu-td>
          <mu-td>{{item.price}}</mu-td>
        </mu-tr>
        <mu-tr>
          <mu-td>租金</mu-td>
-         <mu-td>{{billdatas.price}}元/月</mu-td>
+         <mu-td>{{billdatas[rid].price}}元/月</mu-td>
        </mu-tr>
        <mu-tr>
          <mu-td>合计</mu-td>
@@ -58,7 +58,7 @@
 
      </mu-tbody>
    </mu-table>
-
+   <mu-raised-button v-if="billliston" label="打印账单" :href="'mprint://myprint.ciwi/easyhome?'+printurl.substring(1)" secondary/>
 </div>
 
 <mu-dialog :open="confirmopen" :title="dialogt" @close="confirmclose">
@@ -91,11 +91,17 @@ export default{
       oinfodatas:'',
       water:{},
       eletric:{},
-      billliston:false
+      rid:'',
+      eletricon:false,
+      wateron:false,
+      billliston:false,
+      date:{},
+      printurl:''
     }
   },
 
   created: function () {
+    this.rid=this.$route.params.rid;
     this.ajax("GET","http://easyhome.applinzi.com/public/index.php/admin/recordcontroll/index/type/"+this.$route.params.type+"/rid/"+this.$route.params.rid,this.get);
   },
   mounted () {
@@ -109,37 +115,29 @@ computed:{
     return this.billdatas.water.current.value-this.billdatas.water.last.value;
   },
   eletricfee:function(){
-    var oo=JSON.parse(this.oinfodatas);
-    var price;
-    oo.chargeitems.forEach(function(element){
-      if(element.name=="电费"){
-        price=element.price;
-      }
-    });
+     var reg=/[\d\.]+/;
+    var price=this.eletric.price.match(reg)[0];
+
     return (this.billdatas.eletric.current.value-this.billdatas.eletric.last.value)*price;
   },
   waterfee:function(){
-    var oo=JSON.parse(this.oinfodatas);
-    var price;
-    oo.chargeitems.forEach(function(element){
-      if(element.name=="水费"){
-        price=element.price;
-      }
-    });
+    var reg=/[\d\.]+/;
+    var price=this.water.price.match(reg)[0];
+
     return (this.billdatas.water.current.value-this.billdatas.water.last.value)*price;
   },
   totalfee:function(){
-    var oo=JSON.parse(this.oinfodatas);
+    var reg=/[\d\.]+/;
     var totalprice=0;
     var that=this;
-    oo.chargeitems.forEach(function(element){
+    this.billdatas[this.rid].chargeitems.forEach(function(element){
       switch(element.name){
         case "水费":totalprice=totalprice+that.waterfee;break;
         case "电费":totalprice=totalprice+that.eletricfee;break;
-        default:totalprice=totalprice+element.price;
+        default:totalprice=totalprice+parseInt(element.price.match(reg)[0]);
       }
     });
-    return totalprice+this.billdatas.price;
+    return totalprice+this.billdatas[this.rid].price;
   }
 },
   methods:{
@@ -187,7 +185,7 @@ computed:{
       this.billing=true;
       var mrevice=new this.myrevice();
       mrevice.setcontroller("recordcontroll").setmethod("addboth");
-      var tdate=new Date();
+      var tdate=this.date=new Date();
       var month=tdate.getMonth()+1;
       var formatdate=tdate.getFullYear()+'-'+this.toolformatmonth(month)+'-'+tdate.getDate();
       var data={
@@ -201,16 +199,19 @@ computed:{
       mrevice.prequestadmin(this.Cbgetbill,data);
     },
     Cbgetbill:function(xhr){
-      this.oinfodatas=this.saedata(xhr.responseText);
       this.billdatas=JSON.parse(this.saedata(xhr.responseText));
-        this.billdatas.chargeitems.forEach(function(element){
+      var that=this;
+        this.billdatas[this.rid].chargeitems.forEach(function(element){
           switch(element.name){
-            case '电费':element.price=element.price+"元/KWH";this.eletric=element;break;
-            case '水费':element.price=element.price+"元/m³";this.water=element;break;
-            default:element.price=element.price+"元/月";
+            case '电费':that.printurl=that.printurl+"&ef=l"+that.billdatas.eletric.last.value+"c"+that.billdatas.eletric.current.value+"p"+element.price;element.price=element.price+"元/KWH";that.eletricon=true;that.eletric=element;break;
+            case '水费':that.printurl=that.printurl+"&wf=l"+that.billdatas.water.last.value+"c"+that.billdatas.water.current.value+"p"+element.price;element.price=element.price+"元/m³";that.wateron=true;that.water=element;break;
+            default:that.printurl=that.printurl+"&"+element.name+"="+element.price;element.price=element.price+"元/月";
           }
         });
-       this.billliston=true;
+        this.printurl=this.printurl+"&租金"+this.billdatas[this.rid].price;
+        this.confirmopen=false;
+        this.billliston=true;
+
     }
   }
 }
