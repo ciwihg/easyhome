@@ -13,6 +13,7 @@ import carouseledit from '@/components/admin/carouseledit'
 import customer from '@/components/admin/customer'
 import customeredit from '@/components/admin/customeredit'
 import adminlogin from '@/components/admin/adminlogin'
+import recordprint from '@/components/admin/recordprint'
  var adminroutes=[{
   path: '/adminhome',
   name: 'adminhome',
@@ -52,6 +53,11 @@ import adminlogin from '@/components/admin/adminlogin'
       path: 'roomrecord/:rid/:type',
       name: 'roomrecord',
       component: roomrecord
+    },
+    {
+      path: 'recordprint/:rid',
+      name: 'recordprint',
+      component: recordprint
     },
     {
       path: 'roomedit/:rid',

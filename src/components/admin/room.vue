@@ -41,6 +41,7 @@
       :anchorOrigin="{vertical: 'top',horizontal: 'left'}"
       :targetOrigin="{vertical: 'top',horizontal: 'left'}"
     @itemClick="Ehmenuclick">
+      <mu-menu-item title="抄表及打印" :href="'#/adminhome/recordprint/'+room.rid" />
       <mu-menu-item title="电费记录" :href="'#/adminhome/roomrecord/'+room.rid+'/e'" />
       <mu-menu-item title="水费记录" :href="'#/adminhome/roomrecord/'+room.rid+'/w'" />
       <mu-menu-item class="menuclass" title="注册码" :cid="room.rid"/>
