@@ -4,7 +4,7 @@
     <span class="logotext">EasyHome</span>
     <form class="searchbox">
     <div style="height:100%">
-    <input class="search_text" type="text"/><button type="submit" value="" class="search_btn"></button>
+    <input class="search_text" type="text" v-model="searchtext"/><a  class="search_btn" :href="'#/searchresult/'+searchtext"><i class="material-icons serachicon">search</i></a>
     </div>
     </form>
     <div  class="header_right"style="display:inline-block; float:right; height:100%;">
@@ -18,7 +18,7 @@
       <div class="uparrowcopy" ></div>
       <div class="userinfo" >
         <div style="padding:10px 10px;" >{{username}}</div>
-        <div class="userinfo-item" >我租的房</div>
+        <div class="userinfo-item" ><a style="display:block;padding:10px 20px; color:#ce93d8;" href="#/puserroom">我租的房</a></div>
         <div class="infobottom-row" ><mu-flat-button primary label="退出" @click="exitlogin" style="float:right;"/></div>
 
       </div>
@@ -31,9 +31,9 @@
     <m-navbar @itemclick="Ehitemclick" @smenuclick="Ehsmclick" style="vertical-align:top;" :datas="navdatas" :typeindex="typenum"></m-navbar>
 </div>
 <div style="margin-left:200px; position:relative;">
-  <div :class="{'pagenavbar':pnav,'pnavfixed':!pnav}"></div>
+  <div :class="{'pagenavbar':pnav,'pnavfixed':!pnav}">{{searchtitle}}</div>
 
-   <router-view @loadfinsh="loadfinish" :sortpaddress="sortaddress" @roomtype="settype"></router-view>
+   <router-view @loadfinsh="loadfinish" :sortpaddress="sortaddress" @roomtype="settype" :subpage="sortaddress"></router-view>
 </div>
 <div class="loadingmask" v-if="loading">
   <div class="circular-wrap" style="position:fixed; left:50%; display:inline-block; top:0; bottom:0;">
@@ -132,6 +132,7 @@ export default{
       sortaddress:"",
       typenum:'',
       ver:true,
+      searchtext:'',
   navdatas:[
     {content:"首页",
      color:"rgb(68,68,68)",
@@ -181,16 +182,6 @@ export default{
        {content:"横潭市场",
        link:"#/sortpage/other"}
      ]
-    },
-    {content:"我租的房",
-     color:"rgb(101, 128, 146)",
-     link:"#/puserroom",
-     submenu:[
-       {content:"房屋列表",
-       link:"#/sortpage/other"},
-       {content:"租房登记",
-       link:"#/sortpage/other"}
-     ]
     }
   ]
 
@@ -202,6 +193,14 @@ export default{
     },
     loginbtn:function(){
         return !(((this.useriderror=="")&&(this.passworderror=="")&&(this.captchaerror==""))&&((this.userid!="")&&(this.password!="")&&(this.captchav!="")));
+    },
+    searchtitle:function(){
+      if(this.$route.name=="sresult"){
+        return '搜索结果';
+      }else{
+        return '';
+      }
+
     }
   },
   created: function created() {
@@ -241,6 +240,18 @@ export default{
        var status=JSON.parse(this.saedata(xhr.responseText)).name;
        if(status){
        if(status!=""){
+         var useritem=
+         {content:"我租的房",
+          color:"rgb(101, 128, 146)",
+          link:"#/puserroom",
+          submenu:[
+            {content:"房屋列表",
+            link:"#/puserroom"},
+            {content:"租房登记",
+            link:"#/puserroom"}
+           ]
+         };
+         this.navdatas.push(useritem);
          this.userstatus=true;
          this.username=status;
          this.addexitclick();
@@ -297,6 +308,18 @@ export default{
          this.userstatus=true;
          this.addexitclick();
          this.username=msg.name;
+         var useritem=
+         {content:"我租的房",
+          color:"rgb(101, 128, 146)",
+          link:"#/puserroom",
+          submenu:[
+            {content:"房屋列表",
+            link:"#/puserroom"},
+            {content:"租房登记",
+            link:"#/puserroom"}
+           ]
+         };
+         this.navdatas.push(useritem);
        }
        else{
          this.responsemsg=msg.status;
@@ -323,6 +346,8 @@ export default{
      CbExit:function(xhr){
        var status=JSON.parse(this.saedata(xhr.responseText)).status;
        if(status=="ok"){
+         this.navdatas.pop();
+         this.$router.push({name:'pchome'});
          this.userstatus=false;
          this.username="";
        }
@@ -390,9 +415,13 @@ export default{
          case "二房一厅":this.typenum="1"+this.ver;break;
          case "一房一厅":this.typenum="2"+this.ver;break;
          case "单房":this.typenum="3"+this.ver;break;
+         case "我租的房":this.typenum="5"+this.ver;break;
          default:this.typenum="4"+this.ver;
        }
 
+     },
+     showsearch:function(){
+      this.$router.push({name:'sresult',params:{key:this.searchtext}});
      }
   }
 }
@@ -440,7 +469,10 @@ export default{
   width:60px;
   vertical-align: middle;
   border: none;
+  display: inline-block;
   background-color: #7c4dff;
+  line-height: 30px;
+  text-align: center;
 }
 .more{
     display: inline-block;
@@ -494,10 +526,18 @@ export default{
   box-shadow: 0px 2px 4px rgba(0,0,0,.2);
   width: 100%;
   z-index: 2;
+  line-height:50px;
+  font-size:20px;
+  color:rgba(0,0,0,.5);
+  padding-left:24px;
 }
 .pagenavbar{
   height: 50px;
   background-color: white;
+  line-height:50px;
+  font-size:20px;
+  color:rgba(0,0,0,.5);
+  padding-left:24px;
 }
 .hiddenbar{
   height: 0px;
@@ -649,9 +689,9 @@ export default{
   padding-bottom: 5px;
 }
 .userinfo-item{
-  padding: 10px 20px;
+
   font-size: 16px;
-  color:#ce93d8;
+
   cursor: pointer;
 }
 .userinfo-item:hover{
@@ -676,5 +716,9 @@ export default{
   display: inline-block;
   height: 100%;
   vertical-align: middle;
+}
+.serachicon{
+  line-height: 30px !important;
+  color:white;
 }
 </style>

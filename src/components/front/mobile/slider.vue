@@ -3,7 +3,7 @@
     <div class="item_wrap" ref="itemwrap">
 
     <div class="item" v-for="(item,index) in carouseldatas">
-      <a :href="item.link">
+      <a :href="'#/room/'+item.link">
         <img :src="item.src"/>
         <span class="pagetip">{{index+1}}/{{carouseldatas.length}}</span>
         <div class="mask">

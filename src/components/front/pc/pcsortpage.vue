@@ -38,7 +38,6 @@ export default{
       return this.sortpaddress;
     },function(n,o){
       var reg=/^[^tf]+/;
-      console.log(n.match(reg)[0]);
       switch(n.match(reg)[0]){
         case '横潭大街32号':this.cdatas=this.address1data;this.$emit("loadfinsh");break;
         case '朝阳巷5号':this.cdatas=this.address2data;this.$emit("loadfinsh");break;
@@ -48,6 +47,7 @@ export default{
     var revice=new this.myrevice();
     revice.setcontroller('Mhome').setmethod(this.$route.params.type);
     revice.grequestfront(this.CbSetcdatas);
+
   },
   mounted:function(){
 
@@ -62,6 +62,13 @@ export default{
           this.address2data=[];
           this.$nextTick(function(){
             this.tool.setbodyheight();
+            switch(this.$route.params.type){
+              case "sr":this.$emit('roomtype',"一房一厅");break;
+              case "s2r":this.$emit('roomtype',"二房一厅");break;
+              case "r":this.$emit('roomtype',"单房");break;
+              case "other":this.$emit('roomtype',"其他");break;
+            }
+
             this.$emit("loadfinsh");
           });
           return;
@@ -77,6 +84,12 @@ export default{
         });
             this.$nextTick(function(){
               this.tool.setbodyheight();
+              switch(this.$route.params.type){
+                case "sr":this.$emit('roomtype',"一房一厅");break;
+                case "s2r":this.$emit('roomtype',"二房一厅");break;
+                case "r":this.$emit('roomtype',"单房");break;
+                case "other":this.$emit('roomtype',"其他");break;
+              }
               this.$emit("loadfinsh");
             });
 

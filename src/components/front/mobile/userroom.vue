@@ -6,7 +6,7 @@
    <mu-tab value="4" title="租房登记"/>
  </mu-tabs>
  <div v-if="infoon" class="infotab">
- <m-markdown :head="info.number+'房'" v-for="(info,key,index) in infodatas" :key="key" :infodata="info">
+ <m-markdown :head="info.number+'房'+'—'+info.address" v-for="(info,key,index) in infodatas" :key="key" :infodata="info">
  <mu-table :showCheckbox="false" v-if="info.open">
    <mu-thead>
      <mu-tr>
@@ -50,7 +50,7 @@
  </div>
  <div v-if="billon">
    <mu-select-field label="选择查询的房屋" :fullWidth="true" @change="Ehroomchage">
-   <mu-menu-item v-for="info in infodatas" :key="info.rid" :value="info.rid"  :title="info.number+'房'" />
+   <mu-menu-item v-for="info in infodatas" :key="info.rid" :value="info.rid"  :title="info.number+'房'+'—'+info.address" />
    </mu-select-field>
    <mu-picker :slots="yearmonthSlots" :visible-item-count="3"  @change="Ehdatechange" :values="date"/>
    <mu-raised-button label="查询" @click="Ehgetrecord" :fullWidth="true" secondary/>
@@ -214,7 +214,6 @@ export default{
       var reponse=JSON.parse(xhr.responseText.substring(0,xhr.responseText.indexOf("<")));
       var item;
       var that=this;
-      console.log(reponse);
      for(item in reponse){
        reponse[item].open=false;
         reponse[item].chargeitems.forEach(function(element){

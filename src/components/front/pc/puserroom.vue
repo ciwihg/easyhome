@@ -1,124 +1,19 @@
 <template>
-  <!--<div style="text-align:center; padding:50px 0px;">
-  <mu-paper style=" width:60%;margin:0 auto;" :zDepth="2">
-    <div style=" ">
-    <mu-tabs  :value="tabsvalue" @change="Ehchage">
-     <mu-tab value="1" title="我租的房"/>
-     <mu-tab value="2" title="账单查询"/>
-     <mu-tab value="4" title="租房登记"/>
-   </mu-tabs>
-   <div v-if="infoon" class="infotab">
-   <m-markdown :head="info.number+'房'" v-for="(info,index) in infodatas" :key="index" :infodata="info">
-   <mu-table :showCheckbox="false" v-if="info.open">
-     <mu-thead>
-       <mu-tr>
-          <mu-th colspan="2">房屋信息</mu-th>
-        </mu-tr>
-     </mu-thead>
-     <mu-tbody>
-       <mu-tr>
-         <mu-td>房号</mu-td>
-         <mu-td>{{info.number}}</mu-td>
-       </mu-tr>
-       <mu-tr>
-         <mu-td>地址</mu-td>
-         <mu-td>{{info.address}}</mu-td>
-       </mu-tr>
-       <mu-tr>
-         <mu-td>房型</mu-td>
-         <mu-td>{{info.type}}</mu-td>
-       </mu-tr>
-       <mu-tr>
-         <mu-td>租金</mu-td>
-         <mu-td>{{info.price}}</mu-td>
-       </mu-tr>
-     </mu-tbody>
-   </mu-table>
-   <mu-table :showCheckbox="false" v-if="info.open">
-     <mu-thead>
-       <mu-tr>
-          <mu-th colspan="2">费用项目</mu-th>
-        </mu-tr>
-     </mu-thead>
-     <mu-tbody>
-       <mu-tr v-for="(item,index) in info.chargeitems" :key="index">
-         <mu-td>{{item.name}}</mu-td>
-         <mu-td>{{item.price}}</mu-td>
-       </mu-tr>
-     </mu-tbody>
-   </mu-table>
-   </m-markdown>
 
-   </div>
-   <div v-if="billon">
-     <mu-select-field label="选择查询的房屋" :fullWidth="true" @change="Ehroomchage">
-     <mu-menu-item v-for="info in infodatas" :key="info.rid" :value="info.rid"  :title="info.number+'房'" />
-     </mu-select-field>
-     <mu-picker :slots="yearmonthSlots" :visible-item-count="3"  @change="Ehdatechange" :values="date"/>
-     <mu-raised-button label="查询" @click="Ehgetrecord" :fullWidth="true" secondary/>
-     <mu-table :showCheckbox="false" v-if="billliston">
-       <mu-thead>
-         <mu-tr>
-            <mu-th colspan="2">2017年3月 账单</mu-th>
-          </mu-tr>
-       </mu-thead>
-       <mu-tbody>
-         <mu-tr v-if="eletricon">
-           <mu-td rowspan="3" >电费</mu-td>
-           <mu-td>上月抄表数{{records.eletric.last.value}}</br>本月抄表数{{records.eletric.current.value}}</mu-td>
-         </mu-tr>
-         <mu-tr v-if="eletricon">
-           <mu-td>用电量{{eletriced}}</br>{{eletric.price}}</mu-td>
-         </mu-tr>
-         <mu-tr v-if="eletricon">
-           <mu-td>金额{{eletricfee}}元</mu-td>
-         </mu-tr>
-         <mu-tr v-if="wateron">
-           <mu-td rowspan="3">水费</mu-td>
-           <mu-td>上月抄表数{{records.water.last.value}}</br>本月抄表数{{records.water.current.value}}</mu-td>
-         </mu-tr>
-         <mu-tr v-if="wateron">
-           <mu-td>用水量{{watered}}</br>{{water.price}}</mu-td>
-         </mu-tr>
-         <mu-tr v-if="wateron">
-           <mu-td>金额{{waterfee}}元</mu-td>
-         </mu-tr>
-         <mu-tr v-for="(item,index) in billdatas.chargeitems" v-if="item!==eletric&&item!==water" :key="index">
-           <mu-td>{{item.name}}</mu-td>
-           <mu-td>{{item.price}}</mu-td>
-         </mu-tr>
-         <mu-tr>
-           <mu-td>租金</mu-td>
-           <mu-td>{{billdatas.price}}元/月</mu-td>
-         </mu-tr>
-         <mu-tr>
-           <mu-td>合计</mu-td>
-           <mu-td>{{totalfee}}元</mu-td>
-         </mu-tr>
-
-       </mu-tbody>
-     </mu-table>
-   </div>
-
-   <div v-if="roomregison">
-        <mu-text-field label="请输入登记码" name="regiscode" v-model="code" labelFloat :fullWidth="true"/>
-        <mu-raised-button label="登记" :fullWidth="true" @click="Ehregisroom" secondary/>
-   </div>
-   <mu-toast v-if="toast" :message="msg" @close="Ehhidetoast"/>
-   </div>
-  </mu-paper>
-</div>-->
-<div style="margin:50px 50px; width:60%;position:relative; ">
-<div style="width:200%;" ref="moveframework">
+<div style="margin:50px 50px; width:60%;position:relative; overflow:hidden;">
+<div style="width:200%;" ref="moveframework" v-if="!roomregison">
   <transition name="fadeleft" mode="out-in">
-  <mu-paper style="width: 50%;display:inline-block;" v-show="liston">
-  <mu-list>
-    <mu-list-item :title="info.number+'房'" v-for="info in infodatas" :afterText="info.address" afterTextClass="mtt" @click="detailopen">
+  <mu-paper style="width: 50%;display:inline-block; min-width:300px;" v-if="liston">
+  <mu-list @itemClick="listclick">
+    <mu-list-item :title="info.number+'房'" v-for="(info,key) in infodatas" :afterText="info.address" afterTextClass="aftertext" @click="detailopen" :index="key">
     </mu-list-item>
   </mu-list>
 </mu-paper>
 </transition><transition name="faderight">
-  <mu-paper style="width: 50%; display:inline-block;" v-show="!liston">
+  <mu-paper style="width: 50%; display:inline-block;min-width:300px;" v-if="!liston">
+    <mu-appbar :title="cinfodata.number+'房'" style="height:50px;" titleClass="tclass">
+    <mu-flat-button label="返回" slot="right" @click="detailopen"/>
+</mu-appbar>
   <mu-table :showCheckbox="false" >
     <mu-thead>
       <mu-tr>
@@ -128,19 +23,19 @@
     <mu-tbody>
       <mu-tr>
         <mu-td>房号</mu-td>
-        <mu-td>{{infodatas[7].number}}</mu-td>
+        <mu-td>{{cinfodata.number}}</mu-td>
       </mu-tr>
       <mu-tr>
         <mu-td>地址</mu-td>
-        <mu-td>{{infodatas[7].address}}</mu-td>
+        <mu-td>{{cinfodata.address}}</mu-td>
       </mu-tr>
       <mu-tr>
         <mu-td>房型</mu-td>
-        <mu-td>{{infodatas[7].type}}</mu-td>
+        <mu-td>{{cinfodata.type}}</mu-td>
       </mu-tr>
       <mu-tr>
         <mu-td>租金</mu-td>
-        <mu-td>{{infodatas[7].price}}</mu-td>
+        <mu-td>{{cinfodata.price}}</mu-td>
       </mu-tr>
     </mu-tbody>
   </mu-table>
@@ -151,15 +46,75 @@
        </mu-tr>
     </mu-thead>
     <mu-tbody>
-      <mu-tr v-for="(item,index) in infodatas[7].chargeitems" :key="index">
+      <mu-tr v-for="(item,index) in cinfodata.chargeitems" :key="index">
         <mu-td>{{item.name}}</mu-td>
         <mu-td>{{item.price}}</mu-td>
       </mu-tr>
     </mu-tbody>
-    <div @click="detailopen">out</div>
+  </mu-table>
+  <div style=" padding-left:24px;">
+    <div class="billtitle">账单查询</div>
+    <div>
+  <mu-select-field   hintText="年" v-model="year" style="vertical-align: middle;" @change="yearchange">
+  <mu-menu-item :value="key" :title="String(key)" v-for="(m,key) in yearmonth"/>
+
+</mu-select-field>
+<mu-select-field   hintText="月" v-model="month" style="vertical-align: middle;" >
+  <mu-menu-item :value="m" :title="String(m)" v-for="m in months"/>
+</mu-select-field>
+<mu-flat-button label="查询" style="vertical-align: middle;" @click="billquery" primary/>
+</div>
+  </div>
+  <mu-table :showCheckbox="false" v-if="billliston">
+    <mu-thead>
+      <mu-tr>
+         <mu-th colspan="2">2017年3月 账单</mu-th>
+       </mu-tr>
+    </mu-thead>
+    <mu-tbody>
+      <mu-tr v-if="eletricon">
+        <mu-td rowspan="3" >电费</mu-td>
+        <mu-td>上月抄表数{{records.eletric.last.value}}</br>本月抄表数{{records.eletric.current.value}}</mu-td>
+      </mu-tr>
+      <mu-tr v-if="eletricon">
+        <mu-td>用电量{{eletriced}}</br>{{eletric.price}}</mu-td>
+      </mu-tr>
+      <mu-tr v-if="eletricon">
+        <mu-td>金额{{eletricfee}}元</mu-td>
+      </mu-tr>
+      <mu-tr v-if="wateron">
+        <mu-td rowspan="3">水费</mu-td>
+        <mu-td>上月抄表数{{records.water.last.value}}</br>本月抄表数{{records.water.current.value}}</mu-td>
+      </mu-tr>
+      <mu-tr v-if="wateron">
+        <mu-td>用水量{{watered}}</br>{{water.price}}</mu-td>
+      </mu-tr>
+      <mu-tr v-if="wateron">
+        <mu-td>金额{{waterfee}}元</mu-td>
+      </mu-tr>
+      <mu-tr v-for="(item,index) in billdatas.chargeitems" v-if="item!==eletric&&item!==water" :key="index">
+        <mu-td>{{item.name}}</mu-td>
+        <mu-td>{{item.price}}</mu-td>
+      </mu-tr>
+      <mu-tr>
+        <mu-td>租金</mu-td>
+        <mu-td>{{billdatas.price}}元/月</mu-td>
+      </mu-tr>
+      <mu-tr>
+        <mu-td>合计</mu-td>
+        <mu-td>{{totalfee}}元</mu-td>
+      </mu-tr>
+
+    </mu-tbody>
   </mu-table>
 </mu-paper>
 </transition>
+</div>
+<div v-if="roomregison" style="width:300px;">
+     <mu-text-field label="请输入登记码" name="regiscode" v-model="code" labelFloat :fullWidth="true"/>
+     <mu-raised-button label="登记" :fullWidth="true" @click="Ehregisroom" secondary/>
+</div>
+<mu-toast v-if="toast" :message="msg" @close="Ehhidetoast"/>
 </div>
 </div>
 </template>
@@ -168,7 +123,7 @@
 import markdown from "@/components/front/mobile/markdown"
 export default{
   name:"userroom",
-  props:['loginstatus'],
+  props:['loginstatus','subpage'],
   data:function(){
     return {
      tabsvalue:'1',
@@ -186,6 +141,7 @@ export default{
      ],
      oinfodatas:'',
      infodatas:{},
+     cinfodata:{},
      billdatas:{},
      eletric:{},
      water:{},
@@ -195,26 +151,20 @@ export default{
      date:[],
      year:'',
      month:'',
+     months:[],
      records:{},
      billliston:false,
      toast:false,
      code:'',
-     liston:true
+     liston:true,
+     roomregison:false
     }
   },
   components:{
     "m-markdown":markdown
   },
   computed:{
-    infoon:function(){
-      return parseInt(this.tabsvalue)&1;
-    },
-    billon:function(){
-      return (parseInt(this.tabsvalue)>>1)&1;
-    },
-    roomregison:function(){
-      return (parseInt(this.tabsvalue)>>2)&1;
-    },
+
     eletriced:function(){
       return this.records.eletric.current.value-this.records.eletric.last.value;
     },
@@ -259,6 +209,15 @@ export default{
     var revice= new this.myrevice();
     revice.setcontroller('userroom');
     revice.grequestfront(this.CbSetinfodatas);
+    this.$watch(function(){return this.subpage},function(n,o){
+      var reg=/^[^tf]+/;
+      switch(n.match(reg)[0]){
+        case '房屋列表':this.roomregison=false;console.log(2);this.$emit("loadfinsh");break;
+        case '租房登记':this.roomregison=true;console.log(1);this.$emit("loadfinsh");break;
+        default:this.$emit("loadfinsh");break;
+      }
+
+      this.$emit('loadfinsh');});
   },
   methods:{
     Ehchage:function(v){
@@ -280,46 +239,15 @@ export default{
         });
       }
       this.infodatas=reponse;
-      console.log(reponse[7]);
+      this.$emit('roomtype',"我租的房");
       this.$emit('loadfinsh');
     },
     CbSetyearmonth:function(xhr){
       this.yearmonth=JSON.parse(xhr.responseText.substring(0,xhr.responseText.indexOf("<")));
-      var years=Object.keys(this.yearmonth);
-      this.yearmonthSlots[0].values=years;
-      this.year=years[0];
-      this.yearmonthSlots[1].values=this.yearmonth[years[0]];
-      this.date=[years[0],this.yearmonth[years[0]][0]];
+      this.year='';
+      this.month='';
+      this.months=[];
     },
-    Ehroomchage:function(v){
-      this.billdatas=JSON.parse(this.oinfodatas)[v];
-      var that=this;
-      this.billdatas.chargeitems.forEach(function(element){
-        switch(element.name){
-          case '电费':element.price=element.price+"元/KWH";that.eletric=element;that.eletricon=true;break;
-          case '水费':element.price=element.price+"元/m³";that.water=element;that.wateron=true;break;
-          default:element.price=element.price+"元/月";
-        }
-      });
-      var revice= new this.myrevice();
-      revice.setcontroller('userroom').setmethod('getyear').setparam('rid').setparamvalue(v);
-      revice.grequestfront(this.CbSetyearmonth);
-      this.billliston=false;
-    },
-    Ehdatechange:function(value, index){
-      switch (index) {
-       case 0:
-         this.year = value;
-         this.yearmonthSlots[1].values=this.yearmonth[value];
-         this.month = this.yearmonth[value][0];
-         break;
-       case 1:
-         this.month = value;
-         break;
-     }
-     this.date = [this.year, this.month];
-     this.billliston=false;
-   },
    toolformatmonth:function(m){
      var s=new String(m);
      (s.length==2)?(s):(s='0'+s)
@@ -328,17 +256,6 @@ export default{
    CbSetrecords:function(xhr){
       this.records=JSON.parse(xhr.responseText.substring(0,xhr.responseText.indexOf("<")));
       this.billliston=true;
-   },
-   Ehgetrecord:function(){
-     var revice= new this.myrevice();
-     revice.setcontroller('userroom').setmethod('getrecord');
-     var data={
-       rid:this.billdatas.rid,
-       eletric:this.eletricon,
-       water:this.wateron,
-       date:this.date[0]+'-'+this.toolformatmonth(this.date[1])
-     }
-      revice.prequestfront(this.CbSetrecords,data);
    },
    Cbpoptoast:function(xhr){
      var status=JSON.parse(xhr.responseText.substring(0,xhr.responseText.indexOf("<"))).status;
@@ -363,16 +280,51 @@ export default{
    },
    detailopen:function(){
      this.liston=!this.liston;
+   },
+   listclick:function(item){
+     var key=item.$el.getAttribute('index');
+     this.billdatas=JSON.parse(this.oinfodatas)[key];
+     var that=this;
+     this.billdatas.chargeitems.forEach(function(element){
+       switch(element.name){
+         case '电费':element.price=element.price+"元/KWH";that.eletric=element;that.eletricon=true;break;
+         case '水费':element.price=element.price+"元/m³";that.water=element;that.wateron=true;break;
+         default:element.price=element.price+"元/月";
+       }
+     });
+     this.cinfodata=this.infodatas[key];
+     var revice= new this.myrevice();
+     revice.setcontroller('userroom').setmethod('getyear').setparam('rid').setparamvalue(key);
+     revice.grequestfront(this.CbSetyearmonth);
+     this.billliston=false;
+   },
+   yearchange:function(year){
+     this.months=this.yearmonth[year];
+   },
+   billquery:function(){
+     this.date=[this.year,this.month];
+     var revice= new this.myrevice();
+     revice.setcontroller('userroom').setmethod('getrecord');
+     var data={
+       rid:this.billdatas.rid,
+       eletric:this.eletricon,
+       water:this.wateron,
+       date:this.date[0]+'-'+this.toolformatmonth(this.date[1])
+     }
+      revice.prequestfront(this.CbSetrecords,data);
    }
   }
 }
 </script>
 <style>
-.mtt{
+.aftertext{
   color:white !important;
   background-color: #7c4dff;
   padding: 5px;
   border-radius: 3px;
+}
+.tclass{
+  line-height: 50px !important;
 }
 </style>
 <style scoped>
@@ -418,5 +370,11 @@ export default{
 .faderight-leave{
   opacity: 1;
   transform: translate3d(0%,0,0);
+}
+.billtitle{
+  color:rgba(0,0,0,.54);
+  padding: 13px 0px;
+  font-size: 12px;
+
 }
 </style>

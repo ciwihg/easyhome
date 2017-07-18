@@ -51,6 +51,24 @@ else{
   next();
 }});
 
+router.beforeEach((to,from,next)=>{
+  if(to.path=="/puserroom"){
+    var revice=new myajax();
+    revice.setcontroller("user").setmethod("mvalidate");
+    revice.grequestfront((xhr)=>{
+    var status=JSON.parse(revice.fix(xhr.responseText)).name;
+    if(status){
+    if(status!=""){
+      next();
+    }
+    else{
+      next(false);
+    }}});
+}
+else{
+  next();
+}});
+
 new Vue({
   el: '#app',
   router,

@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import pcframework from '@/components/front/pc/pcframework'
+import searchresult from '@/components/front/pc/searchresult'
 import pchome from '@/components/front/pc/pchome'
 import pcsortpage from '@/components/front/pc/pcsortpage'
 import puserroom from '@/components/front/pc/puserroom'
@@ -60,6 +61,11 @@ export default new Router({
           path:"puserroom",
           name:"puserroom",
           component: puserroom
+        },
+        {
+          path:"searchresult/:key",
+          name:"sresult",
+          component:searchresult
         }
       ]
     },

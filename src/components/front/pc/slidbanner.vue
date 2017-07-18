@@ -5,7 +5,7 @@
     </div>
     <div class="img_wrap" ref="img_wrap" @transitionend="ht">
           <div  class="item_wrap" v-for="item in datas">
-            <a href="#" >
+            <a :href="'#/proom/'+item.link" >
               <img :src="item.src" />
               <div class="mask"></div>
               <div class="info_wrap">
@@ -15,7 +15,7 @@
             </a>
           </div>
           <div  class="item_wrap" v-for="item in datas">
-            <a href="#" >
+            <a :href="'#/proom/'+item.link" >
               <img :src="item.src" />
               <div class="mask"></div>
               <div class="info_wrap">
@@ -25,7 +25,7 @@
             </a>
           </div>
           <div  class="item_wrap" v-for="item in datas">
-            <a href="#" >
+            <a :href="'#/proom/'+item.link" >
               <img :src="item.src" />
               <div class="mask"></div>
               <div class="info_wrap">

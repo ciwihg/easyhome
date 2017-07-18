@@ -104,7 +104,8 @@ export default{
       (this.active>this.lastactive)?(top=0-(this.active-2)*50+"px"):(top=0-(this.active-1)*50+"px")
       this.submenus[this.lastactive-2].style.display="none";
       if(this.lastsubitem){
-        this.lastsubitem.style.color="";
+          this.lastsubitem.style.color="";
+
       }
       this.submenus[this.lastactive-2].style.marginTop="35px";
       this.submenus[this.lastactive-2].style.height="0px";
@@ -177,6 +178,28 @@ export default{
         return;
       }
       this.lis[parseInt(n.substring(0,1))].click();
+    });
+    this.$watch(function(){return this.datas;},function(n,o){
+
+     this.$nextTick(function(){
+       for(var i=0; i<this.datas.length;i++){
+         this.heads[i]=this.$refs["he"+i][0];
+         this.heads[i].style.display="none";
+         this.lis[i]=this.$refs["li"+i][0]?this.$refs["li"+i][0]:this.$refs["li"+i];
+         this.lis[i].style.display="block";
+         this.submenus[i]=this.$refs["submenu"+i]?this.$refs["submenu"+i][0]:this.$refs["submenu"+i];
+         (this.submenus[i])&&(this.submenus[i].style.display="none")
+         this.lastactive=1;
+         this.active=0;
+       }
+     })
+
+     this.$nextTick(function(){
+       this.heads[0].style.display="block";
+       this.lis[0].style.display="none";
+       this.$refs.navul.className="nav_ul nav_ul_n nav_ul_ostatus";
+     })
+
     });
   },
   mounted: function() {
