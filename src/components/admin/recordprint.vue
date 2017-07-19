@@ -208,7 +208,7 @@ computed:{
             default:that.printurl=that.printurl+"&"+element.name+"="+element.price;element.price=element.price+"元/月";
           }
         });
-        this.printurl=this.printurl+"&租金"+this.billdatas[this.rid].price;
+        this.printurl=this.printurl+"&租金="+this.billdatas[this.rid].price+"&number="+this.billdatas[this.rid].number;
         this.confirmopen=false;
         this.billliston=true;
 
