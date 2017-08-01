@@ -187,7 +187,7 @@ computed:{
       mrevice.setcontroller("recordcontroll").setmethod("addboth");
       var tdate=this.date=new Date();
       var month=tdate.getMonth()+1;
-      var formatdate=tdate.getFullYear()+'-'+this.toolformatmonth(month)+'-'+tdate.getDate();
+      var formatdate=tdate.getFullYear()+'-'+this.toolformatmonth(month)+'-'+this.toolformatmonth(tdate.getDate());
       var data={
         evalue:this.evalue,
         wvalue:this.wvalue,
