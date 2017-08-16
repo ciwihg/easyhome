@@ -1,7 +1,6 @@
 <template>
   <div>
-  <mu-table :showCheckbox="false">
-    <div slot="header" class="table_header">
+    <div class="table_header">
       <span>租盘管理</span>
     <div  style="float:right; margin-top:10px; margin-right:15px;">
      <div style="position:relative; display:inline-block" ref="addbtn" @mouseenter="hover" @mouseleave="hovere">
@@ -10,8 +9,24 @@
     </div>
   </div>
     </div>
+    <div  class="filter_wrap">
+      <div >筛选</div>
+     <div>
+      <mu-text-field hintText="房号" v-model="froomnum" style="vertical-align:middle;"/>
+    <mu-select-field hintText="地址" v-model="froomaddr" style="vertical-align:middle;">
+      <mu-menu-item value="横潭大街32号" title="横潭大街32号"/>
+      <mu-menu-item value="朝阳巷5号" title="朝阳巷5号"/>
+      <mu-menu-item value="横潭市场" title="横潭市场"/>
+    </mu-select-field>
+   </div>
+    <div>
+    <mu-raised-button label="确认" secondary @click="filterrooms"/>
+    <mu-raised-button label="重置" secondary @click="resetfilter"/>
+  </div>
+  </div>
+  <mu-table :showCheckbox="false">
 
-    <mu-thead>
+   <mu-thead>
       <mu-tr>
         <mu-th>房号</mu-th>
         <mu-th>户型</mu-th>
@@ -132,7 +147,10 @@ export default {
       customerinfo:false,
       customerdatas:[{}],
       crid:'',
-      toast:false
+      toast:false,
+      froomnum:'',
+      froomaddr:'',
+      orooms:[]
     }
   },
   mounted () {
@@ -160,6 +178,7 @@ methods:{
   },
   get:function(xhr){
     var respon=JSON.parse(xhr.responseText.substring(0,xhr.responseText.indexOf("<")));
+    this.orooms=respon;
     this.rooms=respon;
 
   },
@@ -266,12 +285,27 @@ methods:{
  },
  hideToast:function(){
    this.toast=false;
+ },
+ filterrooms:function(){
+   var that=this;
+   this.rooms=this.orooms.filter(function(element){
+     return element.address==this.froomaddr&&element.number==this.froomnum;
+   },this);
+ },
+ resetfilter:function(){
+   this.froomaddr='';
+   this.froomnum='';
+   this.rooms=this.orooms;
+
  }
 }
 }
 </script>
 
 <style>
+.table_header{
+  background-color: white;
+}
 .table_header>span{
   display: inline-block;
   font-size: 18px;
@@ -284,12 +318,21 @@ methods:{
 .menuclass{
     display: none;
 }
-@media screen and (max-width:600px){
+.filter_wrap{
+  background-color:white;
+  padding:10px 15px;
+}
+@media screen and (max-width:767px){
   .wclass{
     display: none !important;
   }
   .menuclass{
       display: block !important;
+  }
+  .filter_wrap{
+    background-color:white;
+    text-align:center;
+    padding-top:10px;
   }
 }
 

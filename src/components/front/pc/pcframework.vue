@@ -44,7 +44,7 @@
 <div class="whitemask" v-if="maskon">
   <div style="position:relative; display:inline-block; width:25%; vertical-align:middle; height:100%;   min-width: 320px;">
   <transition name="fadeleft">
-  <div class="login-fwrap" v-if="loginon">
+  <div class="login-fwrap" v-show="loginon">
   <mu-paper class="loginwrap" >
     <div class="login-head">Easyhome</div>
     <div class="loginfo-wrap" ref='loginform'>
@@ -61,7 +61,7 @@
 </transition>
 
  <transition name="faderight" mode="in-out">
-   <div class="login-fwrap" v-if="regison">
+   <div class="login-fwrap" v-show="regison">
   <mu-paper class="loginwrap">
     <div class="login-head">创建Easyhome帐号</div>
     <div class="loginfo-wrap" ref="regisform">
