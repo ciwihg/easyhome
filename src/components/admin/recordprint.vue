@@ -11,9 +11,11 @@
    </div>
   </div>
   </div>
-  <div style="text-align:center;">
+  <div style="text-align:center; min-height:600px; background-color:white;">
     <div style="display:inline-block;">
+    <div style="text-align:left;margin-top:30px; color:#d1c4e9;">末次电表行码 {{elast.value}}</br>日期 {{elast.time}}</div>
    <mu-text-field label="电表读数"  v-model="evalue" labelFloat @input="ti"/>
+   <div style="text-align:left;margin-top:15px; color:#d1c4e9;">末次水表行码 {{wlast.value}}</br>日期 {{wlast.time}}</div>
    <mu-text-field label="水表读数" v-model="wvalue"labelFloat @input="ti"/>
    </div>
    <mu-table :showCheckbox="false" v-if="billliston">
@@ -96,13 +98,15 @@ export default{
       wateron:false,
       billliston:false,
       date:{},
-      printurl:''
+      printurl:'',
+      wlast:{},
+      elast:{}
     }
   },
 
   created: function () {
     this.rid=this.$route.params.rid;
-    this.ajax("GET","http://easyhome.applinzi.com/public/index.php/admin/recordcontroll/index/type/"+this.$route.params.type+"/rid/"+this.$route.params.rid,this.get);
+    this.ajax("GET","http://easyhome.applinzi.com/public/index.php/admin/recordcontroll/getlastestrecord/rid/"+this.$route.params.rid,this.get);
   },
   mounted () {
 
@@ -160,6 +164,8 @@ computed:{
     get:function(xhr){
       var respon=JSON.parse(xhr.responseText.substring(0,xhr.responseText.indexOf("<")));
       this.datas=respon;
+      this.elast=respon[2];
+      this.wlast=respon[3];
     },
     ti:function(v){
 

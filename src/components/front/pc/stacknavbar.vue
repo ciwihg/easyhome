@@ -3,7 +3,7 @@
     <div class="head_active_wrap">
       <div class="head_active" v-for="(data,index) in datas" :style="{backgroundColor:data.color}" :ref="'he'+index">
         <a :href="data.link">
-        <div class="itemhead" :style="{backgroundColor:data.color}"></div>
+        <div class="itemhead" :style="{backgroundColor:data.color,textAlign:'right',paddingRight:'10px'}"><i class="material-icons" style="color:white;line-height:50px;">{{data.icon}}</i></div>
         <span>{{data.content}}</span>
         </a>
       </div>
@@ -16,16 +16,16 @@
 
 
         <ul class="nav_ul nav_ul_n" ref="navul" @transitionend="hre" >
-          <li class="nav_item" :ref="'li'+(index+1)" :index="index+2" v-for="(data,index) in listdatas" @click="t" @mouseenter="hcolorc" @mouseleave="ehcolorc" hstatus="0">
+          <li class="nav_item" :class="{'hidden':hidden}" :ref="'li'+(index+1)" :index="index+2" v-for="(data,index) in listdatas" @click="t" @mouseenter="hcolorc" @mouseleave="ehcolorc" hstatus="0">
             <a :href="data.link" :index="index+2">
-            <div class="itemhead" :index="index+2" :style="{backgroundColor:data.color}"></div>
+            <div class="itemhead" :index="index+2" :style="{backgroundColor:data.color,textAlign:'right',paddingRight:'10px'}"><i  :index="index+2" class="material-icons" style="color:white;line-height:50px;">{{data.icon}}</i></div>
             <span :index="index+2">{{data.content}}</span>
             </a>
           </li>
 
-          <li class="nav_item" :ref="'li'+0" index="1" @click="t" @mouseenter="hcolorc" @mouseleave="ehcolorc" hstatus="0">
+          <li class="nav_item" :class="{'hidden':hidden}" :ref="'li'+0" index="1" @click="t" @mouseenter="hcolorc" @mouseleave="ehcolorc" hstatus="0">
             <a href="#" index="1">
-            <div class="itemhead" index="1" :style="{backgroundColor:datas[0].color}"></div>
+            <div class="itemhead" index="1" :style="{backgroundColor:datas[0].color,textAlign:'right',paddingRight:'10px'}"><i class="material-icons" index="1" style="color:white;line-height:50px;">{{datas[0].icon}}</i></div>
             <span index="1">{{datas[0].content}}</span>
             </a>
           </li>
@@ -45,6 +45,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default{
   name:"stacknavbar",
   props:["color","width","datas","typeindex"],
@@ -56,7 +57,9 @@ export default{
       lis:[],
       submenus:[],
       lastsubitem:null,
-      ver:true
+      ver:true,
+      stabar:{},
+      hidden:false
     }
   },
   computed:{
@@ -67,82 +70,27 @@ export default{
       var listdata=this.datas.slice();
          listdata.shift();
       return listdata;
-    }
+    },
+    ...mapState(
+      {
+        navindex:state => state.active,
+        typemap:state => state.typemap
+      }
+  )
   },
   methods:{
     t:function(e){
       this.$emit("itemclick");
-      this.heads[this.lastactive-1].style.display="none";//头部条变空白
-      this.active=parseInt(e.target.getAttribute("index"));//获取激活栏目的索引
-      for(var i=0;i<this.lis.length;i++){   //只显示激活栏目
-        if(i==(this.active-1)){
-          this.lis[i].setAttribute("hstatus","1");
-          this.lis[i].style.backgroundColor=this.datas[this.active-1].color; //强制hover样式
-          this.lis[i].className="nav_item nav_itemfh";
-          this.$refs.navul.className="nav_ul nav_ul_fh";
-          this.lis[i].style.opacity="1"; //显示需要向上浮动的栏目
-        }else{
-          this.lis[i].style.opacity="0";//隐藏其他不需要向上浮动的栏目
-        }
-      }
+      this.stabar.tolistitem(parseInt(e.target.getAttribute("index")));
 
-      var top;
-      if(this.lastactive==1){    //初始状态转换到其他状态
-         top=0-(this.active-1)*50+"px";
-      }
-      else if(this.active==1){  //其他状态转换到初始状态
-        this.submenus[this.lastactive-2].style.display="none";
-        if(this.lastsubitem){
-          this.lastsubitem.style.color="";
-        }
-        this.submenus[this.lastactive-2].style.marginTop="35px";
-        this.submenus[this.lastactive-2].style.height="0px";
-         top=0-(this.lis.length-1)*50+"px";
-
-    }else{ //其他状态之间的转换
-
-      (this.active>this.lastactive)?(top=0-(this.active-2)*50+"px"):(top=0-(this.active-1)*50+"px")
-      this.submenus[this.lastactive-2].style.display="none";
-      if(this.lastsubitem){
-          this.lastsubitem.style.color="";
-
-      }
-      this.submenus[this.lastactive-2].style.marginTop="35px";
-      this.submenus[this.lastactive-2].style.height="0px";
-    }
-       this.lis[this.active-1].style.top=top; //栏目向上浮动
     },
     hre:function(e){
-      if(e.propertyName=="top"){
-        for(var i=0;i<this.lis.length;i++){
-          if(i==(this.active-1)){
-            this.heads[i].style.display="block";
-            this.lis[i].style.display="none";
-            this.lis[i].style.backgroundColor="white";
-            this.lis[i].setAttribute("hstatus","0");
-            this.lis[i].style.opacity="1";
-          }else{
-            this.heads[i].style.display="none";
-            this.lis[i].style.display="block";
-            this.lis[i].style.opacity="1";
-          }
-        }
-        this.$refs.navul.style.transition="none";
-        this.$refs.navul.className="nav_ul";//防止动画完成后再触发侧边栏
-        this.lis[this.active-1].style.top="0px";
-        this.lis[this.active-1].className="nav_item";
-        this.lastactive=this.active;
-
-
-        if(this.active==1){
-          this.$refs.navul.className="nav_ul nav_ul_n nav_ul_ostatus";
-        }
-        else{
-          this.submenus[this.lastactive-2].style.display="inline-block";
-          this.submenus[this.active-2].offsetWidth
-          this.submenus[this.active-2].style.marginTop="50px";
-          this.submenus[this.active-2].style.height="200px";
-        }
+     if(e.propertyName=="top"){
+       this.stabar.displayhead(this.stabar.active);
+       this.stabar.hidelistitem(this.stabar.active);
+       (this.stabar.active==1)?this.stabar.showlist():this.stabar.hidelist()
+       this.stabar.showsubmenu(this.stabar.active);
+       this.stabar.lastactive=this.stabar.active;
       }
     },
   hsh:function(e){
@@ -152,10 +100,11 @@ export default{
   hcolorc:function(e){
     var index=parseInt(e.target.getAttribute("index"));
     e.target.style.backgroundColor=this.datas[index-1].color;
+    e.target.getElementsByTagName("span")[0].style.color="white";
   },
   ehcolorc:function(e){
     var status=e.target.getAttribute("hstatus");
-    (status=="0")&&(e.target.style.backgroundColor="white")
+    (status=="0")&&(e.target.style.backgroundColor="white",e.target.getElementsByTagName("span")[0].style.color="black")
   },
   submclick:function(e){
     if(this.lastsubitem){
@@ -163,8 +112,8 @@ export default{
     }
     var address;
     switch(e.target.nodeName){
-      case "A":e.target.style.color=this.datas[this.active-1].color;address=e.target.innerHTML;this.lastsubitem=e.target;break;
-      case "LI":e.target.firstElementChild.style.color=this.datas[this.active-1].color;address=e.target.firstElementChild.innerHTML;this.lastsubitem=e.target.firstElementChild;break;
+      case "A":e.target.style.color=this.datas[this.stabar.active-1].color;address=e.target.innerHTML;this.lastsubitem=e.target;break;
+      case "LI":e.target.firstElementChild.style.color=this.datas[this.stabar.active-1].color;address=e.target.firstElementChild.innerHTML;this.lastsubitem=e.target.firstElementChild;break;
     }
     this.ver=!this.ver;
     this.$emit("smenuclick",address+this.ver);
@@ -172,49 +121,170 @@ export default{
   },
   created:function(){
     this.$watch(function(){
-     return  this.typeindex;
+     return  this.navindex;
     },function(n,o){
-      if(this.active-1==parseInt(n.substring(0,1))){
-        return;
+      if (this.stabar.active!=this.navindex) {
+        this.stabar.active=this.navindex;
+        this.stabar.tolistitem(this.navindex);
       }
-      this.lis[parseInt(n.substring(0,1))].click();
-    });
-    this.$watch(function(){return this.datas;},function(n,o){
-
-     this.$nextTick(function(){
-       for(var i=0; i<this.datas.length;i++){
-         this.heads[i]=this.$refs["he"+i][0];
-         this.heads[i].style.display="none";
-         this.lis[i]=this.$refs["li"+i][0]?this.$refs["li"+i][0]:this.$refs["li"+i];
-         this.lis[i].style.display="block";
-         this.submenus[i]=this.$refs["submenu"+i]?this.$refs["submenu"+i][0]:this.$refs["submenu"+i];
-         (this.submenus[i])&&(this.submenus[i].style.display="none")
-         this.lastactive=1;
-         this.active=0;
-       }
-     })
-
-     this.$nextTick(function(){
-       this.heads[0].style.display="block";
-       this.lis[0].style.display="none";
-       this.$refs.navul.className="nav_ul nav_ul_n nav_ul_ostatus";
-     })
 
     });
+
+    this.$watch(function(){
+     return  this.datas;
+    },function(n,o){
+      this.$nextTick(function () {
+        this.stabar.init();
+       (this.stabar.lastactive==6)?(this.stabar.setstartstatus()):(this.stabar.showsubmenu(this.stabar.active))
+
+      })
+  });
+
   },
   mounted: function() {
+   function stacknavbar(vuecomponent){
+      this.vuecomponent=vuecomponent;
+      this.active=0;
+      this.lastactive=1;
+      this.heads=[];
+      this.lis=[];
+      this.submenus=[];
+      var vthis=this.vuecomponent;
 
-    for(var i=0; i<this.datas.length;i++){
-      this.heads[i]=this.$refs["he"+i][0];
-      this.lis[i]=this.$refs["li"+i][0]?this.$refs["li"+i][0]:this.$refs["li"+i];
-      this.submenus[i]=this.$refs["submenu"+i]?this.$refs["submenu"+i][0]:this.$refs["submenu"+i];
-    }
-  //  this.lis=[this.$refs.li1,this.$refs.li2,this.$refs.li3,this.$refs.li4,this.$refs.li5,this.$refs.li6];
-  //  this.heads=[this.$refs.h1,this.$refs.h2,this.$refs.h3,this.$refs.h4,this.$refs.h5,this.$refs.h6];
-  //this.submenus=[this.$refs.submenu2,this.$refs.submenu3,this.$refs.submenu4,this.$refs.submenu5,this.$refs.submenu6];
-    this.heads[0].style.display="block";
-    this.lis[0].style.display="none";
-    this.$refs.navul.className="nav_ul nav_ul_n nav_ul_ostatus";
+      this.init=function(){
+        for(var i=0; i<vthis.datas.length;i++){
+          this.heads[i]=vthis.$refs["he"+i][0];
+          this.lis[i]=vthis.$refs["li"+i][0]?vthis.$refs["li"+i][0]:vthis.$refs["li"+i];
+          this.submenus[i]=vthis.$refs["submenu"+i]?vthis.$refs["submenu"+i][0]:vthis.$refs["submenu"+i];
+        }
+      };
+
+      this.setstartstatus=function(){
+        this.active=this.lastactive=1;
+        this.displayhead(1);
+        this.hidelistitem(1);
+        this.showlist();
+      };
+
+
+      this.resetlistitem=function(index){
+        if(!this.lis[index-1]){return}
+        this.lis[index-1].style.backgroundColor="white"; //取消hover时颜色
+        this.lis[index-1].getElementsByTagName("span")[0].style.color="black"
+        this.lis[index-1].setAttribute("hstatus","0"); //启动hover变色
+        this.lis[index-1].style.top="0px";//返回原来的栏目位置
+        this.lis[index-1].style.opacity='';
+        this.lis[index-1].className="nav_item";// 设置栏目类名
+      };
+
+
+      this.setactivelistitem=function(index){
+        if(!this.lis[index-1]){return}
+        this.lis[index-1].style.backgroundColor=vthis.datas[index-1].color;
+        this.lis[index-1].getElementsByTagName("span")[0].style.color="white";
+        this.lis[index-1].setAttribute("hstatus","1");
+        this.lis[index-1].className="nav_item nav_itemfh";
+        this.lis[index-1].style.opacity="1"; //显示需要向上浮动的栏目
+      };
+
+
+      this.displayhead=function(index){
+        this.hidehead(this.lastactive);
+        this.heads[index-1].style.display="block"
+      };
+
+
+      this.hidehead=function(index){
+        this.heads[index-1].style.display="none";
+      };
+
+      this.hidelistitem=function(index){
+        this.lis[this.lastactive-1].style.display="block";
+        this.lis[index-1].style.display="none"
+        this.resetlistitem(index);
+        vthis.hidden=false;
+      };
+
+
+      this.showlistitem=function(index){
+        this.setactivelistitem(index);
+        this.showlist();
+        vthis.hidden=true;
+      };
+
+
+      this.flowlistitem=function(index){
+        var top;
+        if(this.lastactive==1){    //初始状态转换到其他状态
+           top=0-(index-1)*50+"px";
+        }
+        else if(index==1){  //其他状态转换到初始状态
+
+           top=0-(this.lis.length-1)*50+"px";
+
+      }else{ //其他状态之间的转换
+           (index>this.lastactive)?(top=0-(index-2)*50+"px"):(top=0-(index-1)*50+"px")
+
+      }
+         this.lis[index-1].style.top=top;
+
+      };
+
+
+      this.showlist=function(){
+        vthis.$refs.navul.className="nav_ul nav_ul_ostatus";
+      };
+
+
+      this.hoverlist=function(){
+         vthis.$refs.navul.className="nav_ul nav_ul_n";
+      };
+
+
+      this.hidelist=function(){
+        vthis.$refs.navul.style.transition="none";
+         vthis.$refs.navul.className="nav_ul";
+      };
+
+
+      this.hidesubmenu=function(index) {
+          if(index<2){
+            return;
+          }
+          this.submenus[index-2].style.display="none";
+          if(vthis.lastsubitem){
+              vthis.lastsubitem.style.color="";
+          }
+          this.submenus[index-2].style.marginTop="35px";
+          this.submenus[index-2].style.height="0px";
+      };
+
+
+      this.showsubmenu=function(index){
+        if(index<2){
+          return;
+        }
+        this.submenus[index-2].style.display="inline-block";
+        this.submenus[index-2].offsetWidth
+        this.submenus[index-2].style.marginTop="50px";
+        this.submenus[index-2].style.height=(vthis.datas.length-1)*50+"px";
+      };
+
+
+      this.tolistitem=function(index){
+         this.active=index;
+         vthis.$store.commit('setactive',index);
+         this.hidehead(this.lastactive);
+         this.hidesubmenu(this.lastactive);
+         this.showlistitem(index);
+         this.flowlistitem(index);
+      };
+
+    };
+    this.stabar=new stacknavbar(this);
+    this.stabar.init();
+    this.stabar.setstartstatus();
+
 
   }
 }
@@ -288,7 +358,9 @@ export default{
   position: relative;
   background-color: white;
 }
-
+.hidden{
+  opacity: 0;
+}
 .nav_item:hover a span{
   color:white;
 }

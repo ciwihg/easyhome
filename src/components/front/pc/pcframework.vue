@@ -33,7 +33,7 @@
 <div style="margin-left:200px; position:relative;">
   <div :class="{'pagenavbar':pnav,'pnavfixed':!pnav}">{{searchtitle}}</div>
 
-   <router-view @loadfinsh="loadfinish" :sortpaddress="sortaddress" @roomtype="settype" :subpage="sortaddress"></router-view>
+   <router-view :sortpaddress="sortaddress" @roomtype="settype" :subpage="sortaddress"></router-view>
 </div>
 <div class="loadingmask" v-if="loading">
   <div class="circular-wrap" style="position:fixed; left:50%; display:inline-block; top:0; bottom:0;">
@@ -99,6 +99,7 @@
 import slidbanner from '@/components/front/pc/slidbanner'
 import stacknavbar from '@/components/front/pc/stacknavbar'
 import goodp from '@/components/front/pc/goodp'
+import { mapState } from 'vuex'
 export default{
   name:"slider",
   components:{
@@ -128,20 +129,22 @@ export default{
       usercardon:false,
       codeerror:'',
       code:'',
-      loading:false,
       sortaddress:"",
       typenum:'',
       ver:true,
       searchtext:'',
+      ttt:true,
   navdatas:[
     {content:"首页",
      color:"rgb(68,68,68)",
+     icon:'home',
      link:"#/",
      submenu:[
      ]
     },
     {content:"二房一厅",
      color:"rgb(104,159,56)",
+     icon:'view_carousel',
      link:"#/sortpage/s2r",
      submenu:[
        {content:"横潭大街32号",
@@ -152,6 +155,7 @@ export default{
     },
     {content:"一房一厅",
      color:"rgb(239,108,0)",
+     icon:'pause',
      link:"#/sortpage/sr",
      submenu:[
        {content:"横潭大街32号",
@@ -163,6 +167,7 @@ export default{
 
     {content:"单房",
      color:"rgb(3,155,229)",
+    icon:'crop_square',
      link:"#/sortpage/r",
      submenu:[
        {content:"横潭大街32号",
@@ -173,6 +178,7 @@ export default{
     },
     {content:"其他",
      color:"rgb(83,109,254)",
+     icon:'more_horiz',
      link:"#/sortpage/other",
      submenu:[
        {content:"横潭大街32号",
@@ -201,7 +207,14 @@ export default{
         return '';
       }
 
-    }
+    },
+    ...mapState(
+      {
+        navindex:state => state.active,
+        typemap:state => state.typemap,
+        loading:state => state.loading
+      }
+  )
   },
   created: function created() {
     var reg=/Mobile/;
@@ -222,13 +235,29 @@ export default{
     }
   },
   mounted:function(){
+
   },
   methods:{
      openlogin:function(){
-       this.maskon=true;
+      if(this.ttt){ var useritem=
+       {content:"我租的房",
+        icon:'person',
+        color:"rgb(101, 128, 146)",
+        link:"#/puserroom",
+        submenu:[
+          {content:"房屋列表",
+          link:"#/puserroom"},
+          {content:"租房登记",
+          link:"#/puserroom"}
+         ]
+       };
+       this.navdatas.push(useritem);this.ttt=!this.ttt;}
+       else{
+       this.navdatas.pop();this.ttt=!this.ttt;}
+       /*this.maskon=true;
        document.body.style.overflow='hidden';
        document.all[0].style.overflow='hidden';
-       this.getcaptcha();
+       this.getcaptcha();*/
      },
      addexitclick:function(){
        var that=this;
@@ -404,10 +433,6 @@ export default{
      Ehsmclick:function(item){
        this.sortaddress=item;
        this.loading=true;
-     },
-     loadfinish:function(){
-       var that=this;
-       setTimeout(function(){that.loading=false;},500);
      },
      settype:function(c){
        this.ver=!this.ver;

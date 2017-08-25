@@ -72,6 +72,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default{
   name:'pcdetail',
   data:function(){
@@ -86,7 +87,16 @@ export default{
 
     }
   },
+  computed:{
+    ...mapState(
+      {
+        navindex:state => state.active,
+        typemap:state => state.typemap
+      }
+  )
+  },
   created:function(){
+    this.$store.commit('loading');
     var m=new this.myrevice();
     m.setcontroller("Mroom").setmethod("index").setparam("rid").setparamvalue(this.$route.params.id);
     m.grequestfront(this.Cbgetroominfo);
@@ -98,13 +108,14 @@ export default{
   },
   methods:{
     Cbgetroominfo:function(xhr){
+      var that=this;
       var respon=JSON.parse(xhr.responseText.substring(0,xhr.responseText.indexOf("<")));
       this.roomdatas=respon;
       this.roomimgs=JSON.parse(respon.imgs);
       this.mainpic=this.roomimgs.shift();
       this.roomimgs.shift();
-      this.$emit('roomtype',this.roomdatas.type);
-      this.$nextTick(function(){this.$emit("loadfinsh")});
+      this.$store.commit('setactive',this.typemap[this.roomdatas.type]);
+      this.$nextTick(function(){setTimeout(function(){that.$store.commit('loaded');},500);});
     },
     showfull:function(){
       this.$refs.agreement.style.height=this.agreementh+"px";

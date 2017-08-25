@@ -25,10 +25,12 @@ export default{
     }
   },
   created:function(){
+    this.$store.commit('loading');
     this.tool=new this.mtool();
     this.$watch(function(){
       return this.$route.params.type;
     },function(n, o){
+      this.$store.commit('loading');
       this.outofroom=false;
       var revice=new this.myrevice();
       revice.setcontroller('Mhome').setmethod(this.$route.params.type);
@@ -37,11 +39,13 @@ export default{
     this.$watch(function(){
       return this.sortpaddress;
     },function(n,o){
+      this.$store.commit('loading');
       var reg=/^[^tf]+/;
+      var that=this;
       switch(n.match(reg)[0]){
-        case '横潭大街32号':this.cdatas=this.address1data;this.$emit("loadfinsh");break;
-        case '朝阳巷5号':this.cdatas=this.address2data;this.$emit("loadfinsh");break;
-        default:this.$emit("loadfinsh");break;
+        case '横潭大街32号':this.cdatas=this.address1data;setTimeout(function(){that.$store.commit('loaded');},500);break;
+        case '朝阳巷5号':this.cdatas=this.address2data;setTimeout(function(){that.$store.commit('loaded');},500);break;
+        default:setTimeout(function(){that.$store.commit('loaded');},500);break;
       }
     });
     var revice=new this.myrevice();
@@ -56,41 +60,29 @@ export default{
     CbSetcdatas:function(xhr){
       this.alldatas=JSON.parse(this.saedata(xhr.responseText));
       this.cdatas=this.alldatas;
+      this.address1data=[];
+      this.address2data=[];
       if(this.cdatas.length==0){
-          this.outofroom=true;
-          this.address1data=[];
-          this.address2data=[];
-          this.$nextTick(function(){
-            this.tool.setbodyheight();
-            switch(this.$route.params.type){
-              case "sr":this.$emit('roomtype',"一房一厅");break;
-              case "s2r":this.$emit('roomtype',"二房一厅");break;
-              case "r":this.$emit('roomtype',"单房");break;
-              case "other":this.$emit('roomtype',"其他");break;
+       this.outofroom=true;
+        }else{
+          var that=this;
+          this.cdatas.forEach(function(element){
+            switch(element.address){
+              case '横潭大街32号':that.address1data.push(element);break;
+              case '朝阳巷5号':that.address2data.push(element);break;
             }
-
-            this.$emit("loadfinsh");
           });
-          return;
         }
-        this.address1data=[];
-        this.address2data=[];
-        var that=this;
-        this.cdatas.forEach(function(element){
-          switch(element.address){
-            case '横潭大街32号':that.address1data.push(element);break;
-            case '朝阳巷5号':that.address2data.push(element);break;
-          }
-        });
+            var that=this;
             this.$nextTick(function(){
               this.tool.setbodyheight();
               switch(this.$route.params.type){
-                case "sr":this.$emit('roomtype',"一房一厅");break;
-                case "s2r":this.$emit('roomtype',"二房一厅");break;
-                case "r":this.$emit('roomtype',"单房");break;
-                case "other":this.$emit('roomtype',"其他");break;
+                case "sr":this.$store.commit('setactive',3);break;
+                case "s2r":this.$store.commit('setactive',2);break;
+                case "r":this.$store.commit('setactive',4);break;
+                case "other":this.$store.commit('setactive',5);break;
               }
-              this.$emit("loadfinsh");
+              setTimeout(function(){that.$store.commit('loaded');},500);
             });
 
     }
