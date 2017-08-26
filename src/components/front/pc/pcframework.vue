@@ -133,7 +133,6 @@ export default{
       typenum:'',
       ver:true,
       searchtext:'',
-      ttt:true,
   navdatas:[
     {content:"首页",
      color:"rgb(68,68,68)",
@@ -239,25 +238,11 @@ export default{
   },
   methods:{
      openlogin:function(){
-      if(this.ttt){ var useritem=
-       {content:"我租的房",
-        icon:'person',
-        color:"rgb(101, 128, 146)",
-        link:"#/puserroom",
-        submenu:[
-          {content:"房屋列表",
-          link:"#/puserroom"},
-          {content:"租房登记",
-          link:"#/puserroom"}
-         ]
-       };
-       this.navdatas.push(useritem);this.ttt=!this.ttt;}
-       else{
-       this.navdatas.pop();this.ttt=!this.ttt;}
-       /*this.maskon=true;
+
+       this.maskon=true;
        document.body.style.overflow='hidden';
        document.all[0].style.overflow='hidden';
-       this.getcaptcha();*/
+       this.getcaptcha();
      },
      addexitclick:function(){
        var that=this;
@@ -271,6 +256,7 @@ export default{
        if(status!=""){
          var useritem=
          {content:"我租的房",
+          icon:'person',
           color:"rgb(101, 128, 146)",
           link:"#/puserroom",
           submenu:[
