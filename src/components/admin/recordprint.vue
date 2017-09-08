@@ -11,12 +11,12 @@
    </div>
   </div>
   </div>
-  <div style="text-align:center; min-height:600px; background-color:white;">
+  <div style="text-align:center; min-height:600px; background-color:white; padding-top:10px;">
     <div style="display:inline-block;">
     <div style="text-align:left;margin-top:30px; color:#d1c4e9;">末次电表行码 {{elast.value}}</br>日期 {{elast.time}}</div>
-   <mu-text-field label="电表读数"  v-model="evalue" labelFloat @input="ti"/>
+   <mu-text-field label="电表读数"  v-model="evalue" labelFloat @input="ti"/> <mu-raised-button label="上传" primary :disabled="eletricupload" @click="uploadsingle"/>
    <div style="text-align:left;margin-top:15px; color:#d1c4e9;">末次水表行码 {{wlast.value}}</br>日期 {{wlast.time}}</div>
-   <mu-text-field label="水表读数" v-model="wvalue"labelFloat @input="ti"/>
+   <mu-text-field label="水表读数" v-model="wvalue"labelFloat @input="ti"/> <mu-raised-button label="上传" primary :disabled="waterupload" @click="uploadsingle"/>
    </div>
    <mu-table :showCheckbox="false" v-if="billliston">
      <mu-thead>
@@ -65,8 +65,8 @@
 
 <mu-dialog :open="confirmopen" :title="dialogt" @close="confirmclose">
   <div v-show="!billing">
-   <div>电表读数{{evalue}}</div>
-    <div>水表读数{{wvalue}}</div>
+   <div v-show="evalue!=''">电表读数{{evalue}}</div>
+    <div v-show="wvalue!=''">水表读数{{wvalue}}</div>
   </div>
   <div v-show="billing" style="text-align:center;">
     <mu-circular-progress :size="50" />
@@ -142,6 +142,20 @@ computed:{
       }
     });
     return totalprice+this.billdatas[this.rid].price;
+  },
+  waterupload:function(){
+    if(this.wvalue!=""&&this.evalue==""){
+      return false;
+    }else{
+      return true;
+    }
+  },
+  eletricupload:function () {
+    if(this.evalue!=""&&this.wvalue==""){
+      return false;
+    }else{
+      return true;
+    }
   }
 },
   methods:{
@@ -187,13 +201,33 @@ computed:{
       return s;
     },
     sumbitrecord:function(){
+      var tdate=this.date=new Date();
+      var month=tdate.getMonth()+1;
+      var formatdate=tdate.getFullYear()+'-'+this.toolformatmonth(month)+'-'+this.toolformatmonth(tdate.getDate());
+      if(!this.waterupload){
+        var mrevice=new this.myrevice();
+        mrevice.setcontroller("recordcontroll").setmethod("addsingle").setparams([{k:"type",v:'w'},{k:"rid",v:this.$route.params.rid}]);
+        var data={
+          value:this.wvalue,
+          time:formatdate,
+        };
+        mrevice.prequestadmin(this.Cbnone,data);
+        return;
+      }
+      if(!this.eletricupload){
+        var mrevice=new this.myrevice();
+        mrevice.setcontroller("recordcontroll").setmethod("addsingle").setparams([{k:"type",v:'e'},{k:"rid",v:this.$route.params.rid}]);
+        var data={
+          value:this.evalue,
+          time:formatdate,
+        };
+        mrevice.prequestadmin(this.Cbnone,data);
+        return;
+      }
       this.dialogt="账单生成中";
       this.billing=true;
       var mrevice=new this.myrevice();
       mrevice.setcontroller("recordcontroll").setmethod("addboth");
-      var tdate=this.date=new Date();
-      var month=tdate.getMonth()+1;
-      var formatdate=tdate.getFullYear()+'-'+this.toolformatmonth(month)+'-'+this.toolformatmonth(tdate.getDate());
       var data={
         evalue:this.evalue,
         wvalue:this.wvalue,
@@ -218,6 +252,16 @@ computed:{
         this.confirmopen=false;
         this.billliston=true;
 
+    },
+    Cbnone:function (xhr) {
+      var type='e';
+      if(!this.waterupload){
+          type='w';
+      }
+        location="public/#/adminhome/roomrecord/"+this.$route.params.rid+'/'+type;
+    },
+    uploadsingle:function () {
+      this.confirmopen=true;
     }
   }
 }

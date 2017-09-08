@@ -11,7 +11,8 @@ export default new Vuex.Store({
       '一房一厅':3,
       '单房':4,
       '其他':5,
-      '我租的房':6
+      '我租的房':6,
+      '三房一厅':5
      }
   },
   mutations:{

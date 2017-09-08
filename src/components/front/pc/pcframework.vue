@@ -18,7 +18,7 @@
       <div class="uparrowcopy" ></div>
       <div class="userinfo" >
         <div style="padding:10px 10px;" >{{username}}</div>
-        <div class="userinfo-item" ><a style="display:block;padding:10px 20px; color:#ce93d8;" href="#/puserroom">我租的房</a></div>
+        <div class="userinfo-item" ><a style="display:block;padding:10px 20px; color:#ce93d8;" @click="topuserroom" href="#/puserroom">我租的房</a></div>
         <div class="infobottom-row" ><mu-flat-button primary label="退出" @click="exitlogin" style="float:right;"/></div>
 
       </div>
@@ -237,6 +237,9 @@ export default{
 
   },
   methods:{
+    topuserroom:function(){
+      this.$store.commit('setactive',6);
+    },
      openlogin:function(){
 
        this.maskon=true;
@@ -325,6 +328,7 @@ export default{
          this.username=msg.name;
          var useritem=
          {content:"我租的房",
+          icon:'person',
           color:"rgb(101, 128, 146)",
           link:"#/puserroom",
           submenu:[

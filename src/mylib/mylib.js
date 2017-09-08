@@ -67,6 +67,13 @@ export default {
     this.setparamvalue=function(v){
       this.paramvalue="/"+v;
     }
+    this.setparams=function (p) {
+      this.param="/";
+      for (var i = 0; i < p.length; i++) {
+        if(i==(p.length-1)){this.param=this.param+p[i].k+'/'+p[i].v;continue;}
+        this.param=this.param+p[i].k+'/'+p[i].v+'/';
+      }
+    }
 
    this.finallurl=function(){
     return this.controller+this.method+this.param+this.paramvalue;

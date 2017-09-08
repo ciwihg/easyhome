@@ -119,6 +119,7 @@ export default{
     get:function(xhr){
       var respon=JSON.parse(xhr.responseText.substring(0,xhr.responseText.indexOf("<")));
       this.datas=respon;
+      console.log(respon);
     },
     deleteget:function(xhr){
       var respon=JSON.parse(xhr.responseText.substring(0,xhr.responseText.indexOf("<")));
