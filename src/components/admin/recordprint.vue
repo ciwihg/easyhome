@@ -71,8 +71,12 @@
   <div v-show="billing" style="text-align:center;">
     <mu-circular-progress :size="50" />
   </div>
-   <mu-flat-button slot="actions" @click="confirmclose" primary  v-show="!billing" label="取消"/>
-   <mu-flat-button slot="actions" primary @click="sumbitrecord" v-show="!billing" label="确定上传"/>
+   <mu-flat-button slot="actions" @click="confirmclose" primary  v-show="!billing&&addtype!='error'" label="取消"/>
+   <mu-flat-button slot="actions" primary @click="sumbitrecord" v-show="!billing&&addtype!='error'" label="确定上传"/>
+   <div v-show="addtype=='error'">
+     <div>水电表数据记录有误，请检查</div>
+   </div>
+   <mu-flat-button slot="actions" primary @click="redirect"  v-show="addtype=='error'" label="确定"/>
  </mu-dialog>
 </div>
 </template>
@@ -100,7 +104,9 @@ export default{
       date:{},
       printurl:'',
       wlast:{},
-      elast:{}
+      elast:{},
+      addtype:'',
+      caddtime:''
     }
   },
 
@@ -144,14 +150,14 @@ computed:{
     return totalprice+this.billdatas[this.rid].price;
   },
   waterupload:function(){
-    if(this.wvalue!=""&&this.evalue==""){
+    if(this.wvalue!=""&&this.evalue==""&&this.addtype=="both"){
       return false;
     }else{
       return true;
     }
   },
   eletricupload:function () {
-    if(this.evalue!=""&&this.wvalue==""){
+    if(this.evalue!=""&&this.wvalue==""&&this.addtype=="both"){
       return false;
     }else{
       return true;
@@ -180,6 +186,45 @@ computed:{
       this.datas=respon;
       this.elast=respon[2];
       this.wlast=respon[3];
+      switch(this.getaddtype()){
+        case 'both':this.addbothui();break;
+        case 'water':this.wateraddui();break;
+        case 'eletric':this.eletricaddui();break;
+        case 'error':this.errorui();break;
+      }
+    },
+    errorui:function () {
+      this.dialogt="错误";
+      this.confirmopen=true;
+    },
+    redirect:function () {
+      location="public/#/adminhome/room";
+    },
+    getaddtype:function () {
+      if(this.addtype!=''){return this.addtype;}
+      switch(this.elast.length-this.wlast.length){
+        case 0:this.addtype='both';break;
+        case 1:this.addtype='water';break;
+        case -1:this.addtype='eletric';break;
+        default:this.addtype="error";
+      }
+      return this.addtype;
+    },
+    wateraddui:function () {
+      this.evalue=this.elast[0].value;
+      this.caddtime=this.elast[0].time;
+      this.elast=this.elast[1];
+      this.wlast=this.wlast[0];
+    },
+    eletricaddui:function () {
+      this.wvalue=this.wlast[0].value;
+      this.caddtime=this.wlast[0].time;
+      this.wlast=this.wlast[1];
+      this.elast=this.elast[0];
+    },
+    addbothui:function () {
+      this.wlast=this.wlast[0];
+      this.elast=this.elast[0];
     },
     ti:function(v){
 
@@ -201,6 +246,7 @@ computed:{
       return s;
     },
     sumbitrecord:function(){
+      if(this.getaddtype()=='both'){
       var tdate=this.date=new Date();
       var month=tdate.getMonth()+1;
       var formatdate=tdate.getFullYear()+'-'+this.toolformatmonth(month)+'-'+this.toolformatmonth(tdate.getDate());
@@ -237,6 +283,39 @@ computed:{
         rid:this.$route.params.rid
       };
       mrevice.prequestadmin(this.Cbgetbill,data);
+    }
+    if(this.getaddtype()=='water'){
+      this.date=new Date();
+      this.dialogt="账单生成中";
+      this.billing=true;
+      var mrevice=new this.myrevice();
+      mrevice.setcontroller("recordcontroll").setmethod("addboth");
+      var data={
+        wvalue:this.wvalue,
+        time:this.caddtime,
+        eletric:true,
+        water:true,
+        rid:this.$route.params.rid
+      };
+      mrevice.prequestadmin(this.Cbgetbill,data);
+
+    }
+    if(this.getaddtype()=='eletric'){
+      this.date=new Date();
+      this.dialogt="账单生成中";
+      this.billing=true;
+      var mrevice=new this.myrevice();
+      mrevice.setcontroller("recordcontroll").setmethod("addboth");
+      var data={
+        evalue:this.evalue,
+        time:this.caddtime,
+        eletric:true,
+        water:true,
+        rid:this.$route.params.rid
+      };
+      mrevice.prequestadmin(this.Cbgetbill,data);
+
+    }
     },
     Cbgetbill:function(xhr){
       this.billdatas=JSON.parse(this.saedata(xhr.responseText));
