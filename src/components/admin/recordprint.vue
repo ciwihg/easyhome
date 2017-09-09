@@ -198,7 +198,7 @@ computed:{
       this.confirmopen=true;
     },
     redirect:function () {
-      location="public/#/adminhome/room";
+      location="/#/adminhome/room";
     },
     getaddtype:function () {
       if(this.addtype!=''){return this.addtype;}
@@ -337,7 +337,7 @@ computed:{
       if(!this.waterupload){
           type='w';
       }
-        location="public/#/adminhome/roomrecord/"+this.$route.params.rid+'/'+type;
+        location="/#/adminhome/roomrecord/"+this.$route.params.rid+'/'+type;
     },
     uploadsingle:function () {
       this.confirmopen=true;
